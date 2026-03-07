@@ -14,10 +14,10 @@ function log {
 }
 
 # Set the server name of the homeserver
-export SYNAPSE_SERVER_NAME=${SERVER_NAME}
+export BRIIJ_SERVER_NAME=${SERVER_NAME}
 
 # No need to report stats here
-export SYNAPSE_REPORT_STATS=no
+export BRIIJ_REPORT_STATS=no
 
 
 case "$SYNAPSE_COMPLEMENT_DATABASE" in

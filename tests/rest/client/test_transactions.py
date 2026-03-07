@@ -25,16 +25,16 @@ from unittest.mock import AsyncMock, Mock, call
 
 from twisted.internet import defer, reactor as _reactor
 
-from synapse.logging.context import SENTINEL_CONTEXT, LoggingContext, current_context
-from synapse.rest.client.transactions import CLEANUP_PERIOD, HttpTransactionCache
-from synapse.types import ISynapseReactor, JsonDict
-from synapse.util.clock import Clock
-from synapse.util.duration import Duration
+from textrp_briij.logging.context import SENTINEL_CONTEXT, LoggingContext, current_context
+from textrp_briij.rest.client.transactions import CLEANUP_PERIOD, HttpTransactionCache
+from textrp_briij.types import IBriijReactor, JsonDict
+from textrp_briij.util.clock import Clock
+from textrp_briij.util.duration import Duration
 
 from tests import unittest
 from tests.server import get_clock
 
-reactor = cast(ISynapseReactor, _reactor)
+reactor = cast(IBriijReactor, _reactor)
 
 
 class HttpTransactionCacheTestCase(unittest.TestCase):

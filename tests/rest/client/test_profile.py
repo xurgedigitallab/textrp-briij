@@ -30,13 +30,13 @@ from canonicaljson import encode_canonical_json
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.errors import Codes
-from synapse.rest import admin
-from synapse.rest.client import login, profile, room
-from synapse.server import HomeServer
-from synapse.storage.databases.main.profile import MAX_PROFILE_SIZE
-from synapse.types import UserID
-from synapse.util.clock import Clock
+from textrp_briij.api.errors import Codes
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, profile, room
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.databases.main.profile import MAX_PROFILE_SIZE
+from textrp_briij.types import UserID
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.utils import USE_POSTGRES_FOR_TESTS
@@ -655,7 +655,7 @@ class ProfileTestCase(unittest.HomeserverTestCase):
         # ref: https://github.com/twisted/twisted/issues/12482
         # To remove this, we would need to fix the above issue and
         # update, including in olddeps (so several years' wait).
-        sql_logger = logging.getLogger("synapse.storage.SQL")
+        sql_logger = logging.getLogger("textrp_briij.storage.SQL")
         sql_logger_was_disabled = sql_logger.disabled
         sql_logger.disabled = True
         try:

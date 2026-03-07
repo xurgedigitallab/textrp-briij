@@ -24,7 +24,7 @@ from unittest import mock
 
 from twisted.internet.defer import CancelledError, ensureDeferred
 
-from synapse.storage.util.partial_state_events_tracker import (
+from textrp_briij.storage.util.partial_state_events_tracker import (
     PartialCurrentStateTracker,
     PartialStateEventsTracker,
 )

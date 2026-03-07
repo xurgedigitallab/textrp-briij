@@ -30,15 +30,15 @@ from signedjson.types import SigningKey
 from twisted.internet.testing import MemoryReactor
 from twisted.web.resource import NoResource, Resource
 
-from synapse.crypto.keyring import PerspectivesKeyFetcher
-from synapse.http.site import SynapseRequest
-from synapse.rest.key.v2 import KeyResource
-from synapse.server import HomeServer
-from synapse.storage.keys import FetchKeyResult
-from synapse.types import JsonDict
-from synapse.util.clock import Clock
-from synapse.util.httpresourcetree import create_resource_tree
-from synapse.util.stringutils import random_string
+from textrp_briij.crypto.keyring import PerspectivesKeyFetcher
+from textrp_briij.http.site import SynapseRequest
+from textrp_briij.rest.key.v2 import KeyResource
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.keys import FetchKeyResult
+from textrp_briij.types import JsonDict
+from textrp_briij.util.clock import Clock
+from textrp_briij.util.httpresourcetree import create_resource_tree
+from textrp_briij.util.stringutils import random_string
 
 from tests import unittest
 from tests.server import FakeChannel

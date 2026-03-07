@@ -26,17 +26,17 @@ from signedjson.types import BaseKey, SigningKey
 from twisted.internet import defer
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import EduTypes, RoomEncryptionAlgorithms
-from synapse.api.presence import UserPresenceState
-from synapse.federation.sender.per_destination_queue import MAX_PRESENCE_STATES_PER_EDU
-from synapse.federation.units import Transaction
-from synapse.handlers.device import DeviceListUpdater, DeviceWriterHandler
-from synapse.rest import admin
-from synapse.rest.client import login
-from synapse.server import HomeServer
-from synapse.storage.databases.main.events_worker import EventMetadata
-from synapse.types import JsonDict, ReadReceipt
-from synapse.util.clock import Clock
+from textrp_briij.api.constants import EduTypes, RoomEncryptionAlgorithms
+from textrp_briij.api.presence import UserPresenceState
+from textrp_briij.federation.sender.per_destination_queue import MAX_PRESENCE_STATES_PER_EDU
+from textrp_briij.federation.units import Transaction
+from textrp_briij.handlers.device import DeviceListUpdater, DeviceWriterHandler
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.databases.main.events_worker import EventMetadata
+from textrp_briij.types import JsonDict, ReadReceipt
+from textrp_briij.util.clock import Clock
 
 from tests.unittest import HomeserverTestCase
 

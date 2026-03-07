@@ -1,17 +1,17 @@
 from twisted.internet.testing import MemoryReactor
 
-import synapse.rest.admin
-from synapse.api.errors import Codes
-from synapse.rest.client import login, room
-from synapse.server import HomeServer
-from synapse.util.clock import Clock
+import textrp_briij.rest.admin
+from textrp_briij.api.errors import Codes
+from textrp_briij.rest.client import login, room
+from textrp_briij.server import HomeServer
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 
 
 class FetchEventTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
         room.register_servlets,
     ]

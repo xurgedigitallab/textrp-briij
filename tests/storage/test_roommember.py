@@ -24,16 +24,16 @@ from typing import cast
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import EventContentFields, EventTypes, JoinRules, Membership
-from synapse.api.room_versions import RoomVersions
-from synapse.rest import admin
-from synapse.rest.admin import register_servlets_for_client_rest_resource
-from synapse.rest.client import knock, login, room
-from synapse.server import HomeServer
-from synapse.storage.databases.main.roommember import extract_heroes_from_room_summary
-from synapse.storage.roommember import MemberSummary
-from synapse.types import UserID, create_requester
-from synapse.util.clock import Clock
+from textrp_briij.api.constants import EventContentFields, EventTypes, JoinRules, Membership
+from textrp_briij.api.room_versions import RoomVersions
+from textrp_briij.rest import admin
+from textrp_briij.rest.admin import register_servlets_for_client_rest_resource
+from textrp_briij.rest.client import knock, login, room
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.databases.main.roommember import extract_heroes_from_room_summary
+from textrp_briij.storage.roommember import MemberSummary
+from textrp_briij.types import UserID, create_requester
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.server import TestHomeServer

@@ -22,13 +22,13 @@
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import MAIN_TIMELINE, RelationTypes
-from synapse.rest import admin
-from synapse.rest.client import login, room
-from synapse.server import HomeServer
-from synapse.storage.databases.main.event_push_actions import NotifCounts
-from synapse.types import JsonDict
-from synapse.util.clock import Clock
+from textrp_briij.api.constants import MAIN_TIMELINE, RelationTypes
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, room
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.databases.main.event_push_actions import NotifCounts
+from textrp_briij.types import JsonDict
+from textrp_briij.util.clock import Clock
 
 from tests.unittest import HomeserverTestCase
 

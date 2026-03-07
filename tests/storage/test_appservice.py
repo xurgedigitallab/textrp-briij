@@ -29,17 +29,17 @@ import yaml
 from twisted.internet import defer
 from twisted.internet.testing import MemoryReactor
 
-from synapse.appservice import ApplicationService, ApplicationServiceState
-from synapse.config._base import ConfigError
-from synapse.events import EventBase
-from synapse.server import HomeServer
-from synapse.storage.database import DatabasePool, LoggingDatabaseConnection, make_conn
-from synapse.storage.databases.main.appservice import (
+from textrp_briij.appservice import ApplicationService, ApplicationServiceState
+from textrp_briij.config._base import ConfigError
+from textrp_briij.events import EventBase
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.database import DatabasePool, LoggingDatabaseConnection, make_conn
+from textrp_briij.storage.databases.main.appservice import (
     ApplicationServiceStore,
     ApplicationServiceTransactionStore,
 )
-from synapse.types import DeviceListUpdates
-from synapse.util.clock import Clock
+from textrp_briij.types import DeviceListUpdates
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 

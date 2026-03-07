@@ -1,6 +1,6 @@
-import synapse
-from synapse.api.constants import EventTypes, RoomEncryptionAlgorithms
-from synapse.rest.client import login, room
+import textrp_briij
+from textrp_briij.api.constants import EventTypes, RoomEncryptionAlgorithms
+from textrp_briij.rest.client import login, room
 
 from tests import unittest
 from tests.unittest import override_config
@@ -9,7 +9,7 @@ from tests.unittest import override_config
 class EncryptedByDefaultTestCase(unittest.HomeserverTestCase):
     servlets = [
         login.register_servlets,
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         room.register_servlets,
     ]
 

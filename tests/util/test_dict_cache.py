@@ -20,7 +20,7 @@
 #
 
 
-from synapse.util.caches.dictionary_cache import DictionaryCache
+from textrp_briij.util.caches.dictionary_cache import DictionaryCache
 
 from tests import unittest
 from tests.server import get_clock

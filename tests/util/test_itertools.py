@@ -20,7 +20,7 @@
 #
 from typing import Iterable, Sequence
 
-from synapse.util.iterutils import (
+from textrp_briij.util.iterutils import (
     chunk_seq,
     sorted_topologically,
     sorted_topologically_batched,

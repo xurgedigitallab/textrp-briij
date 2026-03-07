@@ -21,11 +21,11 @@
 
 from typing import Iterable, cast
 
-from synapse.api.constants import EventTypes, Membership
-from synapse.api.room_versions import RoomVersions
-from synapse.events import EventBase, FrozenEvent
-from synapse.push.presentable_names import calculate_room_name
-from synapse.types import StateKey, StateMap
+from textrp_briij.api.constants import EventTypes, Membership
+from textrp_briij.api.room_versions import RoomVersions
+from textrp_briij.events import EventBase, FrozenEvent
+from textrp_briij.push.presentable_names import calculate_room_name
+from textrp_briij.types import StateKey, StateMap
 
 from tests import unittest
 

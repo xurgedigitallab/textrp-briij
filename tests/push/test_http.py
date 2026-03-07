@@ -25,21 +25,21 @@ from parameterized import parameterized
 from twisted.internet.defer import Deferred
 from twisted.internet.testing import MemoryReactor
 
-import synapse.rest.admin
-from synapse.logging.context import make_deferred_yieldable
-from synapse.push import PusherConfig, PusherConfigException
-from synapse.rest.admin.experimental_features import ExperimentalFeature
-from synapse.rest.client import login, push_rule, pusher, receipts, room, versions
-from synapse.server import HomeServer
-from synapse.types import JsonDict
-from synapse.util.clock import Clock
+import textrp_briij.rest.admin
+from textrp_briij.logging.context import make_deferred_yieldable
+from textrp_briij.push import PusherConfig, PusherConfigException
+from textrp_briij.rest.admin.experimental_features import ExperimentalFeature
+from textrp_briij.rest.client import login, push_rule, pusher, receipts, room, versions
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict
+from textrp_briij.util.clock import Clock
 
 from tests.unittest import HomeserverTestCase, override_config
 
 
 class HTTPPusherTests(HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         room.register_servlets,
         login.register_servlets,
         receipts.register_servlets,

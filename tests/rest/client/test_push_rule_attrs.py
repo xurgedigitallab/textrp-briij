@@ -20,16 +20,16 @@
 #
 from http import HTTPStatus
 
-import synapse
-from synapse.api.errors import Codes
-from synapse.rest.client import login, push_rule, room
+import textrp_briij
+from textrp_briij.api.errors import Codes
+from textrp_briij.rest.client import login, push_rule, room
 
 from tests.unittest import HomeserverTestCase
 
 
 class PushRuleAttributesTestCase(HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         room.register_servlets,
         login.register_servlets,
         push_rule.register_servlets,

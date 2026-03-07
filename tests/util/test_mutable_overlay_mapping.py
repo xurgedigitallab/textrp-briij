@@ -14,7 +14,7 @@
 
 import unittest
 
-from synapse.util import MutableOverlayMapping
+from textrp_briij.util import MutableOverlayMapping
 
 
 class TestMutableOverlayMapping(unittest.TestCase):

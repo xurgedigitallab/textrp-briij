@@ -27,15 +27,15 @@ from unittest.mock import AsyncMock, Mock
 
 from twisted.internet.testing import MemoryReactor
 
-import synapse
-from synapse.api.constants import LoginType
-from synapse.api.errors import Codes
-from synapse.handlers.account import AccountHandler
-from synapse.module_api import ModuleApi
-from synapse.rest.client import account, devices, login, logout, register
-from synapse.server import HomeServer
-from synapse.types import JsonDict, UserID
-from synapse.util.clock import Clock
+import textrp_briij
+from textrp_briij.api.constants import LoginType
+from textrp_briij.api.errors import Codes
+from textrp_briij.handlers.account import AccountHandler
+from textrp_briij.module_api import ModuleApi
+from textrp_briij.rest.client import account, devices, login, logout, register
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict, UserID
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.server import FakeChannel
@@ -161,7 +161,7 @@ def providers_config(*providers: type[Any]) -> dict:
 
 class PasswordAuthProviderTests(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
         devices.register_servlets,
         logout.register_servlets,

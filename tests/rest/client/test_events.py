@@ -25,11 +25,11 @@ from unittest.mock import Mock
 
 from twisted.internet.testing import MemoryReactor
 
-import synapse.rest.admin
-from synapse.api.constants import EduTypes
-from synapse.rest.client import events, login, room
-from synapse.server import HomeServer
-from synapse.util.clock import Clock
+import textrp_briij.rest.admin
+from textrp_briij.api.constants import EduTypes
+from textrp_briij.rest.client import events, login, room
+from textrp_briij.server import HomeServer
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 
@@ -40,7 +40,7 @@ class EventStreamPermissionsTestCase(unittest.HomeserverTestCase):
     servlets = [
         events.register_servlets,
         room.register_servlets,
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         login.register_servlets,
     ]
 
@@ -142,7 +142,7 @@ class GetEventsTestCase(unittest.HomeserverTestCase):
     servlets = [
         events.register_servlets,
         room.register_servlets,
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         login.register_servlets,
     ]
 

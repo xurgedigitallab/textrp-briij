@@ -25,12 +25,12 @@ from unittest.mock import AsyncMock, patch
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import AccountDataTypes, EventTypes, RelationTypes
-from synapse.rest import admin
-from synapse.rest.client import login, register, relations, room, sync
-from synapse.server import HomeServer
-from synapse.types import JsonDict
-from synapse.util.clock import Clock
+from textrp_briij.api.constants import AccountDataTypes, EventTypes, RelationTypes
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, register, relations, room, sync
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.server import FakeChannel
@@ -267,7 +267,7 @@ class RelationsTestCase(BaseRelationsTestCase):
 
         # Disable the validation to pretend this came over federation.
         with patch(
-            "synapse.handlers.message.EventCreationHandler._validate_event_relation",
+            "textrp_briij.handlers.message.EventCreationHandler._validate_event_relation",
             new_callable=AsyncMock,
             return_value=None,
         ):
@@ -1302,7 +1302,7 @@ class BundledAggregationsTestCase(BaseRelationsTestCase):
         # Disable the validation to pretend this came over federation, since it is
         # not an event the Client-Server API will allow..
         with patch(
-            "synapse.handlers.message.EventCreationHandler._validate_event_relation",
+            "textrp_briij.handlers.message.EventCreationHandler._validate_event_relation",
             new_callable=AsyncMock,
             return_value=None,
         ):

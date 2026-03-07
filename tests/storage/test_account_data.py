@@ -23,10 +23,10 @@ from typing import Iterable
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import AccountDataTypes
-from synapse.api.errors import Codes, SynapseError
-from synapse.server import HomeServer
-from synapse.util.clock import Clock
+from textrp_briij.api.constants import AccountDataTypes
+from textrp_briij.api.errors import Codes, SynapseError
+from textrp_briij.server import HomeServer
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 

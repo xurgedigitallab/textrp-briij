@@ -1,0 +1,6 @@
+opt/venvs/textrp-briij/bin/hash_password usr/bin/hash_password
+opt/venvs/textrp-briij/bin/register_new_matrix_user usr/bin/register_new_matrix_user
+opt/venvs/textrp-briij/bin/synapse_port_db usr/bin/synapse_port_db
+opt/venvs/textrp-briij/bin/synapse_review_recent_signups usr/bin/synapse_review_recent_signups
+opt/venvs/textrp-briij/bin/synctl usr/bin/synctl
+opt/venvs/textrp-briij/bin/update_synapse_database usr/bin/update_synapse_database

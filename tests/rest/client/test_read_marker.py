@@ -20,12 +20,12 @@
 #
 from twisted.internet.testing import MemoryReactor
 
-import synapse.rest.admin
-from synapse.api.constants import EventTypes
-from synapse.rest import admin
-from synapse.rest.client import login, read_marker, register, room
-from synapse.server import HomeServer
-from synapse.util.clock import Clock
+import textrp_briij.rest.admin
+from textrp_briij.api.constants import EventTypes
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, read_marker, register, room
+from textrp_briij.server import HomeServer
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 
@@ -39,7 +39,7 @@ class ReadMarkerTestCase(unittest.HomeserverTestCase):
         register.register_servlets,
         read_marker.register_servlets,
         room.register_servlets,
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         admin.register_servlets,
     ]
 

@@ -80,7 +80,7 @@ def generate_config_from_template(
         ownership: "<user>:<group>" string which will be used to set
             ownership of the generated configs. If None, ownership will not change.
     """
-    for v in ("SYNAPSE_SERVER_NAME", "SYNAPSE_REPORT_STATS"):
+    for v in ("BRIIJ_SERVER_NAME", "BRIIJ_REPORT_STATS"):
         if v not in os_environ:
             error(
                 "Environment variable '%s' is mandatory when generating a config file."
@@ -90,13 +90,13 @@ def generate_config_from_template(
     # populate some params from data files (if they exist, else create new ones)
     environ: dict[str, Any] = dict(os_environ)
     secrets = {
-        "registration": "SYNAPSE_REGISTRATION_SHARED_SECRET",
-        "macaroon": "SYNAPSE_MACAROON_SECRET_KEY",
+        "registration": "BRIIJ_REGISTRATION_SHARED_SECRET",
+        "macaroon": "BRIIJ_MACAROON_SECRET_KEY",
     }
 
     for name, secret in secrets.items():
         if secret not in environ:
-            filename = "/data/%s.%s.key" % (environ["SYNAPSE_SERVER_NAME"], name)
+            filename = "/data/%s.%s.key" % (environ["BRIIJ_SERVER_NAME"], name)
 
             # if the file already exists, load in the existing value; otherwise,
             # generate a new secret and write it to a file
@@ -112,29 +112,29 @@ def generate_config_from_template(
                     handle.write(value)
             environ[secret] = value
 
-    environ["SYNAPSE_APPSERVICES"] = glob.glob("/data/appservices/*.yaml")
+    environ["BRIIJ_APPSERVICES"] = glob.glob("/data/appservices/*.yaml")
     if not os.path.exists(config_dir):
         os.mkdir(config_dir)
 
-    # Convert SYNAPSE_NO_TLS to boolean if exists
-    tlsanswerstring = environ.get("SYNAPSE_NO_TLS")
+    # Convert BRIIJ_NO_TLS to boolean if exists
+    tlsanswerstring = environ.get("BRIIJ_NO_TLS")
     if tlsanswerstring is not None:
         try:
-            environ["SYNAPSE_NO_TLS"] = strtobool(tlsanswerstring)
+            environ["BRIIJ_NO_TLS"] = strtobool(tlsanswerstring)
         except ValueError:
             error(
-                'Environment variable "SYNAPSE_NO_TLS" found but value "'
+                'Environment variable "BRIIJ_NO_TLS" found but value "'
                 + tlsanswerstring
                 + '" unrecognized; exiting.'
             )
 
-    if "SYNAPSE_LOG_CONFIG" not in environ:
-        environ["SYNAPSE_LOG_CONFIG"] = config_dir + "/log.config"
+    if "BRIIJ_LOG_CONFIG" not in environ:
+        environ["BRIIJ_LOG_CONFIG"] = config_dir + "/log.config"
 
-    log("Generating synapse config file " + config_path)
+    log("Generating briij config file " + config_path)
     convert("/conf/homeserver.yaml", config_path, environ)
 
-    log_config_file = environ["SYNAPSE_LOG_CONFIG"]
+    log_config_file = environ["BRIIJ_LOG_CONFIG"]
     log("Generating log config file " + log_config_file)
     convert(
         "/conf/log.config",
@@ -146,10 +146,10 @@ def generate_config_from_template(
     args = [
         sys.executable,
         "-m",
-        "synapse.app.homeserver",
+        "textrp_briij.app.homeserver",
         "--config-path",
         config_path,
-        # tell synapse to put generated keys in /data rather than /compiled
+        # tell briij to put generated keys in /data rather than /compiled
         "--keys-directory",
         config_dir,
         "--generate-keys",
@@ -164,7 +164,7 @@ def generate_config_from_template(
 
 
 def run_generate_config(environ: Mapping[str, str], ownership: str | None) -> None:
-    """Run synapse with a --generate-config param to generate a template config file
+    """Run briij with a --generate-config param to generate a template config file
 
     Args:
         environ: env vars from `os.enrivon`.
@@ -172,15 +172,15 @@ def run_generate_config(environ: Mapping[str, str], ownership: str | None) -> No
 
     Never returns.
     """
-    for v in ("SYNAPSE_SERVER_NAME", "SYNAPSE_REPORT_STATS"):
+    for v in ("BRIIJ_SERVER_NAME", "BRIIJ_REPORT_STATS"):
         if v not in environ:
             error("Environment variable '%s' is mandatory in `generate` mode." % (v,))
 
-    server_name = environ["SYNAPSE_SERVER_NAME"]
-    config_dir = environ.get("SYNAPSE_CONFIG_DIR", "/data")
-    config_path = environ.get("SYNAPSE_CONFIG_PATH", config_dir + "/homeserver.yaml")
-    data_dir = environ.get("SYNAPSE_DATA_DIR", "/data")
-    enable_metrics_raw = environ.get("SYNAPSE_ENABLE_METRICS", "0")
+    server_name = environ["BRIIJ_SERVER_NAME"]
+    config_dir = environ.get("BRIIJ_CONFIG_DIR", "/data")
+    config_path = environ.get("BRIIJ_CONFIG_PATH", config_dir + "/homeserver.yaml")
+    data_dir = environ.get("BRIIJ_DATA_DIR", "/data")
+    enable_metrics_raw = environ.get("BRIIJ_ENABLE_METRICS", "0")
 
     enable_metrics = False
     if enable_metrics_raw is not None:
@@ -188,7 +188,7 @@ def run_generate_config(environ: Mapping[str, str], ownership: str | None) -> No
             enable_metrics = strtobool(enable_metrics_raw)
         except ValueError:
             error(
-                'Environment variable "SYNAPSE_ENABLE_METRICS" found but value "'
+                'Environment variable "BRIIJ_ENABLE_METRICS" found but value "'
                 + enable_metrics_raw
                 + '" unrecognized; exiting.'
             )
@@ -203,11 +203,11 @@ def run_generate_config(environ: Mapping[str, str], ownership: str | None) -> No
     args = [
         sys.executable,
         "-m",
-        "synapse.app.homeserver",
+        "textrp_briij.app.homeserver",
         "--server-name",
         server_name,
         "--report-stats",
-        environ["SYNAPSE_REPORT_STATS"],
+        environ["BRIIJ_REPORT_STATS"],
         "--config-path",
         config_path,
         "--config-directory",
@@ -222,7 +222,7 @@ def run_generate_config(environ: Mapping[str, str], ownership: str | None) -> No
         args.append("--enable-metrics")
 
     if ownership is not None:
-        # make sure that synapse has perms to write to the data dir.
+        # make sure that briij has perms to write to the data dir.
         log(f"Setting ownership on {data_dir} to {ownership}")
         subprocess.run(["chown", ownership, data_dir], check=True)
         args = ["gosu", ownership] + args
@@ -234,30 +234,32 @@ def run_generate_config(environ: Mapping[str, str], ownership: str | None) -> No
 def main(args: list[str], environ: MutableMapping[str, str]) -> None:
     mode = args[1] if len(args) > 1 else "run"
 
+    env = dict(environ)
+
     # if we were given an explicit user to switch to, do so
     ownership = None
-    if "UID" in environ:
-        desired_uid = int(environ["UID"])
-        desired_gid = int(environ.get("GID", "991"))
+    if "UID" in env:
+        desired_uid = int(env["UID"])
+        desired_gid = int(env.get("GID", "991"))
         ownership = f"{desired_uid}:{desired_gid}"
     elif os.getuid() == 0:
         # otherwise, if we are running as root, use user 991
         ownership = "991:991"
 
-    synapse_worker = environ.get("SYNAPSE_WORKER", "synapse.app.homeserver")
+    synapse_worker = env.get("BRIIJ_WORKER", "textrp_briij.app.homeserver")
 
     # In generate mode, generate a configuration and missing keys, then exit
     if mode == "generate":
-        return run_generate_config(environ, ownership)
+        return run_generate_config(env, ownership)
 
     if mode == "migrate_config":
         # generate a config based on environment vars.
-        config_dir = environ.get("SYNAPSE_CONFIG_DIR", "/data")
-        config_path = environ.get(
-            "SYNAPSE_CONFIG_PATH", config_dir + "/homeserver.yaml"
+        config_dir = env.get("BRIIJ_CONFIG_DIR", "/data")
+        config_path = env.get(
+            "BRIIJ_CONFIG_PATH", config_dir + "/homeserver.yaml"
         )
         return generate_config_from_template(
-            config_dir, config_path, environ, ownership
+            config_dir, config_path, env, ownership
         )
 
     if mode != "run":
@@ -271,24 +273,24 @@ def main(args: list[str], environ: MutableMapping[str, str]) -> None:
     jemallocpath = "/usr/lib/%s-linux-gnu/libjemalloc.so.2" % (platform.machine(),)
 
     if os.path.isfile(jemallocpath):
-        environ["LD_PRELOAD"] = jemallocpath
+        env["LD_PRELOAD"] = jemallocpath
     else:
         log("Could not find %s, will not use" % (jemallocpath,))
 
     # if there are no config files passed to synapse, try adding the default file
     if not any(p.startswith(("--config-path", "-c")) for p in args):
-        config_dir = environ.get("SYNAPSE_CONFIG_DIR", "/data")
-        config_path = environ.get(
-            "SYNAPSE_CONFIG_PATH", config_dir + "/homeserver.yaml"
+        config_dir = env.get("BRIIJ_CONFIG_DIR", "/data")
+        config_path = env.get(
+            "BRIIJ_CONFIG_PATH", config_dir + "/homeserver.yaml"
         )
 
         if not os.path.exists(config_path):
-            if "SYNAPSE_SERVER_NAME" in environ:
+            if "BRIIJ_SERVER_NAME" in env:
                 error(
                     """\
 Config file '%s' does not exist.
 
-The synapse docker image no longer supports generating a config file on-the-fly
+The briij docker image no longer supports generating a config file on-the-fly
 based on environment variables. You can migrate to a static config file by
 running with 'migrate_config'. See the README for more details.
 """
@@ -299,22 +301,22 @@ running with 'migrate_config'. See the README for more details.
                 "Config file '%s' does not exist. You should either create a new "
                 "config file by running with the `generate` argument (and then edit "
                 "the resulting file before restarting) or specify the path to an "
-                "existing config file with the SYNAPSE_CONFIG_PATH variable."
+                "existing config file with the BRIIJ_CONFIG_PATH variable."
                 % (config_path,)
             )
 
         args += ["--config-path", config_path]
 
-    log("Starting synapse with args " + " ".join(args))
+    log("Starting briij with args " + " ".join(args))
 
     args = [sys.executable] + args
     if ownership is not None:
         args = ["gosu", ownership] + args
         flush_buffers()
-        os.execve("/usr/sbin/gosu", args, environ)
+        os.execve("/usr/sbin/gosu", args, env)
     else:
         flush_buffers()
-        os.execve(sys.executable, args, environ)
+        os.execve(sys.executable, args, env)
 
 
 if __name__ == "__main__":

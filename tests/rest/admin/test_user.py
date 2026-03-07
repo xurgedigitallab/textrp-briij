@@ -34,19 +34,19 @@ from parameterized import parameterized, parameterized_class
 from twisted.internet.testing import MemoryReactor
 from twisted.web.resource import Resource
 
-import synapse.rest.admin
-from synapse.api.constants import (
+import textrp_briij.rest.admin
+from textrp_briij.api.constants import (
     ApprovalNoticeMedium,
     EventContentFields,
     EventTypes,
     LoginType,
     UserTypes,
 )
-from synapse.api.errors import Codes, HttpResponseException, ResourceLimitError
-from synapse.api.room_versions import RoomVersions
-from synapse.media.filepath import MediaFilePaths
-from synapse.rest import admin
-from synapse.rest.client import (
+from textrp_briij.api.errors import Codes, HttpResponseException, ResourceLimitError
+from textrp_briij.api.room_versions import RoomVersions
+from textrp_briij.media.filepath import MediaFilePaths
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import (
     devices,
     login,
     logout,
@@ -57,10 +57,10 @@ from synapse.rest.client import (
     sync,
     user_directory,
 )
-from synapse.server import HomeServer
-from synapse.storage.databases.main.client_ips import LAST_SEEN_GRANULARITY
-from synapse.types import JsonDict, UserID, create_requester
-from synapse.util.clock import Clock
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.databases.main.client_ips import LAST_SEEN_GRANULARITY
+from textrp_briij.types import JsonDict, UserID, create_requester
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.replication._base import BaseMultiWorkerStreamTestCase
@@ -71,7 +71,7 @@ from tests.unittest import override_config
 
 class UserRegisterTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         profile.register_servlets,
     ]
 
@@ -529,7 +529,7 @@ class UserRegisterTestCase(unittest.HomeserverTestCase):
 
 class UsersListTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
         room.register_servlets,
     ]
@@ -1440,7 +1440,7 @@ class UserDevicesTestCase(unittest.HomeserverTestCase):
     """
 
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
         sync.register_servlets,
     ]
@@ -1526,7 +1526,7 @@ class UserDevicesTestCase(unittest.HomeserverTestCase):
 
 class DeactivateAccountTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
     ]
 
@@ -1803,7 +1803,7 @@ class DeactivateAccountTestCase(unittest.HomeserverTestCase):
 
 class UserRestTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
         sync.register_servlets,
         register.register_servlets,
@@ -3385,7 +3385,7 @@ class UserRestTestCase(unittest.HomeserverTestCase):
 
 class UserMembershipRestTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
         room.register_servlets,
     ]
@@ -3544,7 +3544,7 @@ class UserMembershipRestTestCase(unittest.HomeserverTestCase):
 
 class PushersRestTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
     ]
 
@@ -3672,7 +3672,7 @@ class PushersRestTestCase(unittest.HomeserverTestCase):
 
 class UserMediaRestTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
         media.register_servlets,
     ]
@@ -4246,7 +4246,7 @@ class UserTokenRestTestCase(unittest.HomeserverTestCase):
     """Test for /_synapse/admin/v1/users/<user>/login"""
 
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
         sync.register_servlets,
         room.register_servlets,
@@ -4472,7 +4472,7 @@ class UserTokenRestTestCase(unittest.HomeserverTestCase):
 )
 class WhoisRestTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
     ]
 
@@ -4551,7 +4551,7 @@ class WhoisRestTestCase(unittest.HomeserverTestCase):
 
 class ShadowBanRestTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
     ]
 
@@ -4631,7 +4631,7 @@ class ShadowBanRestTestCase(unittest.HomeserverTestCase):
 
 class RateLimitTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
     ]
 
@@ -4856,7 +4856,7 @@ class RateLimitTestCase(unittest.HomeserverTestCase):
 
 class AccountDataTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
     ]
 
@@ -4945,7 +4945,7 @@ class AccountDataTestCase(unittest.HomeserverTestCase):
 
 class UsersByExternalIdTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
     ]
 
@@ -5031,7 +5031,7 @@ class UsersByExternalIdTestCase(unittest.HomeserverTestCase):
 
 class UsersByThreePidTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
     ]
 
@@ -5125,7 +5125,7 @@ class UsersByThreePidTestCase(unittest.HomeserverTestCase):
 
 class AllowCrossSigningReplacementTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
     ]
 
@@ -5181,7 +5181,7 @@ class AllowCrossSigningReplacementTestCase(unittest.HomeserverTestCase):
 
 class UserSuspensionTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
         admin.register_servlets,
     ]
@@ -5263,7 +5263,7 @@ class UserSuspensionTestCase(unittest.HomeserverTestCase):
 
 class UserRedactionTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
         admin.register_servlets,
         room.register_servlets,
@@ -5728,7 +5728,7 @@ class UserRedactionTestCase(unittest.HomeserverTestCase):
 
 class UserRedactionBackgroundTaskTestCase(BaseMultiWorkerStreamTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
         admin.register_servlets,
         room.register_servlets,
@@ -5758,7 +5758,7 @@ class UserRedactionBackgroundTaskTestCase(BaseMultiWorkerStreamTestCase):
         Test that redact task successfully runs when `run_background_tasks_on` is specified
         """
         self.make_worker_hs(
-            "synapse.app.generic_worker",
+            "textrp_briij.app.generic_worker",
             extra_config={
                 "worker_name": "worker1",
                 "run_background_tasks_on": "worker1",
@@ -5823,7 +5823,7 @@ class UserRedactionBackgroundTaskTestCase(BaseMultiWorkerStreamTestCase):
 
 class GetInvitesFromUserTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
         admin.register_servlets,
         room.register_servlets,
@@ -5956,7 +5956,7 @@ class GetInvitesFromUserTestCase(unittest.HomeserverTestCase):
 
 class GetCumulativeJoinedRoomCountForUserTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
         admin.register_servlets,
         room.register_servlets,

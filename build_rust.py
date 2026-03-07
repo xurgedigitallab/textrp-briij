@@ -13,7 +13,7 @@ def build(setup_kwargs: dict[str, Any]) -> None:
     cargo_toml_path = os.path.join(original_project_dir, "rust", "Cargo.toml")
 
     extension = RustExtension(
-        target="synapse.synapse_rust",
+        target="textrp_briij.synapse_rust",
         path=cargo_toml_path,
         binding=Binding.PyO3,
         # This flag is a no-op in the latest versions. Instead, we need to

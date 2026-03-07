@@ -24,8 +24,8 @@ from unittest import skipUnless
 from immutabledict import immutabledict
 from parameterized import parameterized_class
 
-from synapse.api.errors import SynapseError
-from synapse.types import (
+from textrp_briij.api.errors import SynapseError
+from textrp_briij.types import (
     AbstractMultiWriterStreamToken,
     MultiWriterStreamToken,
     RoomAlias,

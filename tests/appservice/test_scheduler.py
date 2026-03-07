@@ -26,22 +26,22 @@ from typing_extensions import TypeAlias
 from twisted.internet import defer
 from twisted.internet.testing import MemoryReactor
 
-from synapse.appservice import (
+from textrp_briij.appservice import (
     ApplicationService,
     ApplicationServiceState,
     TransactionOneTimeKeysCount,
     TransactionUnusedFallbackKeys,
 )
-from synapse.appservice.scheduler import (
+from textrp_briij.appservice.scheduler import (
     ApplicationServiceScheduler,
     _Recoverer,
     _TransactionController,
 )
-from synapse.events import EventBase
-from synapse.logging.context import make_deferred_yieldable
-from synapse.server import HomeServer
-from synapse.types import DeviceListUpdates, JsonDict
-from synapse.util.clock import Clock
+from textrp_briij.events import EventBase
+from textrp_briij.logging.context import make_deferred_yieldable
+from textrp_briij.server import HomeServer
+from textrp_briij.types import DeviceListUpdates, JsonDict
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.server import get_clock
@@ -279,7 +279,7 @@ class ApplicationServiceSchedulerRecovererTestCase(unittest.HomeserverTestCase):
         self.callback.assert_called_once_with(self.recoverer)
 
 
-# Corresponds to synapse.appservice.scheduler._TransactionController.send
+# Corresponds to textrp_briij.appservice.scheduler._TransactionController.send
 TxnCtrlArgs: TypeAlias = """
 defer.Deferred[
     tuple[

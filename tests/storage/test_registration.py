@@ -20,11 +20,11 @@
 #
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import UserTypes
-from synapse.api.errors import ThreepidValidationError
-from synapse.server import HomeServer
-from synapse.types import JsonDict, UserID, UserInfo
-from synapse.util.clock import Clock
+from textrp_briij.api.constants import UserTypes
+from textrp_briij.api.errors import ThreepidValidationError
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict, UserID, UserInfo
+from textrp_briij.util.clock import Clock
 
 from tests.unittest import HomeserverTestCase, override_config
 

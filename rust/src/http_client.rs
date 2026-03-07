@@ -2,6 +2,7 @@
  * This file is licensed under the Affero General Public License (AGPL) version 3.
  *
  * Copyright (C) 2025 New Vector, Ltd
+ * Copyright (C) 2026 TextRP https://textrp.io
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,7 +25,7 @@ use tokio::runtime::Runtime;
 use crate::errors::HttpResponseException;
 
 create_exception!(
-    synapse.synapse_rust.http_client,
+    textrp_briij.synapse_rust.http_client,
     RustPanicError,
     PyException,
     "A panic which happened in a Rust future"
@@ -45,7 +46,7 @@ impl RustPanicError {
 }
 
 /// This is the name of the attribute where we store the runtime on the reactor
-static TOKIO_RUNTIME_ATTR: &str = "__synapse_rust_tokio_runtime";
+static TOKIO_RUNTIME_ATTR: &str = "__textrp_briij_rust_tokio_runtime";
 
 /// A Python wrapper around a Tokio runtime.
 ///
@@ -154,10 +155,10 @@ pub fn register_module(py: Python<'_>, m: &Bound<'_, PyModule>) -> PyResult<()> 
     m.add_submodule(&child_module)?;
 
     // We need to manually add the module to sys.modules to make `from
-    // synapse.synapse_rust import http_client` work.
-    py.import("sys")?
-        .getattr("modules")?
-        .set_item("synapse.synapse_rust.http_client", child_module)?;
+    // textrp_briij.synapse_rust import http_client` work (and keep legacy aliases).
+    let modules = py.import("sys")?.getattr("modules")?;
+    modules.set_item("textrp_briij.synapse_rust.http_client", &child_module)?;
+    modules.set_item("synapse.synapse_rust.http_client", &child_module)?;
 
     Ok(())
 }
@@ -311,19 +312,19 @@ where
         });
     });
 
-    // Make the deferred follow the Synapse logcontext rules
+    // Make the deferred follow the Briij logcontext rules
     make_deferred_yieldable(py, &deferred)
 }
 
 static MAKE_DEFERRED_YIELDABLE: OnceLock<pyo3::Py<pyo3::PyAny>> = OnceLock::new();
 
-/// Given a deferred, make it follow the Synapse logcontext rules
+/// Given a deferred, make it follow the Briij logcontext rules
 fn make_deferred_yieldable<'py>(
     py: Python<'py>,
     deferred: &Bound<'py, PyAny>,
 ) -> PyResult<Bound<'py, PyAny>> {
     let make_deferred_yieldable = MAKE_DEFERRED_YIELDABLE.get_or_init(|| {
-        let sys = PyModule::import(py, "synapse.logging.context").unwrap();
+        let sys = PyModule::import(py, "textrp_briij.logging.context").unwrap();
         let func = sys.getattr("make_deferred_yieldable").unwrap().unbind();
         func
     });

@@ -15,7 +15,7 @@
 #
 import logging
 
-from synapse.logging.loggers import ExplicitlyConfiguredLogger
+from textrp_briij.logging.loggers import ExplicitlyConfiguredLogger
 
 from tests.unittest import TestCase
 

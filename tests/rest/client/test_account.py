@@ -29,17 +29,17 @@ from unittest.mock import Mock
 from twisted.internet.interfaces import IReactorTCP
 from twisted.internet.testing import MemoryReactor
 
-import synapse.rest.admin
-from synapse.api.constants import LoginType, Membership
-from synapse.api.errors import Codes, HttpResponseException
-from synapse.appservice import ApplicationService
-from synapse.rest import admin
-from synapse.rest.client import account, login, register, room
-from synapse.rest.synapse.client.password_reset import PasswordResetSubmitTokenResource
-from synapse.server import HomeServer
-from synapse.storage._base import db_to_json
-from synapse.types import JsonDict, UserID
-from synapse.util.clock import Clock
+import textrp_briij.rest.admin
+from textrp_briij.api.constants import LoginType, Membership
+from textrp_briij.api.errors import Codes, HttpResponseException
+from textrp_briij.appservice import ApplicationService
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import account, login, register, room
+from textrp_briij.rest.briij.client.password_reset import PasswordResetSubmitTokenResource
+from textrp_briij.server import HomeServer
+from textrp_briij.storage._base import db_to_json
+from textrp_briij.types import JsonDict, UserID
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.server import FakeSite, make_request
@@ -49,7 +49,7 @@ from tests.unittest import override_config
 class PasswordResetTestCase(unittest.HomeserverTestCase):
     servlets = [
         account.register_servlets,
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         register.register_servlets,
         login.register_servlets,
     ]
@@ -59,7 +59,9 @@ class PasswordResetTestCase(unittest.HomeserverTestCase):
 
         # Email config.
         templates = (
-            importlib_resources.files("synapse").joinpath("res").joinpath("templates")
+            importlib_resources.files("textrp_briij")
+            .joinpath("res")
+            .joinpath("templates")
         )
         config["email"] = {
             "enable_notifs": False,
@@ -475,7 +477,7 @@ class PasswordResetTestCase(unittest.HomeserverTestCase):
 
 class DeactivateTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         login.register_servlets,
         account.register_servlets,
         room.register_servlets,
@@ -715,7 +717,7 @@ class DeactivateTestCase(unittest.HomeserverTestCase):
 
 class WhoamiTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         login.register_servlets,
         account.register_servlets,
         register.register_servlets,
@@ -791,7 +793,7 @@ class ThreepidEmailRestTestCase(unittest.HomeserverTestCase):
     servlets = [
         account.register_servlets,
         login.register_servlets,
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
     ]
 
     def make_homeserver(self, reactor: MemoryReactor, clock: Clock) -> HomeServer:
@@ -799,7 +801,9 @@ class ThreepidEmailRestTestCase(unittest.HomeserverTestCase):
 
         # Email config.
         templates = (
-            importlib_resources.files("synapse").joinpath("res").joinpath("templates")
+            importlib_resources.files("textrp_briij")
+            .joinpath("res")
+            .joinpath("templates")
         )
         config["email"] = {
             "enable_notifs": False,

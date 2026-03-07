@@ -27,14 +27,14 @@ from immutabledict import immutabledict
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import EventTypes, Membership
-from synapse.api.room_versions import RoomVersions
-from synapse.events import EventBase
-from synapse.server import HomeServer
-from synapse.types import JsonDict, RoomID, StateMap, UserID
-from synapse.types.state import StateFilter
-from synapse.util.clock import Clock
-from synapse.util.stringutils import random_string
+from textrp_briij.api.constants import EventTypes, Membership
+from textrp_briij.api.room_versions import RoomVersions
+from textrp_briij.events import EventBase
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict, RoomID, StateMap, UserID
+from textrp_briij.types.state import StateFilter
+from textrp_briij.util.clock import Clock
+from textrp_briij.util.stringutils import random_string
 
 from tests.unittest import HomeserverTestCase
 

@@ -24,19 +24,19 @@ from parameterized import parameterized
 
 from twisted.internet.testing import MemoryReactor
 
-import synapse.rest.admin
-from synapse.api.errors import Codes
-from synapse.handlers.device import MAX_DEVICE_DISPLAY_NAME_LEN, DeviceWriterHandler
-from synapse.rest.client import devices, login
-from synapse.server import HomeServer
-from synapse.util.clock import Clock
+import textrp_briij.rest.admin
+from textrp_briij.api.errors import Codes
+from textrp_briij.handlers.device import MAX_DEVICE_DISPLAY_NAME_LEN, DeviceWriterHandler
+from textrp_briij.rest.client import devices, login
+from textrp_briij.server import HomeServer
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 
 
 class DeviceRestTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
     ]
 
@@ -295,7 +295,7 @@ class DeviceRestTestCase(unittest.HomeserverTestCase):
 
 class DevicesRestTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         devices.register_servlets,
         login.register_servlets,
     ]
@@ -474,7 +474,7 @@ class DevicesRestTestCase(unittest.HomeserverTestCase):
 
 class DeleteDevicesRestTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
     ]
 

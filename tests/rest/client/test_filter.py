@@ -21,11 +21,11 @@
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.errors import Codes
-from synapse.rest.client import filter
-from synapse.server import HomeServer
-from synapse.types import UserID
-from synapse.util.clock import Clock
+from textrp_briij.api.errors import Codes
+from textrp_briij.rest.client import filter
+from textrp_briij.server import HomeServer
+from textrp_briij.types import UserID
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 

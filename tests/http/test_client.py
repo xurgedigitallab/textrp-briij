@@ -31,8 +31,8 @@ from twisted.python.failure import Failure
 from twisted.web.client import Agent, ResponseDone
 from twisted.web.iweb import UNKNOWN_LENGTH
 
-from synapse.api.errors import SynapseError
-from synapse.http.client import (
+from textrp_briij.api.errors import SynapseError
+from textrp_briij.http.client import (
     BlocklistingAgentWrapper,
     BlocklistingReactorWrapper,
     BodyExceededMaxSize,

@@ -26,13 +26,13 @@ from parameterized import parameterized, parameterized_class
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import (
+from textrp_briij.api.constants import (
     EventTypes,
     JoinRules,
     Membership,
 )
-from synapse.api.room_versions import RoomVersions
-from synapse.handlers.sliding_sync import (
+from textrp_briij.api.room_versions import RoomVersions
+from textrp_briij.handlers.sliding_sync import (
     MAX_NUMBER_PREVIOUS_STATE_KEYS_TO_REMEMBER,
     RoomsForUserType,
     RoomSyncConfig,
@@ -40,17 +40,17 @@ from synapse.handlers.sliding_sync import (
     _required_state_changes,
     _RequiredStateChangesReturn,
 )
-from synapse.rest import admin
-from synapse.rest.client import knock, login, room
-from synapse.server import HomeServer
-from synapse.storage.util.id_generators import MultiWriterIdGenerator
-from synapse.types import JsonDict, StateMap, StreamToken, UserID, create_requester
-from synapse.types.handlers.sliding_sync import (
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import knock, login, room
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.util.id_generators import MultiWriterIdGenerator
+from textrp_briij.types import JsonDict, StateMap, StreamToken, UserID, create_requester
+from textrp_briij.types.handlers.sliding_sync import (
     PerConnectionState,
     SlidingSyncConfig,
 )
-from synapse.types.state import StateFilter
-from synapse.util.clock import Clock
+from textrp_briij.types.state import StateFilter
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.replication._base import BaseMultiWorkerStreamTestCase
@@ -3028,7 +3028,7 @@ class ComputeInterestedRoomsShardTestCase(
         # We control the room ID generation by patching out the
         # `_generate_room_id` method
         with patch(
-            "synapse.handlers.room.RoomCreationHandler._generate_room_id"
+            "textrp_briij.handlers.room.RoomCreationHandler._generate_room_id"
         ) as mock:
             mock.side_effect = lambda: room_id
             self.helper.create_room_as(user_id, tok=tok)
@@ -3056,17 +3056,17 @@ class ComputeInterestedRoomsShardTestCase(
         user2_tok = self.login(user2_id, "pass")
 
         self.make_worker_hs(
-            "synapse.app.generic_worker",
+            "textrp_briij.app.generic_worker",
             {"worker_name": "worker1"},
         )
 
         worker_hs2 = self.make_worker_hs(
-            "synapse.app.generic_worker",
+            "textrp_briij.app.generic_worker",
             {"worker_name": "worker2"},
         )
 
         self.make_worker_hs(
-            "synapse.app.generic_worker",
+            "textrp_briij.app.generic_worker",
             {"worker_name": "worker3"},
         )
 

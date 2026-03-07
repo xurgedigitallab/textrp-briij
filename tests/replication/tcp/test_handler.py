@@ -21,7 +21,7 @@
 
 from twisted.internet import defer
 
-from synapse.replication.tcp.commands import PositionCommand
+from textrp_briij.replication.tcp.commands import PositionCommand
 
 from tests.replication._base import BaseMultiWorkerStreamTestCase
 
@@ -37,7 +37,7 @@ class ChannelsTestCase(BaseMultiWorkerStreamTestCase):
     def test_background_worker_subscribed_to_user_ip(self) -> None:
         # The default main process is subscribed to the USER_IP channel.
         worker1 = self.make_worker_hs(
-            "synapse.app.generic_worker",
+            "textrp_briij.app.generic_worker",
             extra_config={
                 "worker_name": "worker1",
                 "run_background_tasks_on": "worker1",
@@ -61,7 +61,7 @@ class ChannelsTestCase(BaseMultiWorkerStreamTestCase):
     def test_non_background_worker_not_subscribed_to_user_ip(self) -> None:
         # The default main process is subscribed to the USER_IP channel.
         worker2 = self.make_worker_hs(
-            "synapse.app.generic_worker",
+            "textrp_briij.app.generic_worker",
             extra_config={
                 "worker_name": "worker2",
                 "run_background_tasks_on": "worker1",
@@ -92,7 +92,7 @@ class ChannelsTestCase(BaseMultiWorkerStreamTestCase):
         data_handler = self.hs.get_replication_data_handler()
 
         worker1 = self.make_worker_hs(
-            "synapse.app.generic_worker",
+            "textrp_briij.app.generic_worker",
             extra_config={
                 "worker_name": "worker1",
                 "run_background_tasks_on": "worker1",
@@ -158,7 +158,7 @@ class ChannelsTestCase(BaseMultiWorkerStreamTestCase):
         data_handler = self.hs.get_replication_data_handler()
 
         worker1 = self.make_worker_hs(
-            "synapse.app.generic_worker",
+            "textrp_briij.app.generic_worker",
             extra_config={
                 "worker_name": "worker1",
                 "run_background_tasks_on": "worker1",

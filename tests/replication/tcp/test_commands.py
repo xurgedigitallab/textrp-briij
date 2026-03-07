@@ -18,7 +18,7 @@
 # [This file includes modifications made by New Vector Limited]
 #
 #
-from synapse.replication.tcp.commands import (
+from textrp_briij.replication.tcp.commands import (
     RdataCommand,
     ReplicateCommand,
     parse_command_from_line,

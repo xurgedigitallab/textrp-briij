@@ -23,23 +23,23 @@ from typing import Sequence
 from twisted.internet import defer
 from twisted.test.proto_helpers import MemoryReactor
 
-from synapse.api.constants import EventTypes, JoinRules, Membership
-from synapse.api.room_versions import RoomVersions
-from synapse.events import EventBase
-from synapse.federation.federation_base import event_from_pdu_json
-from synapse.rest import admin
-from synapse.rest.client import login, room
-from synapse.server import HomeServer
-from synapse.state import StateResolutionStore
-from synapse.state.v2 import (
+from textrp_briij.api.constants import EventTypes, JoinRules, Membership
+from textrp_briij.api.room_versions import RoomVersions
+from textrp_briij.events import EventBase
+from textrp_briij.federation.federation_base import event_from_pdu_json
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, room
+from textrp_briij.server import HomeServer
+from textrp_briij.state import StateResolutionStore
+from textrp_briij.state.v2 import (
     StateResolutionStore as StateResolutionStoreInterface,
     _get_auth_chain_difference,
     _seperate,
     resolve_events_with_store,
 )
-from synapse.types import StateMap
-from synapse.util.clock import Clock
-from synapse.util.duration import Duration
+from textrp_briij.types import StateMap
+from textrp_briij.util.clock import Clock
+from textrp_briij.util.duration import Duration
 
 from tests import unittest
 from tests.state.test_v2 import TestStateResolutionStore

@@ -23,21 +23,21 @@ from typing import Any, cast
 
 from twisted.internet.testing import MemoryReactor
 
-import synapse.rest.admin
-from synapse.api.constants import EventTypes, HistoryVisibility, Membership
-from synapse.api.room_versions import RoomVersions
-from synapse.appservice import ApplicationService
-from synapse.events import FrozenEvent, make_event_from_dict
-from synapse.push.bulk_push_rule_evaluator import _flatten_dict
-from synapse.push.httppusher import tweaks_for_actions
-from synapse.rest import admin
-from synapse.rest.client import login, register, room
-from synapse.server import HomeServer
-from synapse.storage.databases.main.appservice import _make_exclusive_regex
-from synapse.synapse_rust.push import PushRuleEvaluator
-from synapse.types import JsonDict, JsonMapping, UserID
-from synapse.util.clock import Clock
-from synapse.util.frozenutils import freeze
+import textrp_briij.rest.admin
+from textrp_briij.api.constants import EventTypes, HistoryVisibility, Membership
+from textrp_briij.api.room_versions import RoomVersions
+from textrp_briij.appservice import ApplicationService
+from textrp_briij.events import FrozenEvent, make_event_from_dict
+from textrp_briij.push.bulk_push_rule_evaluator import _flatten_dict
+from textrp_briij.push.httppusher import tweaks_for_actions
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, register, room
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.databases.main.appservice import _make_exclusive_regex
+from textrp_briij.synapse_rust.push import PushRuleEvaluator
+from textrp_briij.types import JsonDict, JsonMapping, UserID
+from textrp_briij.util.clock import Clock
+from textrp_briij.util.frozenutils import freeze
 
 from tests import unittest
 from tests.test_utils.event_injection import create_event, inject_member_event
@@ -919,7 +919,7 @@ class TestBulkPushRuleEvaluator(unittest.HomeserverTestCase):
     """Tests for the bulk push rule evaluator"""
 
     servlets = [
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         login.register_servlets,
         register.register_servlets,
         room.register_servlets,

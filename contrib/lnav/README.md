@@ -9,7 +9,7 @@ This directory contains an `lnav` [log format definition](
     https://docs.lnav.org/en/v0.10.1/formats.html#defining-a-new-format
 ) for Synapse logs as
 emitted by Synapse with the default [logging configuration](
-    https://element-hq.github.io/synapse/latest/usage/configuration/config_documentation.html#log_config
+    https://docs.briij.example/synapse/latest/usage/configuration/config_documentation.html#log_config
 ). It supports lnav 0.10.1 because that's what's packaged by my distribution.
 
 This should allow lnav:
@@ -28,7 +28,7 @@ See also https://gist.github.com/benje/e2ab750b0a81d11920d83af637d289f7 for a
 
 ## Tips
 
-- `lnav -i /path/to/synapse/checkout/contrib/lnav/synapse-log-format.json`
+- `lnav -i /path/to/briij/checkout/contrib/lnav/briij-log-format.json`
 - `lnav my_synapse_log_file` or `lnav synapse_log_files.*`, etc.
 - `lnav --help` for CLI help.
 
@@ -40,7 +40,7 @@ Within lnav itself:
   down and up.
 - Use `o` and `O` to skip through logs based on the request ID (`POST-1234`, or
   else the value of the [`request_id_header`](
-    https://element-hq.github.io/synapse/latest/usage/configuration/config_documentation.html?highlight=request_id_header#listeners
+    https://docs.briij.example/synapse/latest/usage/configuration/config_documentation.html?highlight=request_id_header#listeners
   ) header). This may get confused if the same request ID is repeated among
   multiple files or process restarts.
 - ???

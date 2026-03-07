@@ -22,8 +22,8 @@ import os
 
 import twisted.logger
 
-from synapse.logging.context import LoggingContextFilter
-from synapse.synapse_rust import reset_logging_config
+from textrp_briij.logging.context import LoggingContextFilter
+from textrp_briij.synapse_rust import reset_logging_config
 
 
 class ToTwistedHandler(logging.Handler):
@@ -66,7 +66,7 @@ def setup_logging() -> None:
         # Log when events are (maybe unexpectedly) filtered out of responses in tests. It's
         # just nice to be able to look at the CI log and figure out why an event isn't being
         # returned.
-        logging.getLogger("synapse.visibility.filtered_event_debug").setLevel(
+        logging.getLogger("textrp_briij.visibility.filtered_event_debug").setLevel(
             logging.DEBUG
         )
 

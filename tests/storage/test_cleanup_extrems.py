@@ -24,14 +24,14 @@ from unittest.mock import Mock, patch
 
 from twisted.internet.testing import MemoryReactor
 
-import synapse.rest.admin
-from synapse.api.constants import EventTypes
-from synapse.rest.client import login, room
-from synapse.server import HomeServer
-from synapse.storage import prepare_database
-from synapse.storage.types import Cursor
-from synapse.types import UserID, create_requester
-from synapse.util.clock import Clock
+import textrp_briij.rest.admin
+from textrp_briij.api.constants import EventTypes
+from textrp_briij.rest.client import login, room
+from textrp_briij.server import HomeServer
+from textrp_briij.storage import prepare_database
+from textrp_briij.storage.types import Cursor
+from textrp_briij.types import UserID, create_requester
+from textrp_briij.util.clock import Clock
 
 from tests.unittest import HomeserverTestCase
 
@@ -262,7 +262,7 @@ class CleanupExtremDummyEventsTestCase(HomeserverTestCase):
     CONSENT_VERSION = "1"
     EXTREMITIES_COUNT = 50
     servlets = [
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         login.register_servlets,
         room.register_servlets,
     ]
@@ -301,7 +301,7 @@ class CleanupExtremDummyEventsTestCase(HomeserverTestCase):
         )
         self.assertTrue(len(latest_event_ids) < 10, len(latest_event_ids))
 
-    @patch("synapse.handlers.message._DUMMY_EVENT_ROOM_EXCLUSION_EXPIRY", new=0)
+    @patch("textrp_briij.handlers.message._DUMMY_EVENT_ROOM_EXCLUSION_EXPIRY", new=0)
     def test_send_dummy_events_when_insufficient_power(self) -> None:
         self._create_extremity_rich_graph()
         # Criple power levels
@@ -332,7 +332,7 @@ class CleanupExtremDummyEventsTestCase(HomeserverTestCase):
         )
         self.assertTrue(len(latest_event_ids) < 10, len(latest_event_ids))
 
-    @patch("synapse.handlers.message._DUMMY_EVENT_ROOM_EXCLUSION_EXPIRY", new=250)
+    @patch("textrp_briij.handlers.message._DUMMY_EVENT_ROOM_EXCLUSION_EXPIRY", new=250)
     def test_expiry_logic(self) -> None:
         """Simple test to ensure that _expire_rooms_to_exclude_from_dummy_event_insertion()
         expires old entries correctly.

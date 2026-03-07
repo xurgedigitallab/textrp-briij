@@ -10,7 +10,7 @@ Logcontexts are also used for CPU and database accounting, so that we
 can track which requests were responsible for high CPU use or database
 activity.
 
-The `synapse.logging.context` module provides facilities for managing
+The `textrp_briij.logging.context` module provides facilities for managing
 the current log context (as well as providing the `LoggingContextFilter`
 class).
 
@@ -28,7 +28,7 @@ any code of this nature, the rule is that our function should leave
 things as it found them:
 
 ```python
-from synapse.logging import context         # omitted from future snippets
+from textrp_briij.logging import context         # omitted from future snippets
 
 def handle_request(request_id):
     request_context = context.LoggingContext()
@@ -61,7 +61,7 @@ def do_request_handling():
 
 ### The `sentinel` context
 
-The default logcontext is `synapse.logging.context.SENTINEL_CONTEXT`, which is an empty
+The default logcontext is `textrp_briij.logging.context.SENTINEL_CONTEXT`, which is an empty
 sentinel value to represent the root logcontext. This is what is used when there is no
 other logcontext set. The phrase "clear/reset the logcontext" means to set the current
 logcontext to the `sentinel` logcontext.
@@ -554,13 +554,13 @@ lead to leaked logcontexts which are incredibly hard to track down.
 
 Debugging logcontext issues can be tricky as leaking or losing a logcontext will surface
 downstream and can point to an unrelated part of the codebase. It's best to enable debug
-logging for `synapse.logging.context.debug` (needs to be explicitly configured) and go
+logging for `textrp_briij.logging.context.debug` (needs to be explicitly configured) and go
 backwards in the logs from the point where the issue is observed to find the root cause.
 
 `log.config.yaml`
 ```yaml
 loggers:
     # Unlike other loggers, this one needs to be explicitly configured to see debug logs.
-    synapse.logging.context.debug:
+    textrp_briij.logging.context.debug:
         level: DEBUG
 ```

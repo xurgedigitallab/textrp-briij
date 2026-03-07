@@ -26,16 +26,16 @@ from twisted.internet.defer import succeed
 from twisted.internet.testing import MemoryReactor
 from twisted.web.resource import Resource
 
-import synapse.rest.admin
-from synapse.api.constants import ApprovalNoticeMedium, LoginType
-from synapse.api.errors import Codes, SynapseError
-from synapse.handlers.ui_auth.checkers import UserInteractiveAuthChecker
-from synapse.rest.client import account, auth, devices, login, logout, register
-from synapse.rest.synapse.client import build_synapse_client_resource_tree
-from synapse.server import HomeServer
-from synapse.storage.database import LoggingTransaction
-from synapse.types import JsonDict, UserID
-from synapse.util.clock import Clock
+import textrp_briij.rest.admin
+from textrp_briij.api.constants import ApprovalNoticeMedium, LoginType
+from textrp_briij.api.errors import Codes, SynapseError
+from textrp_briij.handlers.ui_auth.checkers import UserInteractiveAuthChecker
+from textrp_briij.rest.client import account, auth, devices, login, logout, register
+from textrp_briij.rest.briij.client import build_briij_client_resource_tree
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.database import LoggingTransaction
+from textrp_briij.types import JsonDict, UserID
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.handlers.test_oidc import HAS_OIDC
@@ -174,7 +174,7 @@ class UIAuthTests(unittest.HomeserverTestCase):
         auth.register_servlets,
         devices.register_servlets,
         login.register_servlets,
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         register.register_servlets,
     ]
 
@@ -184,7 +184,7 @@ class UIAuthTests(unittest.HomeserverTestCase):
         # public_baseurl uses an http:// scheme because FakeChannel.isSecure() returns
         # False, so synapse will see the requested uri as http://..., so using http in
         # the public_baseurl stops Synapse trying to redirect to https.
-        config["public_baseurl"] = "http://synapse.test"
+        config["public_baseurl"] = "http://textrp_briij.test"
 
         if HAS_OIDC:
             # we enable OIDC as a way of testing SSO flows
@@ -197,7 +197,7 @@ class UIAuthTests(unittest.HomeserverTestCase):
 
     def create_resource_dict(self) -> dict[str, Resource]:
         resource_dict = super().create_resource_dict()
-        resource_dict.update(build_synapse_client_resource_tree(self.hs))
+        resource_dict.update(build_briij_client_resource_tree(self.hs))
         return resource_dict
 
     def prepare(self, reactor: MemoryReactor, clock: Clock, hs: HomeServer) -> None:
@@ -627,7 +627,7 @@ class RefreshAuthTests(unittest.HomeserverTestCase):
         account.register_servlets,
         login.register_servlets,
         logout.register_servlets,
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         register.register_servlets,
     ]
     hijack_auth = False
@@ -1219,13 +1219,13 @@ class OidcBackchannelLogoutTests(unittest.HomeserverTestCase):
         # public_baseurl uses an http:// scheme because FakeChannel.isSecure() returns
         # False, so synapse will see the requested uri as http://..., so using http in
         # the public_baseurl stops Synapse trying to redirect to https.
-        config["public_baseurl"] = "http://synapse.test"
+        config["public_baseurl"] = "http://textrp_briij.test"
 
         return config
 
     def create_resource_dict(self) -> dict[str, Resource]:
         resource_dict = super().create_resource_dict()
-        resource_dict.update(build_synapse_client_resource_tree(self.hs))
+        resource_dict.update(build_briij_client_resource_tree(self.hs))
         return resource_dict
 
     def submit_logout_token(self, logout_token: str) -> FakeChannel:

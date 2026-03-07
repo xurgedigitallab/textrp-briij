@@ -40,7 +40,7 @@ as follows:
    provided by `matrix.org` so no further action is needed.
 
  * If you installed Synapse into a virtualenv, run `/path/to/env/bin/pip
-   install matrix-synapse[oidc]` to install the necessary dependencies.
+   install textrp-briij[oidc]` to install the necessary dependencies.
 
  * For other installation mechanisms, see the documentation provided by the
    maintainer.

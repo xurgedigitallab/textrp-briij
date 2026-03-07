@@ -24,13 +24,13 @@ from typing import Any, Collection, Iterable
 
 from parameterized import parameterized
 
-from synapse import event_auth
-from synapse.api.constants import EventContentFields
-from synapse.api.errors import AuthError, SynapseError
-from synapse.api.room_versions import EventFormatVersions, RoomVersion, RoomVersions
-from synapse.events import EventBase, make_event_from_dict
-from synapse.storage.databases.main.events_worker import EventRedactBehaviour
-from synapse.types import JsonDict, get_domain_from_id
+from textrp_briij import event_auth
+from textrp_briij.api.constants import EventContentFields
+from textrp_briij.api.errors import AuthError, SynapseError
+from textrp_briij.api.room_versions import EventFormatVersions, RoomVersion, RoomVersions
+from textrp_briij.events import EventBase, make_event_from_dict
+from textrp_briij.storage.databases.main.events_worker import EventRedactBehaviour
+from textrp_briij.types import JsonDict, get_domain_from_id
 
 from tests.test_utils import get_awaitable_result
 

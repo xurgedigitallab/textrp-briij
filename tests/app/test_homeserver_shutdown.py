@@ -24,9 +24,9 @@ import weakref
 from typing import Any
 from unittest.mock import patch
 
-from synapse.app.homeserver import SynapseHomeServer
-from synapse.logging.context import LoggingContext
-from synapse.storage.background_updates import UpdaterStatus
+from textrp_briij.app.homeserver import BriijHomeServer
+from textrp_briij.logging.context import LoggingContext
+from textrp_briij.storage.background_updates import UpdaterStatus
 
 from tests.server import (
     cleanup_test_reactor_system_event_triggers,
@@ -50,12 +50,12 @@ class HomeserverCleanShutdownTestCase(HomeserverTestCase):
 
     @logcontext_clean
     def test_clean_homeserver_shutdown(self) -> None:
-        """Ensure the `SynapseHomeServer` can be fully shutdown and garbage collected"""
+        """Ensure the `BriijHomeServer` can be fully shutdown and garbage collected"""
         self.reactor, self.clock = get_clock()
         self.hs = setup_test_homeserver(
             cleanup_func=self.addCleanup,
             reactor=self.reactor,
-            homeserver_to_use=SynapseHomeServer,
+            homeserver_to_use=BriijHomeServer,
             clock=self.clock,
         )
         self.wait_for_background_updates()
@@ -93,13 +93,13 @@ class HomeserverCleanShutdownTestCase(HomeserverTestCase):
 
     @logcontext_clean
     def test_clean_homeserver_shutdown_mid_background_updates(self) -> None:
-        """Ensure the `SynapseHomeServer` can be fully shutdown and garbage collected
+        """Ensure the `BriijHomeServer` can be fully shutdown and garbage collected
         before background updates have completed"""
         self.reactor, self.clock = get_clock()
         self.hs = setup_test_homeserver(
             cleanup_func=self.addCleanup,
             reactor=self.reactor,
-            homeserver_to_use=SynapseHomeServer,
+            homeserver_to_use=BriijHomeServer,
             clock=self.clock,
         )
 
@@ -145,20 +145,20 @@ class HomeserverCleanShutdownTestCase(HomeserverTestCase):
     @logcontext_clean
     def test_clean_homeserver_shutdown_when_failed_to_setup(self) -> None:
         """
-        Ensure the `SynapseHomeServer` can be fully shutdown and garbage collected if it
+        Ensure the `BriijHomeServer` can be fully shutdown and garbage collected if it
         fails to be `setup`.
         """
         self.reactor, self.clock = get_clock()
 
         # Patch `hs.setup()` to do nothing, so that the homeserver is not fully setup.
-        with patch.object(SynapseHomeServer, "setup", return_value=None) as mock_setup:
+        with patch.object(BriijHomeServer, "setup", return_value=None) as mock_setup:
             # Patch out the call to `start_test_homeserver` since we want access to the
             # homeserver even before the server is setup (let alone started)
             with patch("tests.server.start_test_homeserver", return_value=None):
                 self.hs = setup_test_homeserver(
                     cleanup_func=self.addCleanup,
                     reactor=self.reactor,
-                    homeserver_to_use=SynapseHomeServer,
+                    homeserver_to_use=BriijHomeServer,
                     clock=self.clock,
                 )
             # Sanity check that we patched the correct method (make sure it was the
@@ -223,9 +223,9 @@ def get_memory_debug_info_for_object(object: Any) -> dict[str, Any]:
         # `multi_synapse` shard.
         #
         # We can see frozen objects if you forget to `freeze=False` when
-        # starting the `SynapseHomeServer`. Frozen objects mean they are
+        # starting the `BriijHomeServer`. Frozen objects mean they are
         # never considered for garbage collection. If the
-        # `SynapseHomeServer` (or anything that references the homeserver)
+        # `BriijHomeServer` (or anything that references the homeserver)
         # is frozen, the homeserver can never be garbage collected and will
         # linger in memory forever.
         freeze_count = gc.get_freeze_count()
@@ -234,7 +234,7 @@ def get_memory_debug_info_for_object(object: Any) -> dict[str, Any]:
     # To help debug this test when it fails, it is useful to leverage the
     # `objgraph` module.
     # The following code serves as an example of what I have found to be useful
-    # when tracking down references holding the `SynapseHomeServer` in memory:
+    # when tracking down references holding the `BriijHomeServer` in memory:
     #
     # all_objects = gc.get_objects()
     # for obj in all_objects:
@@ -246,7 +246,7 @@ def get_memory_debug_info_for_object(object: Any) -> dict[str, Any]:
     #             print(sys.getrefcount(obj), "refs to", obj)
     #             if not isinstance(obj, weakref.ProxyType):
     #                 db_obj = obj
-    #         if isinstance(obj, SynapseHomeServer):
+    #         if isinstance(obj, BriijHomeServer):
     #             print(sys.getrefcount(obj), "refs to", obj)
     #             if not isinstance(obj, weakref.ProxyType):
     #                 synapse_hs = obj

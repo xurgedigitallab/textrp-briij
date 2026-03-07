@@ -22,17 +22,17 @@
 from twisted.internet.address import IPv6Address
 from twisted.internet.testing import MemoryReactor, StringTransport
 
-from synapse.app._base import max_request_body_size
-from synapse.app.homeserver import SynapseHomeServer
-from synapse.server import HomeServer
-from synapse.util.clock import Clock
+from textrp_briij.app._base import max_request_body_size
+from textrp_briij.app.homeserver import BriijHomeServer
+from textrp_briij.server import HomeServer
+from textrp_briij.util.clock import Clock
 
 from tests.unittest import HomeserverTestCase
 
 
 class SynapseRequestTestCase(HomeserverTestCase):
     def make_homeserver(self, reactor: MemoryReactor, clock: Clock) -> HomeServer:
-        return self.setup_test_homeserver(homeserver_to_use=SynapseHomeServer)
+        return self.setup_test_homeserver(homeserver_to_use=BriijHomeServer)
 
     def test_large_request(self) -> None:
         """overlarge HTTP requests should be rejected"""

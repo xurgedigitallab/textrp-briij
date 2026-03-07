@@ -20,8 +20,8 @@ from typing_extensions import assert_never
 
 from twisted.internet.testing import MemoryReactor
 
-import synapse.rest.admin
-from synapse.api.constants import (
+import textrp_briij.rest.admin
+from textrp_briij.api.constants import (
     AccountDataTypes,
     EventContentFields,
     EventTypes,
@@ -29,21 +29,21 @@ from synapse.api.constants import (
     Membership,
     RoomTypes,
 )
-from synapse.api.room_versions import RoomVersions
-from synapse.events import EventBase, StrippedStateEvent, make_event_from_dict
-from synapse.events.snapshot import EventContext
-from synapse.handlers.sliding_sync import StateValues
-from synapse.rest.client import account_data, devices, login, receipts, room, sync
-from synapse.server import HomeServer
-from synapse.types import (
+from textrp_briij.api.room_versions import RoomVersions
+from textrp_briij.events import EventBase, StrippedStateEvent, make_event_from_dict
+from textrp_briij.events.snapshot import EventContext
+from textrp_briij.handlers.sliding_sync import StateValues
+from textrp_briij.rest.client import account_data, devices, login, receipts, room, sync
+from textrp_briij.server import HomeServer
+from textrp_briij.types import (
     JsonDict,
     RoomStreamToken,
     SlidingSyncStreamToken,
     StreamKeyType,
     StreamToken,
 )
-from synapse.util.clock import Clock
-from synapse.util.stringutils import random_string
+from textrp_briij.util.clock import Clock
+from textrp_briij.util.stringutils import random_string
 
 from tests import unittest
 from tests.server import FakeChannel, TimedOutException
@@ -435,7 +435,7 @@ class SlidingSyncTestCase(SlidingSyncBase):
     """
 
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
         room.register_servlets,
         sync.register_servlets,

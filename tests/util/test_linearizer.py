@@ -24,8 +24,8 @@ from typing import Hashable, Protocol
 from twisted.internet import defer
 from twisted.internet.defer import CancelledError, Deferred
 
-from synapse.logging.context import LoggingContext, current_context
-from synapse.util.async_helpers import Linearizer
+from textrp_briij.logging.context import LoggingContext, current_context
+from textrp_briij.util.async_helpers import Linearizer
 
 from tests import unittest
 from tests.server import (

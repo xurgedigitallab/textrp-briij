@@ -20,8 +20,8 @@
 #
 from unittest.mock import AsyncMock
 
-from synapse.rest import admin
-from synapse.rest.client import account_data, login, room
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import account_data, login, room
 
 from tests import unittest
 

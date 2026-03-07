@@ -22,8 +22,8 @@ import os
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.server import HomeServer
-from synapse.util.clock import Clock
+from textrp_briij.server import HomeServer
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.unittest import override_config
@@ -56,7 +56,7 @@ class URLPreviewTests(unittest.HomeserverTestCase):
         config["media_store_path"] = self.media_store_path
 
         provider_config = {
-            "module": "synapse.media.storage_provider.FileStorageProviderBackend",
+            "module": "textrp_briij.media.storage_provider.FileStorageProviderBackend",
             "store_local": True,
             "store_synchronous": False,
             "store_remote": True,

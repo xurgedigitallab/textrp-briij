@@ -20,9 +20,9 @@
 
 import yaml
 
-from synapse.config._base import ConfigError, RootConfig
-from synapse.config.homeserver import HomeServerConfig
-from synapse.config.server import ServerConfig, generate_ip_set, is_threepid_reserved
+from textrp_briij.config._base import ConfigError, RootConfig
+from textrp_briij.config.homeserver import HomeServerConfig
+from textrp_briij.config.server import ServerConfig, generate_ip_set, is_threepid_reserved
 
 from tests import unittest
 

@@ -22,7 +22,7 @@ worker_listeners:
     resources:
       - names: [client, federation]
 
-worker_log_config: /etc/matrix-synapse/generic-worker-log.yaml
+worker_log_config: /etc/textrp-briij/generic-worker-log.yaml
 #worker_pid_file: DATADIR/generic_worker$i.pid
 EOF
 done

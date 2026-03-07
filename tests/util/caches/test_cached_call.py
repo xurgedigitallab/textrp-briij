@@ -24,7 +24,7 @@ from unittest.mock import Mock
 from twisted.internet import defer
 from twisted.internet.defer import Deferred
 
-from synapse.util.caches.cached_call import CachedCall, RetryOnExceptionCachedCall
+from textrp_briij.util.caches.cached_call import CachedCall, RetryOnExceptionCachedCall
 
 from tests.test_utils import get_awaitable_result
 from tests.unittest import TestCase

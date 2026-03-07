@@ -34,27 +34,27 @@ from parameterized import parameterized
 from twisted.internet import defer
 from twisted.internet.testing import MemoryReactor
 
-import synapse.rest.admin
-import synapse.storage
-from synapse.api.constants import EduTypes, EventTypes
-from synapse.appservice import (
+import textrp_briij.rest.admin
+import textrp_briij.storage
+from textrp_briij.api.constants import EduTypes, EventTypes
+from textrp_briij.appservice import (
     ApplicationService,
     TransactionOneTimeKeysCount,
     TransactionUnusedFallbackKeys,
 )
-from synapse.handlers.appservice import ApplicationServicesHandler
-from synapse.metrics.background_process_metrics import run_as_background_process
-from synapse.rest.client import login, receipts, register, room, sendtodevice
-from synapse.server import HomeServer
-from synapse.types import (
+from textrp_briij.handlers.appservice import ApplicationServicesHandler
+from textrp_briij.metrics.background_process_metrics import run_as_background_process
+from textrp_briij.rest.client import login, receipts, register, room, sendtodevice
+from textrp_briij.server import HomeServer
+from textrp_briij.types import (
     JsonDict,
     MultiWriterStreamToken,
     RoomStreamToken,
     StreamKeyType,
     UserID,
 )
-from synapse.util.clock import Clock
-from synapse.util.stringutils import random_string
+from textrp_briij.util.clock import Clock
+from textrp_briij.util.stringutils import random_string
 
 from tests import unittest
 from tests.server import get_clock
@@ -432,7 +432,7 @@ class ApplicationServicesHandlerSendEventsTestCase(unittest.HomeserverTestCase):
     """
 
     servlets = [
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         login.register_servlets,
         room.register_servlets,
         sendtodevice.register_servlets,
@@ -1055,7 +1055,7 @@ class ApplicationServicesHandlerDeviceListsTestCase(unittest.HomeserverTestCase)
     """
 
     servlets = [
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         login.register_servlets,
         room.register_servlets,
     ]
@@ -1161,7 +1161,7 @@ class ApplicationServicesHandlerOtkCountsTestCase(unittest.HomeserverTestCase):
     ARG_FALLBACK_KEYS = 5
 
     servlets = [
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         login.register_servlets,
         register.register_servlets,
         room.register_servlets,

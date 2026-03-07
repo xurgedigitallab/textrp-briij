@@ -26,14 +26,14 @@ import jsonschema
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import EduTypes, EventContentFields
-from synapse.api.errors import SynapseError
-from synapse.api.filtering import Filter
-from synapse.api.presence import UserPresenceState
-from synapse.server import HomeServer
-from synapse.types import JsonDict, UserID
-from synapse.util.clock import Clock
-from synapse.util.frozenutils import freeze
+from textrp_briij.api.constants import EduTypes, EventContentFields
+from textrp_briij.api.errors import SynapseError
+from textrp_briij.api.filtering import Filter
+from textrp_briij.api.presence import UserPresenceState
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict, UserID
+from textrp_briij.util.clock import Clock
+from textrp_briij.util.frozenutils import freeze
 
 from tests import unittest
 from tests.events.test_utils import MockEvent
@@ -117,7 +117,7 @@ class FilteringTestCase(unittest.HomeserverTestCase):
                 "event_fields": ["type", "content", "sender"],
             },
             # (note that event_fields is implemented in
-            # synapse.events.utils.serialize_event, and so whether this actually works
+            # textrp_briij.events.utils.serialize_event, and so whether this actually works
             # is tested elsewhere. We just want to check that it is allowed through the
             # filter validation)
             {"event_fields": [r"foo\.bar"]},

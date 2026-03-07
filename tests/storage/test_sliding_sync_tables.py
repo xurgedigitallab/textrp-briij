@@ -25,25 +25,25 @@ from parameterized import parameterized
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import EventContentFields, EventTypes, Membership, RoomTypes
-from synapse.api.room_versions import RoomVersions
-from synapse.events import EventBase, StrippedStateEvent, make_event_from_dict
-from synapse.events.snapshot import EventContext
-from synapse.rest import admin
-from synapse.rest.client import login, room, sync
-from synapse.server import HomeServer
-from synapse.storage.databases.main.events import DeltaState
-from synapse.storage.databases.main.events_bg_updates import (
+from textrp_briij.api.constants import EventContentFields, EventTypes, Membership, RoomTypes
+from textrp_briij.api.room_versions import RoomVersions
+from textrp_briij.events import EventBase, StrippedStateEvent, make_event_from_dict
+from textrp_briij.events.snapshot import EventContext
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, room, sync
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.databases.main.events import DeltaState
+from textrp_briij.storage.databases.main.events_bg_updates import (
     _resolve_stale_data_in_sliding_sync_joined_rooms_table,
     _resolve_stale_data_in_sliding_sync_membership_snapshots_table,
 )
-from synapse.types import SlidingSyncStreamToken, create_requester
-from synapse.types.handlers.sliding_sync import (
+from textrp_briij.types import SlidingSyncStreamToken, create_requester
+from textrp_briij.types.handlers.sliding_sync import (
     LAZY_MEMBERS_UPDATE_INTERVAL,
     StateValues,
 )
-from synapse.types.storage import _BackgroundUpdates
-from synapse.util.clock import Clock
+from textrp_briij.types.storage import _BackgroundUpdates
+from textrp_briij.util.clock import Clock
 
 from tests.rest.client.sliding_sync.test_sliding_sync import SlidingSyncBase
 from tests.test_utils.event_injection import create_event

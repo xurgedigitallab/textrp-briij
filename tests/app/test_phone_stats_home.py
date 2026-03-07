@@ -1,8 +1,8 @@
-import synapse
-from synapse.app.phone_stats_home import start_phone_stats_home
-from synapse.rest.client import login, room
-from synapse.server import HomeServer
-from synapse.util.clock import Clock
+import textrp_briij
+from textrp_briij.app.phone_stats_home import start_phone_stats_home
+from textrp_briij.rest.client import login, room
+from textrp_briij.server import HomeServer
+from textrp_briij.util.clock import Clock
 
 from tests.server import ThreadedMemoryReactorClock
 from tests.unittest import HomeserverTestCase
@@ -13,7 +13,7 @@ ONE_DAY_IN_SECONDS = 86400
 
 class PhoneHomeR30V2TestCase(HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         room.register_servlets,
         login.register_servlets,
     ]

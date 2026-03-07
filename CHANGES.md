@@ -77,7 +77,7 @@ No significant changes since 1.146.0rc1.
 
 ## Features
 
-- Add a new config option [`enable_local_media_storage`](https://element-hq.github.io/synapse/latest/usage/configuration/config_documentation.html#enable_local_media_storage) which controls whether media is additionally stored locally when using configured `media_storage_providers`. Setting this to `false` allows off-site media storage without a local cache. Contributed by Patrice Brend'amour @dr.allgood. ([\#19204](https://github.com/element-hq/synapse/issues/19204))
+- Add a new config option [`enable_local_media_storage`](https://docs.briij.example/synapse/latest/usage/configuration/config_documentation.html#enable_local_media_storage) which controls whether media is additionally stored locally when using configured `media_storage_providers`. Setting this to `false` allows off-site media storage without a local cache. Contributed by Patrice Brend'amour @dr.allgood. ([\#19204](https://github.com/element-hq/synapse/issues/19204))
 - Stabilise support for [MSC4312](https://github.com/matrix-org/matrix-spec-proposals/pull/4312)'s `m.oauth` User-Interactive Auth stage for resetting cross-signing identity with the OAuth 2.0 API. The old, unstable name (`org.matrix.cross_signing_reset`) is now deprecated and will be removed in a future release. ([\#19273](https://github.com/element-hq/synapse/issues/19273))
 - Refactor Grafana dashboard to use `server_name` label (instead of `instance`). ([\#19337](https://github.com/element-hq/synapse/issues/19337))
 
@@ -391,7 +391,7 @@ This release of Synapse requires PostgreSQL 14+.
 
 This release drops support for Python 3.9, in line with our [dependency
 deprecation
-policy](https://element-hq.github.io/synapse/latest/deprecation_policy.html#platform-dependencies),
+policy](https://docs.briij.example/synapse/latest/deprecation_policy.html#platform-dependencies),
 as it is now [end of life](https://endoflife.date/python).
 
 ## SQLite 3.40.0+ is now required
@@ -454,7 +454,7 @@ love to hear from you!
 ## Features
 
 - Add support for Python 3.14. ([\#19055](https://github.com/element-hq/synapse/issues/19055), [\#19134](https://github.com/element-hq/synapse/issues/19134))
-- Add an [Admin API](https://element-hq.github.io/synapse/latest/usage/administration/admin_api/index.html)
+- Add an [Admin API](https://docs.briij.example/synapse/latest/usage/administration/admin_api/index.html)
   to allow an admin to fetch the space/room hierarchy for a given space. ([\#19021](https://github.com/element-hq/synapse/issues/19021))
 
 ## Bugfixes
@@ -469,7 +469,7 @@ love to hear from you!
 - Update the link to the Debian oldstable package for SQLite. ([\#19047](https://github.com/element-hq/synapse/issues/19047))
 - Point out additional Redis configuration options available in the worker docs. Contributed by @servisbryce. ([\#19073](https://github.com/element-hq/synapse/issues/19073))
 - Update the list of Debian releases that the downstream Debian package is maintained for. ([\#19100](https://github.com/element-hq/synapse/issues/19100))
-- Add [a page](https://element-hq.github.io/synapse/latest/development/internal_documentation/release_notes_review_checklist.html) to the documentation describing the steps the Synapse team takes to review the release notes before publishing them. ([\#19109](https://github.com/element-hq/synapse/issues/19109))
+- Add [a page](https://docs.briij.example/synapse/latest/development/internal_documentation/release_notes_review_checklist.html) to the documentation describing the steps the Synapse team takes to review the release notes before publishing them. ([\#19109](https://github.com/element-hq/synapse/issues/19109))
 
 ## Deprecations and Removals
 
@@ -606,9 +606,9 @@ No significant changes since 1.140.0rc1.
 
 ## Features
 
-- Add [a new Media Query by ID Admin API](https://element-hq.github.io/synapse/v1.140/admin_api/media_admin_api.html#query-a-piece-of-media-by-id) that allows server admins to query and investigate the metadata of local or cached remote media via
+- Add [a new Media Query by ID Admin API](https://docs.briij.example/synapse/v1.140/admin_api/media_admin_api.html#query-a-piece-of-media-by-id) that allows server admins to query and investigate the metadata of local or cached remote media via
   the `origin/media_id` identifier found in a [Matrix Content URI](https://spec.matrix.org/v1.14/client-server-api/#matrix-content-mxc-uris). ([\#18911](https://github.com/element-hq/synapse/issues/18911))
-- Add [a new Fetch Event Admin API](https://element-hq.github.io/synapse/v1.140/admin_api/fetch_event.html) to fetch an event by ID. ([\#18963](https://github.com/element-hq/synapse/issues/18963))
+- Add [a new Fetch Event Admin API](https://docs.briij.example/synapse/v1.140/admin_api/fetch_event.html) to fetch an event by ID. ([\#18963](https://github.com/element-hq/synapse/issues/18963))
 - Update [MSC4284: Policy Servers](https://github.com/matrix-org/matrix-spec-proposals/pull/4284) implementation to support signatures when available. ([\#18934](https://github.com/element-hq/synapse/issues/18934))
 - Add experimental implementation of the `GET /_matrix/client/v1/rtc/transports` endpoint for the latest draft of [MSC4143: MatrixRTC](https://github.com/matrix-org/matrix-spec-proposals/pull/4143). ([\#18967](https://github.com/element-hq/synapse/issues/18967))
 - Expose a `defer_to_threadpool` function in the Synapse Module API that allows modules to run a function on a separate thread in a custom threadpool. ([\#19032](https://github.com/element-hq/synapse/issues/19032))
@@ -732,7 +732,7 @@ Application Services that do not set `inhibit_login=true` when calling `POST
 /_matrix/client/v3/register` will receive the error
 `IO.ELEMENT.MSC4190.M_APPSERVICE_LOGIN_UNSUPPORTED` in response. Please see [the
 upgrade
-notes](https://element-hq.github.io/synapse/develop/upgrade.html#register-requests-from-old-application-service-implementations-may-break-when-using-mas)
+notes](https://docs.briij.example/synapse/develop/upgrade.html#register-requests-from-old-application-service-implementations-may-break-when-using-mas)
 for more information.
 
 No significant changes since 1.139.0rc3.
@@ -937,7 +937,7 @@ Note: This release includes the security fixes from `1.135.2` and `1.136.0rc2`, 
 
 ### Bugfixes
 
-- Fix bug introduced in 1.135.2 and 1.136.0rc2 where the [Make Room Admin API](https://element-hq.github.io/synapse/latest/admin_api/rooms.html#make-room-admin-api) would not treat a room v12's creator power level as the highest in room. ([\#18805](https://github.com/element-hq/synapse/issues/18805))
+- Fix bug introduced in 1.135.2 and 1.136.0rc2 where the [Make Room Admin API](https://docs.briij.example/synapse/latest/admin_api/rooms.html#make-room-admin-api) would not treat a room v12's creator power level as the highest in room. ([\#18805](https://github.com/element-hq/synapse/issues/18805))
 
 
 # Synapse 1.135.2 (2025-08-11)
@@ -1069,7 +1069,7 @@ No significant changes since 1.135.0rc2.
 - Enable workers to write directly to the device lists stream and handle device list updates, reducing load on the main process. ([\#18581](https://github.com/element-hq/synapse/issues/18581))
 - Support arbitrary profile fields. Contributed by @clokep. ([\#18635](https://github.com/element-hq/synapse/issues/18635))
 - Advertise support for Matrix v1.12. ([\#18647](https://github.com/element-hq/synapse/issues/18647))
-- Add an option to issue redactions as an admin user via the [admin redaction endpoint](https://element-hq.github.io/synapse/latest/admin_api/user_admin_api.html#redact-all-the-events-of-a-user). ([\#18671](https://github.com/element-hq/synapse/issues/18671))
+- Add an option to issue redactions as an admin user via the [admin redaction endpoint](https://docs.briij.example/synapse/latest/admin_api/user_admin_api.html#redact-all-the-events-of-a-user). ([\#18671](https://github.com/element-hq/synapse/issues/18671))
 - Add experimental and incomplete support for [MSC4306: Thread Subscriptions](https://github.com/matrix-org/matrix-spec-proposals/blob/rei/msc_thread_subscriptions/proposals/4306-thread-subscriptions.md). ([\#18674](https://github.com/element-hq/synapse/issues/18674))
 - Include `event_id` when getting state with `?format=event`. Contributed by @tulir @ Beeper. ([\#18675](https://github.com/element-hq/synapse/issues/18675))
 
@@ -1303,7 +1303,7 @@ Previously, wheels were built using the [manylinux2014](https://github.com/pypa/
 
 ### Internal Changes
 
-- Mark dehydrated devices in the [List All User Devices Admin API](https://element-hq.github.io/synapse/latest/admin_api/user_admin_api.html#list-all-devices). ([\#18252](https://github.com/element-hq/synapse/issues/18252))
+- Mark dehydrated devices in the [List All User Devices Admin API](https://docs.briij.example/synapse/latest/admin_api/user_admin_api.html#list-all-devices). ([\#18252](https://github.com/element-hq/synapse/issues/18252))
 - Reduce disk wastage by cleaning up `received_transactions` older than 1 day, rather than 30 days. ([\#18310](https://github.com/element-hq/synapse/issues/18310))
 - Distinguish all vs local events being persisted in the "Event Send Time Quantiles" graph (Grafana). ([\#18510](https://github.com/element-hq/synapse/issues/18510))
 
@@ -1320,7 +1320,7 @@ No significant changes since 1.131.0rc1.
 
 - Add `msc4263_limit_key_queries_to_users_who_share_rooms` config option as per [MSC4263](https://github.com/matrix-org/matrix-spec-proposals/pull/4263). ([\#18180](https://github.com/element-hq/synapse/issues/18180))
 - Add option to allow registrations that begin with `_`. Contributed by `_` (@hex5f). ([\#18262](https://github.com/element-hq/synapse/issues/18262))
-- Include room ID in response to the [Room Deletion Status Admin API](https://element-hq.github.io/synapse/latest/admin_api/rooms.html#status-of-deleting-rooms). ([\#18318](https://github.com/element-hq/synapse/issues/18318))
+- Include room ID in response to the [Room Deletion Status Admin API](https://docs.briij.example/synapse/latest/admin_api/rooms.html#status-of-deleting-rooms). ([\#18318](https://github.com/element-hq/synapse/issues/18318))
 - Add support for calling Policy Servers ([MSC4284](https://github.com/matrix-org/matrix-spec-proposals/pull/4284)) to mark events as spam. ([\#18387](https://github.com/element-hq/synapse/issues/18387))
 
 ### Bugfixes
@@ -1678,7 +1678,7 @@ No significant changes since 1.125.0rc1.
 
 ### Updates to the Docker image
 
-- Add `SYNAPSE_HTTP_PROXY`/`SYNAPSE_HTTPS_PROXY`/`SYNAPSE_NO_PROXY` environment variables to pass through specifically to the Synapse process (instead of needing to apply [`http_proxy`/`https_proxy`/`no_proxy`](https://element-hq.github.io/synapse/latest/setup/forward_proxy.html) globally). ([\#18158](https://github.com/element-hq/synapse/issues/18158))
+- Add `SYNAPSE_HTTP_PROXY`/`SYNAPSE_HTTPS_PROXY`/`SYNAPSE_NO_PROXY` environment variables to pass through specifically to the Synapse process (instead of needing to apply [`http_proxy`/`https_proxy`/`no_proxy`](https://docs.briij.example/synapse/latest/setup/forward_proxy.html) globally). ([\#18158](https://github.com/element-hq/synapse/issues/18158))
 
 ### Improved Documentation
 
@@ -1748,7 +1748,7 @@ No significant changes since 1.124.0rc3.
   Contributed by @maxkratz. ([\#18089](https://github.com/element-hq/synapse/issues/18089))
 - Fix rare edge case where state groups could be deleted while we are persisting new events that reference them. ([\#18107](https://github.com/element-hq/synapse/issues/18107), [\#18130](https://github.com/element-hq/synapse/issues/18130), [\#18131](https://github.com/element-hq/synapse/issues/18131))
 - Raise an error if someone is using an incorrect suffix in a config duration string. ([\#18112](https://github.com/element-hq/synapse/issues/18112))
-- Fix a bug where the [Delete Room Admin API](https://element-hq.github.io/synapse/latest/admin_api/rooms.html#version-2-new-version) would fail if the `block` parameter was set to `true` and a worker other than the main process was configured to handle background tasks. ([\#18119](https://github.com/element-hq/synapse/issues/18119))
+- Fix a bug where the [Delete Room Admin API](https://docs.briij.example/synapse/latest/admin_api/rooms.html#version-2-new-version) would fail if the `block` parameter was set to `true` and a worker other than the main process was configured to handle background tasks. ([\#18119](https://github.com/element-hq/synapse/issues/18119))
 
 ### Internal Changes
 
@@ -1776,7 +1776,7 @@ No significant changes since 1.123.0rc1.
 ### Features
 
 - Implement [MSC4133](https://github.com/matrix-org/matrix-spec-proposals/pull/4133) for custom profile fields. Contributed by @clokep. ([\#17488](https://github.com/element-hq/synapse/issues/17488))
-- Add a query parameter `type` to the [Room State Admin API](https://element-hq.github.io/synapse/develop/admin_api/rooms.html#room-state-api) that filters the state event. ([\#18035](https://github.com/element-hq/synapse/issues/18035))
+- Add a query parameter `type` to the [Room State Admin API](https://docs.briij.example/synapse/develop/admin_api/rooms.html#room-state-api) that filters the state event. ([\#18035](https://github.com/element-hq/synapse/issues/18035))
 - Support the new `/auth_metadata` endpoint defined in [MSC2965](https://github.com/matrix-org/matrix-spec-proposals/pull/2965). ([\#18093](https://github.com/element-hq/synapse/issues/18093))
 
 ### Bugfixes

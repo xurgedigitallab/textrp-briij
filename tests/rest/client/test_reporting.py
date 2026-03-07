@@ -21,11 +21,11 @@
 
 from twisted.internet.testing import MemoryReactor
 
-import synapse.rest.admin
-from synapse.rest.client import login, reporting, room
-from synapse.server import HomeServer
-from synapse.types import JsonDict
-from synapse.util.clock import Clock
+import textrp_briij.rest.admin
+from textrp_briij.rest.client import login, reporting, room
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.unittest import override_config
@@ -33,7 +33,7 @@ from tests.unittest import override_config
 
 class ReportEventTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
         room.register_servlets,
         reporting.register_servlets,
@@ -162,7 +162,7 @@ class ReportEventTestCase(unittest.HomeserverTestCase):
 
 class ReportRoomTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
         room.register_servlets,
         reporting.register_servlets,
@@ -238,7 +238,7 @@ class ReportRoomTestCase(unittest.HomeserverTestCase):
 
 class ReportUserTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
         room.register_servlets,
         reporting.register_servlets,

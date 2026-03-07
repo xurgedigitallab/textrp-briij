@@ -1,4 +1,4 @@
-name: matrix-synapse
+name: textrp-briij
 base: core18
 version: git
 summary: Reference Matrix homeserver
@@ -10,7 +10,7 @@ grade: stable
 confinement: strict
 
 apps:
-  matrix-synapse:
+  textrp-briij:
     command: synctl --no-daemonize start $SNAP_COMMON/homeserver.yaml
     stop-command: synctl -c $SNAP_COMMON stop
     plugs: [network-bind, network]
@@ -27,7 +27,7 @@ apps:
   synctl:
     command: synctl
 parts:
-  matrix-synapse:
+  textrp-briij:
     source: .
     plugin: python
     python-version: python3

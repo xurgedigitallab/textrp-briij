@@ -15,7 +15,7 @@
 
 import weakref
 
-from synapse.util.duration import Duration
+from textrp_briij.util.duration import Duration
 
 from tests.unittest import HomeserverTestCase
 

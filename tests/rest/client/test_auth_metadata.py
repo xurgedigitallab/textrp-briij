@@ -23,7 +23,7 @@ from unittest.mock import AsyncMock
 
 from parameterized import parameterized_class
 
-from synapse.rest.client import auth_metadata
+from textrp_briij.rest.client import auth_metadata
 
 from tests.unittest import HomeserverTestCase, override_config, skip_unless
 from tests.utils import HAS_AUTHLIB

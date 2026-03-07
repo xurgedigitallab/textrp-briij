@@ -25,8 +25,8 @@ import platform
 from twisted.internet import defer
 from twisted.internet.testing import MemoryReactor
 
-from synapse.server import HomeServer
-from synapse.util.clock import Clock
+from textrp_briij.server import HomeServer
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.replication._base import BaseMultiWorkerStreamTestCase
@@ -106,7 +106,7 @@ class WorkerLockWorkersTestCase(BaseMultiWorkerStreamTestCase):
         """Test waiting for a lock on another worker"""
 
         worker = self.make_worker_hs(
-            "synapse.app.generic_worker",
+            "textrp_briij.app.generic_worker",
             extra_config={
                 "redis": {"enabled": True},
             },

@@ -257,9 +257,9 @@ def _prepare() -> None:
     subprocess.check_output(["poetry", "version", new_version])
 
     # Update config schema $id.
-    schema_file = "schema/synapse-config.schema.yaml"
+    schema_file = "schema/briij-config.schema.yaml"
     major_minor_version = ".".join(new_version.split(".")[:2])
-    url = f"https://element-hq.github.io/synapse/schema/synapse/v{major_minor_version}/synapse-config.schema.json"
+    url = f"https://docs.briij.example/synapse/schema/briij/v{major_minor_version}/briij-config.schema.json"
     subprocess.check_output(["sed", "-i", f"0,/^\\$id: .*/s||$id: {url}|", schema_file])
 
     # Generate changelogs.
@@ -323,7 +323,7 @@ def _prepare() -> None:
 
     print("Opening the changelog in your browser...")
     print(
-        "Please review it using the release notes review checklist: https://element-hq.github.io/synapse/develop/development/internal_documentation/release_notes_review_checklist.html"
+        "Please review it using the release notes review checklist: https://docs.briij.example/synapse/develop/development/internal_documentation/release_notes_review_checklist.html"
     )
     print("And post it in #synapse-dev for cursory review from the team.")
     click.launch(
@@ -750,7 +750,7 @@ Hi everyone. Synapse {current_version} has just been released.
 [notes](https://github.com/element-hq/synapse/releases/tag/{tag_name}) | \
 [docker](https://hub.docker.com/r/matrixdotorg/synapse/tags?name={tag_name}) | \
 [debs](https://packages.matrix.org/debian/) | \
-[pypi](https://pypi.org/project/matrix-synapse/{current_version}/)"""
+[pypi](https://pypi.org/project/textrp-briij/{current_version}/)"""
 
     click.echo(release_text)
 

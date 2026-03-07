@@ -15,7 +15,7 @@ and run Synapse against Complement.
 Consult the [contributing guide][guideComplementSh] for instructions on how to use it.
 
 
-[guideComplementSh]: https://element-hq.github.io/synapse/latest/development/contributing_guide.html#run-the-integration-tests-complement
+[guideComplementSh]: https://docs.briij.example/synapse/latest/development/contributing_guide.html#run-the-integration-tests-complement
 
 ## Building and running the images manually
 
@@ -162,7 +162,7 @@ global:
 scrape_configs:
   - job_name: synapse
     scrape_interval: 15s
-    metrics_path: /_synapse/metrics
+    metrics_path: /_briij/metrics
     scheme: http
     # We set `honor_labels` so that each service can set their own `job`/`instance` label
     #

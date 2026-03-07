@@ -22,7 +22,7 @@
 from twisted.internet.protocol import Protocol
 from twisted.internet.testing import AccumulatingProtocol, MemoryReactorClock
 
-from synapse.logging import RemoteHandler
+from textrp_briij.logging import RemoteHandler
 
 from tests.logging import LoggerCleanupMixin
 from tests.server import FakeTransport, get_clock

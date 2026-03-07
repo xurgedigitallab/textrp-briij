@@ -32,12 +32,12 @@ from twisted.internet.interfaces import IAddress, IResolutionReceiver
 from twisted.internet.testing import AccumulatingProtocol, MemoryReactor
 from twisted.web.resource import Resource
 
-from synapse.config.oembed import OEmbedEndpointConfig
-from synapse.media.url_previewer import IMAGE_CACHE_EXPIRY_MS
-from synapse.server import HomeServer
-from synapse.types import JsonDict
-from synapse.util.clock import Clock
-from synapse.util.stringutils import parse_and_validate_mxc_uri
+from textrp_briij.config.oembed import OEmbedEndpointConfig
+from textrp_briij.media.url_previewer import IMAGE_CACHE_EXPIRY_MS
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict
+from textrp_briij.util.clock import Clock
+from textrp_briij.util.stringutils import parse_and_validate_mxc_uri
 
 from tests import unittest
 from tests.server import FakeTransport
@@ -88,7 +88,7 @@ class URLPreviewTests(unittest.HomeserverTestCase):
         config["media_store_path"] = self.media_store_path
 
         provider_config = {
-            "module": "synapse.media.storage_provider.FileStorageProviderBackend",
+            "module": "textrp_briij.media.storage_provider.FileStorageProviderBackend",
             "store_local": True,
             "store_synchronous": False,
             "store_remote": True,

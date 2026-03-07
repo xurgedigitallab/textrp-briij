@@ -162,13 +162,13 @@ main() {
   fi
 
   if [ -n "$use_editable_synapse" ]; then
-    if [[ -e synapse/synapse_rust.abi3.so ]]; then
+    if [[ -e textrp_briij/synapse_rust.abi3.so ]]; then
       # In an editable install, back up the host's compiled Rust module to prevent
       # inconvenience; the container will overwrite the module with its own copy.
-      mv -n synapse/synapse_rust.abi3.so synapse/synapse_rust.abi3.so~host
+      mv -n textrp_briij/synapse_rust.abi3.so textrp_briij/synapse_rust.abi3.so~host
       # And restore it on exit:
-      synapse_pkg=`realpath synapse`
-      trap "mv -f '$synapse_pkg/synapse_rust.abi3.so~host' '$synapse_pkg/synapse_rust.abi3.so'" EXIT
+      textrp_briij_pkg=`realpath textrp_briij`
+      trap "mv -f '$textrp_briij_pkg/synapse_rust.abi3.so~host' '$textrp_briij_pkg/synapse_rust.abi3.so'" EXIT
     fi
 
     editable_mount="$(realpath .):/editable-src:z"
@@ -180,9 +180,9 @@ main() {
       # - The Poetry lock file must be the same (otherwise we assume dependencies have changed)
 
       # First set up the module in the right place for an editable installation.
-      $CONTAINER_RUNTIME run --rm -v $editable_mount --entrypoint 'cp' "$COMPLEMENT_SYNAPSE_EDITABLE_IMAGE_PATH" -- /synapse_rust.abi3.so.bak /editable-src/synapse/synapse_rust.abi3.so
+      $CONTAINER_RUNTIME run --rm -v $editable_mount --entrypoint 'cp' "$COMPLEMENT_SYNAPSE_EDITABLE_IMAGE_PATH" -- /synapse_rust.abi3.so.bak /editable-src/textrp_briij/synapse_rust.abi3.so
 
-      if ($CONTAINER_RUNTIME run --rm -v $editable_mount --entrypoint 'python' "$COMPLEMENT_SYNAPSE_EDITABLE_IMAGE_PATH" -c 'import synapse.synapse_rust' \
+      if ($CONTAINER_RUNTIME run --rm -v $editable_mount --entrypoint 'python' "$COMPLEMENT_SYNAPSE_EDITABLE_IMAGE_PATH" -c 'import textrp_briij.synapse_rust' \
         && $CONTAINER_RUNTIME run --rm -v $editable_mount --entrypoint 'diff' "$COMPLEMENT_SYNAPSE_EDITABLE_IMAGE_PATH" --brief /editable-src/poetry.lock /poetry.lock.bak); then
         skip_docker_build=1
       else
@@ -212,7 +212,7 @@ main() {
         -f "docker/complement/Dockerfile" "docker/complement"
 
       # Prepare the Rust module
-      $CONTAINER_RUNTIME run --rm -v $editable_mount --entrypoint 'cp' "$COMPLEMENT_SYNAPSE_EDITABLE_IMAGE_PATH" -- /synapse_rust.abi3.so.bak /editable-src/synapse/synapse_rust.abi3.so
+      $CONTAINER_RUNTIME run --rm -v $editable_mount --entrypoint 'cp' "$COMPLEMENT_SYNAPSE_EDITABLE_IMAGE_PATH" -- /synapse_rust.abi3.so.bak /editable-src/textrp_briij/synapse_rust.abi3.so
 
     else
 

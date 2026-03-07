@@ -35,19 +35,19 @@ import pymacaroons
 from twisted.internet.testing import MemoryReactor
 from twisted.web.resource import Resource
 
-import synapse.rest.admin
-from synapse.api.constants import ApprovalNoticeMedium, LoginType
-from synapse.api.errors import Codes
-from synapse.api.urls import LoginSSORedirectURIBuilder
-from synapse.appservice import ApplicationService
-from synapse.http.client import RawHeaders
-from synapse.module_api import ModuleApi
-from synapse.rest.client import account, devices, login, logout, profile, register
-from synapse.rest.client.account import WhoamiRestServlet
-from synapse.rest.synapse.client import build_synapse_client_resource_tree
-from synapse.server import HomeServer
-from synapse.types import JsonDict, UserID, create_requester
-from synapse.util.clock import Clock
+import textrp_briij.rest.admin
+from textrp_briij.api.constants import ApprovalNoticeMedium, LoginType
+from textrp_briij.api.errors import Codes
+from textrp_briij.api.urls import LoginSSORedirectURIBuilder
+from textrp_briij.appservice import ApplicationService
+from textrp_briij.http.client import RawHeaders
+from textrp_briij.module_api import ModuleApi
+from textrp_briij.rest.client import account, devices, login, logout, profile, register
+from textrp_briij.rest.client.account import WhoamiRestServlet
+from textrp_briij.rest.briij.client import build_briij_client_resource_tree
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict, UserID, create_requester
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.handlers.test_oidc import HAS_OIDC
@@ -143,7 +143,7 @@ class TestSpamChecker:
         initial_display_name: str | None,
         request_info: Collection[tuple[str | None, str]],
         auth_provider_id: str | None = None,
-    ) -> Literal["NOT_SPAM"] | tuple["synapse.module_api.errors.Codes", JsonDict]:
+    ) -> Literal["NOT_SPAM"] | tuple["textrp_briij.module_api.errors.Codes", JsonDict]:
         return "NOT_SPAM"
 
 
@@ -164,7 +164,7 @@ class DenyAllSpamChecker:
         initial_display_name: str | None,
         request_info: Collection[tuple[str | None, str]],
         auth_provider_id: str | None = None,
-    ) -> Literal["NOT_SPAM"] | tuple["synapse.module_api.errors.Codes", JsonDict]:
+    ) -> Literal["NOT_SPAM"] | tuple["textrp_briij.module_api.errors.Codes", JsonDict]:
         # Return an odd set of values to ensure that they get correctly passed
         # to the client.
         return Codes.LIMIT_EXCEEDED, {"extra": "value"}
@@ -172,7 +172,7 @@ class DenyAllSpamChecker:
 
 class LoginRestServletTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         login.register_servlets,
         logout.register_servlets,
         devices.register_servlets,
@@ -669,7 +669,7 @@ class MultiSSOTestCase(unittest.HomeserverTestCase):
 
     def create_resource_dict(self) -> dict[str, Resource]:
         d = super().create_resource_dict()
-        d.update(build_synapse_client_resource_tree(self.hs))
+        d.update(build_briij_client_resource_tree(self.hs))
         return d
 
     def test_get_login_flows(self) -> None:
@@ -1155,7 +1155,7 @@ class CASTestCase(unittest.HomeserverTestCase):
 @skip_unless(HAS_JWT, "requires authlib")
 class JWTTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         login.register_servlets,
         profile.register_servlets,
     ]
@@ -1370,7 +1370,7 @@ class JWTPubKeyTestCase(unittest.HomeserverTestCase):
         login.register_servlets,
     ]
 
-    # This key's pubkey is used as the jwt_secret setting of synapse. Valid
+    # This key's pubkey is used as the jwt_secret setting of textrp_briij. Valid
     # tokens are signed by this and validated using the pubkey. It is generated
     # with `openssl genrsa 512` (not a secure way to generate real keys, but
     # good enough for tests!)
@@ -1399,7 +1399,7 @@ class JWTPubKeyTestCase(unittest.HomeserverTestCase):
         ]
     )
 
-    # This key is used to sign tokens that shouldn't be accepted by synapse.
+    # This key is used to sign tokens that shouldn't be accepted by textrp_briij.
     # Generated just like jwt_privatekey.
     bad_privatekey = "\n".join(
         [
@@ -1640,7 +1640,7 @@ class UsernamePickerTestCase(HomeserverTestCase):
 
     def create_resource_dict(self) -> dict[str, Resource]:
         d = super().create_resource_dict()
-        d.update(build_synapse_client_resource_tree(self.hs))
+        d.update(build_briij_client_resource_tree(self.hs))
         return d
 
     def proceed_to_username_picker_page(

@@ -22,9 +22,9 @@
 from twisted.internet import defer
 from twisted.internet.defer import Deferred
 
-from synapse.config.homeserver import HomeServerConfig
-from synapse.config.ratelimiting import FederationRatelimitSettings
-from synapse.util.ratelimitutils import FederationRateLimiter
+from textrp_briij.config.homeserver import HomeServerConfig
+from textrp_briij.config.ratelimiting import FederationRatelimitSettings
+from textrp_briij.util.ratelimitutils import FederationRateLimiter
 
 from tests.server import ThreadedMemoryReactorClock, get_clock
 from tests.unittest import TestCase

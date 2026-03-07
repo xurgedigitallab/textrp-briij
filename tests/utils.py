@@ -29,14 +29,14 @@ from typing import (
     overload,
 )
 
-from synapse.api.constants import EventTypes
-from synapse.api.room_versions import RoomVersions
-from synapse.config.homeserver import HomeServerConfig
-from synapse.config.server import DEFAULT_ROOM_VERSION
-from synapse.server import HomeServer
-from synapse.storage.database import LoggingDatabaseConnection
-from synapse.storage.engines import create_engine
-from synapse.storage.prepare_database import prepare_database
+from textrp_briij.api.constants import EventTypes
+from textrp_briij.api.room_versions import RoomVersions
+from textrp_briij.config.homeserver import HomeServerConfig
+from textrp_briij.config.server import DEFAULT_ROOM_VERSION
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.database import LoggingDatabaseConnection
+from textrp_briij.storage.engines import create_engine
+from textrp_briij.storage.prepare_database import prepare_database
 
 try:
     import authlib  # noqa: F401

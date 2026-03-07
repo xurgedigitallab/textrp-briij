@@ -29,10 +29,10 @@ from signedjson.key import (
 )
 from signedjson.sign import sign_json
 
-from synapse.api.errors import Codes
-from synapse.rest import admin
-from synapse.rest.client import keys, login
-from synapse.types import JsonDict, Requester, create_requester
+from textrp_briij.api.errors import Codes
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import keys, login
+from textrp_briij.types import JsonDict, Requester, create_requester
 
 from tests import unittest
 from tests.http.server._base import make_request_with_cancellation_test

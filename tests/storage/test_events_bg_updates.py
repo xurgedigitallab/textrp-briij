@@ -16,10 +16,10 @@
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import MAX_DEPTH
-from synapse.api.room_versions import RoomVersion, RoomVersions
-from synapse.server import HomeServer
-from synapse.util.clock import Clock
+from textrp_briij.api.constants import MAX_DEPTH
+from textrp_briij.api.room_versions import RoomVersion, RoomVersions
+from textrp_briij.server import HomeServer
+from textrp_briij.util.clock import Clock
 
 from tests.unittest import HomeserverTestCase
 

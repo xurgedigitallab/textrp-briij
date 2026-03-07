@@ -18,7 +18,7 @@
 # [This file includes modifications made by New Vector Limited]
 #
 #
-from synapse.rest.health import HealthResource
+from textrp_briij.rest.health import HealthResource
 
 from tests import unittest
 

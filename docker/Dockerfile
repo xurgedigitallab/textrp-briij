@@ -94,15 +94,15 @@ RUN --mount=type=cache,target=/root/.cache/uv \
   uv pip install --prefix="/install" --no-deps -r /synapse/requirements.txt
 
 # Copy over the rest of the synapse source code.
+COPY textrp_briij /synapse/textrp_briij/
 COPY synapse /synapse/synapse/
 COPY rust /synapse/rust/
-# ... and what we need to `pip install`.
 COPY pyproject.toml README.rst build_rust.py Cargo.toml Cargo.lock /synapse/
 
 # Repeat of earlier build argument declaration, as this is a new build stage.
 ARG TEST_ONLY_IGNORE_POETRY_LOCKFILE
 
-# Install the synapse package itself.
+# Install the textrp-briij package itself.
 # If we have populated requirements.txt, we don't install any dependencies
 # as we should already have those from the previous `pip install` step.
 RUN \
@@ -172,7 +172,7 @@ FROM docker.io/library/python:${PYTHON_VERSION}-slim-${DEBIAN_VERSION}
 ARG TARGETARCH
 
 LABEL org.opencontainers.image.url='https://github.com/element-hq/synapse'
-LABEL org.opencontainers.image.documentation='https://element-hq.github.io/synapse/latest/'
+LABEL org.opencontainers.image.documentation='https://docs.briij.example/synapse/latest/'
 LABEL org.opencontainers.image.source='https://github.com/element-hq/synapse.git'
 LABEL org.opencontainers.image.licenses='AGPL-3.0-or-later OR LicenseRef-Element-Commercial'
 

@@ -26,9 +26,9 @@ from unittest import mock
 import yaml
 from parameterized import parameterized
 
-from synapse.config import ConfigError
-from synapse.config._base import RootConfig
-from synapse.config.homeserver import HomeServerConfig
+from textrp_briij.config import ConfigError
+from textrp_briij.config._base import RootConfig
+from textrp_briij.config.homeserver import HomeServerConfig
 
 from tests.config.utils import ConfigFileTestCase
 

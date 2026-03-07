@@ -19,16 +19,16 @@ from signedjson.key import encode_verify_key_base64, get_verify_key
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.errors import SynapseError
-from synapse.crypto.event_signing import compute_event_signature
-from synapse.events import EventBase, make_event_from_dict
-from synapse.handlers.room_policy import POLICY_SERVER_KEY_ID
-from synapse.rest import admin
-from synapse.rest.client import filter, login, room, sync
-from synapse.server import HomeServer
-from synapse.types import JsonDict, UserID
-from synapse.types.handlers.policy_server import RECOMMENDATION_OK, RECOMMENDATION_SPAM
-from synapse.util.clock import Clock
+from textrp_briij.api.errors import SynapseError
+from textrp_briij.crypto.event_signing import compute_event_signature
+from textrp_briij.events import EventBase, make_event_from_dict
+from textrp_briij.handlers.room_policy import POLICY_SERVER_KEY_ID
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import filter, login, room, sync
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict, UserID
+from textrp_briij.types.handlers.policy_server import RECOMMENDATION_OK, RECOMMENDATION_SPAM
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.test_utils import event_injection

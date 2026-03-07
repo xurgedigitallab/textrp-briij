@@ -1,9 +1,9 @@
-from synapse.api.ratelimiting import LimitExceededError, Ratelimiter
-from synapse.appservice import ApplicationService
-from synapse.config.ratelimiting import RatelimitSettings
-from synapse.module_api import RatelimitOverride
-from synapse.module_api.callbacks.ratelimit_callbacks import RatelimitModuleApiCallbacks
-from synapse.types import UserID, create_requester
+from textrp_briij.api.ratelimiting import LimitExceededError, Ratelimiter
+from textrp_briij.appservice import ApplicationService
+from textrp_briij.config.ratelimiting import RatelimitSettings
+from textrp_briij.module_api import RatelimitOverride
+from textrp_briij.module_api.callbacks.ratelimit_callbacks import RatelimitModuleApiCallbacks
+from textrp_briij.types import UserID, create_requester
 
 from tests import unittest
 

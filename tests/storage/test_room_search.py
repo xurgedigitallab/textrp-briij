@@ -23,16 +23,16 @@ from unittest.case import SkipTest
 
 from twisted.internet.testing import MemoryReactor
 
-import synapse.rest.admin
-from synapse.api.constants import EventTypes
-from synapse.api.errors import StoreError
-from synapse.rest.client import login, room
-from synapse.server import HomeServer
-from synapse.storage.databases.main import DataStore
-from synapse.storage.databases.main.search import Phrase, SearchToken, _tokenize_query
-from synapse.storage.engines import PostgresEngine
-from synapse.storage.engines.sqlite import Sqlite3Engine
-from synapse.util.clock import Clock
+import textrp_briij.rest.admin
+from textrp_briij.api.constants import EventTypes
+from textrp_briij.api.errors import StoreError
+from textrp_briij.rest.client import login, room
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.databases.main import DataStore
+from textrp_briij.storage.databases.main.search import Phrase, SearchToken, _tokenize_query
+from textrp_briij.storage.engines import PostgresEngine
+from textrp_briij.storage.engines.sqlite import Sqlite3Engine
+from textrp_briij.util.clock import Clock
 
 from tests.unittest import HomeserverTestCase, skip_unless
 from tests.utils import USE_POSTGRES_FOR_TESTS
@@ -40,7 +40,7 @@ from tests.utils import USE_POSTGRES_FOR_TESTS
 
 class EventSearchInsertionTest(HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         login.register_servlets,
         room.register_servlets,
     ]
@@ -216,7 +216,7 @@ class MessageSearchTest(HomeserverTestCase):
     """
 
     servlets = [
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         login.register_servlets,
         room.register_servlets,
     ]

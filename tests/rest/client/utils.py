@@ -44,11 +44,11 @@ import attr
 from twisted.internet.testing import MemoryReactorClock
 from twisted.web.server import Site
 
-from synapse.api.constants import EventTypes, Membership, ReceiptTypes
-from synapse.api.errors import Codes
-from synapse.server import HomeServer
-from synapse.types import JsonDict
-from synapse.util.duration import Duration
+from textrp_briij.api.constants import EventTypes, Membership, ReceiptTypes
+from textrp_briij.api.errors import Codes
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict
+from textrp_briij.util.duration import Duration
 
 from tests.server import FakeChannel, make_request
 from tests.test_utils.html_parsers import TestHtmlParser

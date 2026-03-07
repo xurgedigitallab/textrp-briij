@@ -28,24 +28,24 @@ from parameterized import parameterized
 
 from twisted.internet.testing import MemoryReactor
 
-import synapse.rest.admin
-from synapse.api.constants import EventContentFields, EventTypes, Membership, RoomTypes
-from synapse.api.errors import Codes
-from synapse.api.room_versions import RoomVersions
-from synapse.handlers.pagination import (
+import textrp_briij.rest.admin
+from textrp_briij.api.constants import EventContentFields, EventTypes, Membership, RoomTypes
+from textrp_briij.api.errors import Codes
+from textrp_briij.api.room_versions import RoomVersions
+from textrp_briij.handlers.pagination import (
     PURGE_ROOM_ACTION_NAME,
     SHUTDOWN_AND_PURGE_ROOM_ACTION_NAME,
 )
-from synapse.rest.client import directory, events, knock, login, room, sync
-from synapse.server import HomeServer
-from synapse.storage.databases.main.purge_events import (
+from textrp_briij.rest.client import directory, events, knock, login, room, sync
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.databases.main.purge_events import (
     purge_room_tables_with_event_id_index,
     purge_room_tables_with_room_id_column,
 )
-from synapse.types import UserID
-from synapse.util.clock import Clock
-from synapse.util.duration import Duration
-from synapse.util.task_scheduler import TaskScheduler
+from textrp_briij.types import UserID
+from textrp_briij.util.clock import Clock
+from textrp_briij.util.duration import Duration
+from textrp_briij.util.task_scheduler import TaskScheduler
 
 from tests import unittest
 
@@ -57,7 +57,7 @@ ONE_HOUR_IN_S = 3600
 
 class AdminHierarchyTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
         room.register_servlets,
     ]
@@ -359,7 +359,7 @@ class AdminHierarchyTestCase(unittest.HomeserverTestCase):
 
 class DeleteRoomTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
         events.register_servlets,
         room.register_servlets,
@@ -896,7 +896,7 @@ class DeleteRoomTestCase(unittest.HomeserverTestCase):
 
 class DeleteRoomV2TestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
         events.register_servlets,
         room.register_servlets,
@@ -1653,7 +1653,7 @@ class RoomTestCase(unittest.HomeserverTestCase):
     """Test /room admin API."""
 
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
         room.register_servlets,
         directory.register_servlets,
@@ -2512,7 +2512,7 @@ class RoomTestCase(unittest.HomeserverTestCase):
 
 class RoomMessagesTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
         room.register_servlets,
     ]
@@ -2729,7 +2729,7 @@ class RoomMessagesTestCase(unittest.HomeserverTestCase):
 
 class JoinAliasRoomTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         room.register_servlets,
         login.register_servlets,
     ]
@@ -3208,7 +3208,7 @@ class JoinAliasRoomTestCase(unittest.HomeserverTestCase):
 
 class MakeRoomAdminTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         room.register_servlets,
         login.register_servlets,
     ]
@@ -3400,7 +3400,7 @@ class MakeRoomAdminTestCase(unittest.HomeserverTestCase):
 
 class BlockRoomTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         room.register_servlets,
         login.register_servlets,
     ]

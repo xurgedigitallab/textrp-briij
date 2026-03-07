@@ -20,12 +20,12 @@
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.errors import NotFoundError, SynapseError
-from synapse.rest.client import room
-from synapse.server import HomeServer
-from synapse.types.state import StateFilter
-from synapse.types.storage import _BackgroundUpdates
-from synapse.util.clock import Clock
+from textrp_briij.api.errors import NotFoundError, SynapseError
+from textrp_briij.rest.client import room
+from textrp_briij.server import HomeServer
+from textrp_briij.types.state import StateFilter
+from textrp_briij.types.storage import _BackgroundUpdates
+from textrp_briij.util.clock import Clock
 
 from tests.unittest import HomeserverTestCase
 

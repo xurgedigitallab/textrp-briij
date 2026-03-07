@@ -24,21 +24,21 @@ from parameterized import parameterized
 
 from twisted.internet.testing import MemoryReactor
 
-import synapse.rest.admin
-from synapse.api.errors import Codes
-from synapse.rest.client import login
-from synapse.server import HomeServer
-from synapse.storage.background_updates import BackgroundUpdater
-from synapse.types import JsonDict
-from synapse.util.clock import Clock
-from synapse.util.duration import Duration
+import textrp_briij.rest.admin
+from textrp_briij.api.errors import Codes
+from textrp_briij.rest.client import login
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.background_updates import BackgroundUpdater
+from textrp_briij.types import JsonDict
+from textrp_briij.util.clock import Clock
+from textrp_briij.util.duration import Duration
 
 from tests import unittest
 
 
 class BackgroundUpdatesTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
     ]
 

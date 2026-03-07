@@ -32,23 +32,23 @@ from twisted.web.client import Agent, ResponseNeverReceived
 from twisted.web.http import HTTPChannel
 from twisted.web.http_headers import Headers
 
-from synapse.api.errors import HttpResponseException, RequestSendFailed
-from synapse.api.ratelimiting import Ratelimiter
-from synapse.config._base import ConfigError
-from synapse.config.ratelimiting import RatelimitSettings
-from synapse.http.matrixfederationclient import (
+from textrp_briij.api.errors import HttpResponseException, RequestSendFailed
+from textrp_briij.api.ratelimiting import Ratelimiter
+from textrp_briij.config._base import ConfigError
+from textrp_briij.config.ratelimiting import RatelimitSettings
+from textrp_briij.http.matrixfederationclient import (
     ByteParser,
     MatrixFederationHttpClient,
     MatrixFederationRequest,
 )
-from synapse.logging.context import (
+from textrp_briij.logging.context import (
     SENTINEL_CONTEXT,
     LoggingContext,
     LoggingContextOrSentinel,
     current_context,
 )
-from synapse.server import HomeServer
-from synapse.util.clock import Clock
+from textrp_briij.server import HomeServer
+from textrp_briij.util.clock import Clock
 
 from tests.replication._base import BaseMultiWorkerStreamTestCase
 from tests.server import FakeTransport
@@ -831,7 +831,7 @@ class FederationClientProxyTests(BaseMultiWorkerStreamTestCase):
 
         # Create the `federation_sender` worker
         self.make_worker_hs(
-            "synapse.app.generic_worker",
+            "textrp_briij.app.generic_worker",
             {"worker_name": "federation_sender"},
             federation_http_client=mock_client_on_federation_sender,
         )
@@ -889,7 +889,7 @@ class FederationClientProxyTests(BaseMultiWorkerStreamTestCase):
 
         # Create the `federation_sender` worker
         self.make_worker_hs(
-            "synapse.app.generic_worker",
+            "textrp_briij.app.generic_worker",
             {"worker_name": "federation_sender"},
             federation_http_client=mock_client_on_federation_sender,
         )
@@ -943,7 +943,7 @@ class FederationClientProxyTests(BaseMultiWorkerStreamTestCase):
 
         # Create the `federation_sender` worker
         self.make_worker_hs(
-            "synapse.app.generic_worker",
+            "textrp_briij.app.generic_worker",
             {"worker_name": "federation_sender"},
             federation_http_client=mock_client_on_federation_sender,
         )
@@ -1031,7 +1031,7 @@ class FederationClientProxyTests(BaseMultiWorkerStreamTestCase):
         with self.assertRaises(ConfigError):
             # Create the `federation_sender` worker
             self.make_worker_hs(
-                "synapse.app.generic_worker",
+                "textrp_briij.app.generic_worker",
                 {
                     "worker_name": "federation_sender",
                     # Test that we aren't able to proxy any outbound federation requests
@@ -1061,7 +1061,7 @@ class FederationClientProxyTests(BaseMultiWorkerStreamTestCase):
 
         # Create the `federation_sender` worker
         self.make_worker_hs(
-            "synapse.app.generic_worker",
+            "textrp_briij.app.generic_worker",
             {
                 "worker_name": "federation_sender",
                 # Test that we aren't able to proxy any outbound federation requests

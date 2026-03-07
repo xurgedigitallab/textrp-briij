@@ -27,19 +27,19 @@ from twisted.enterprise.adbapi import ConnectionPool
 from twisted.internet.defer import CancelledError, Deferred, ensureDeferred
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.room_versions import EventFormatVersions, RoomVersions
-from synapse.events import make_event_from_dict
-from synapse.logging.context import LoggingContext
-from synapse.rest import admin
-from synapse.rest.client import login, room
-from synapse.server import HomeServer
-from synapse.storage.databases.main.events_worker import (
+from textrp_briij.api.room_versions import EventFormatVersions, RoomVersions
+from textrp_briij.events import make_event_from_dict
+from textrp_briij.logging.context import LoggingContext
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, room
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.databases.main.events_worker import (
     EVENT_QUEUE_THREADS,
     EventsWorkerStore,
 )
-from synapse.storage.types import Connection
-from synapse.util.async_helpers import yieldable_gather_results
-from synapse.util.clock import Clock
+from textrp_briij.storage.types import Connection
+from textrp_briij.util.async_helpers import yieldable_gather_results
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.test_utils.event_injection import create_event, inject_event
@@ -450,7 +450,7 @@ class DatabaseOutageTestCase(unittest.HomeserverTestCase):
     def test_recovery(self) -> None:
         """Test that event fetchers recover after a database outage."""
         with self.assertLogs(
-            "synapse.metrics.background_process_metrics", level="ERROR"
+            "textrp_briij.metrics.background_process_metrics", level="ERROR"
         ):
             with self._outage():
                 # Kick off a bunch of event fetches but do not pump the reactor

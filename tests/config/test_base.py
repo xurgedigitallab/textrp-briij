@@ -23,9 +23,9 @@ import os.path
 import tempfile
 from unittest.mock import Mock
 
-from synapse.config import ConfigError
-from synapse.config._base import Config
-from synapse.util.stringutils import random_string
+from textrp_briij.config import ConfigError
+from textrp_briij.config._base import Config
+from textrp_briij.util.stringutils import random_string
 
 from tests import unittest
 

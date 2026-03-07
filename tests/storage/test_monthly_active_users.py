@@ -22,9 +22,9 @@ from unittest.mock import AsyncMock
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import UserTypes
-from synapse.server import HomeServer
-from synapse.util.clock import Clock
+from textrp_briij.api.constants import UserTypes
+from textrp_briij.server import HomeServer
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.unittest import default_config, override_config

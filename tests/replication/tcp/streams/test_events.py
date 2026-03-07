@@ -24,11 +24,11 @@ from parameterized import parameterized
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import EventTypes, Membership
-from synapse.events import EventBase
-from synapse.replication.tcp.commands import RdataCommand
-from synapse.replication.tcp.streams._base import _STREAM_UPDATE_TARGET_ROW_COUNT
-from synapse.replication.tcp.streams.events import (
+from textrp_briij.api.constants import EventTypes, Membership
+from textrp_briij.events import EventBase
+from textrp_briij.replication.tcp.commands import RdataCommand
+from textrp_briij.replication.tcp.streams._base import _STREAM_UPDATE_TARGET_ROW_COUNT
+from textrp_briij.replication.tcp.streams.events import (
     _MAX_STATE_UPDATES_PER_ROOM,
     EventsStream,
     EventsStreamAllStateRow,
@@ -36,10 +36,10 @@ from synapse.replication.tcp.streams.events import (
     EventsStreamEventRow,
     EventsStreamRow,
 )
-from synapse.rest import admin
-from synapse.rest.client import login, room
-from synapse.server import HomeServer
-from synapse.util.clock import Clock
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, room
+from textrp_briij.server import HomeServer
+from textrp_briij.util.clock import Clock
 
 from tests.replication._base import BaseStreamTestCase
 from tests.test_utils.event_injection import inject_event, inject_member_event

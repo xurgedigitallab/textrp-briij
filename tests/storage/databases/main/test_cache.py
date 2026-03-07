@@ -20,7 +20,7 @@
 #
 from unittest.mock import Mock, call
 
-from synapse.storage.database import LoggingTransaction
+from textrp_briij.storage.database import LoggingTransaction
 
 from tests.replication._base import BaseMultiWorkerStreamTestCase
 from tests.unittest import HomeserverTestCase
@@ -76,7 +76,7 @@ class CacheInvalidationOverReplicationTestCase(BaseMultiWorkerStreamTestCase):
         worker_invalidate = Mock()
 
         self.store._get_cached_user_device.invalidate = master_invalidate
-        worker = self.make_worker_hs("synapse.app.generic_worker")
+        worker = self.make_worker_hs("textrp_briij.app.generic_worker")
         worker_ds = worker.get_datastores().main
         worker_ds._get_cached_user_device.invalidate = worker_invalidate
 

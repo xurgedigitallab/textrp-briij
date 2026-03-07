@@ -19,7 +19,7 @@ In order to start the Synapse container as a worker, you must specify an `entryp
 
 ```yaml
 synapse-generic-worker-1:
-  image: matrixdotorg/synapse:latest
+  image: textrp/briij-synapse:latest
   container_name: synapse-generic-worker-1
   restart: unless-stopped
   entrypoint: ["/start.py", "run", "--config-path=/data/homeserver.yaml", "--config-path=/data/workers/synapse-generic-worker-1.yaml"]
@@ -46,7 +46,7 @@ Please note: The federation sender does not receive REST API calls so no exposed
 
 ```yaml
 synapse-federation-sender-1:
-  image: matrixdotorg/synapse:latest
+  image: textrp/briij-synapse:latest
   container_name: synapse-federation-sender-1
   restart: unless-stopped
   entrypoint: ["/start.py", "run", "--config-path=/data/homeserver.yaml", "--config-path=/data/workers/synapse-federation-sender-1.yaml"]
@@ -116,4 +116,4 @@ federation_sender_instances:
 
 ## Other Worker types
 
-Using the concepts shown here it is possible to create other worker types in Docker Compose. See the [Workers](https://element-hq.github.io/synapse/latest/workers.html#available-worker-applications) documentation for a list of available workers.
+Using the concepts shown here it is possible to create other worker types in Docker Compose. See the [Workers](https://docs.briij.example/synapse/latest/workers.html#available-worker-applications) documentation for a list of available workers.

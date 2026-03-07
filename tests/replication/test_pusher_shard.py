@@ -24,10 +24,10 @@ from unittest.mock import Mock
 from twisted.internet import defer
 from twisted.internet.testing import MemoryReactor
 
-from synapse.rest import admin
-from synapse.rest.client import login, room
-from synapse.server import HomeServer
-from synapse.util.clock import Clock
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, room
+from textrp_briij.server import HomeServer
+from textrp_briij.util.clock import Clock
 
 from tests.replication._base import BaseMultiWorkerStreamTestCase
 
@@ -98,7 +98,7 @@ class PusherShardTestCase(BaseMultiWorkerStreamTestCase):
         )
 
         self.make_worker_hs(
-            "synapse.app.generic_worker",
+            "textrp_briij.app.generic_worker",
             {"worker_name": "pusher1", "pusher_instances": ["pusher1"]},
             proxied_blocklisted_http_client=http_client_mock,
         )
@@ -128,7 +128,7 @@ class PusherShardTestCase(BaseMultiWorkerStreamTestCase):
         )
 
         self.make_worker_hs(
-            "synapse.app.generic_worker",
+            "textrp_briij.app.generic_worker",
             {
                 "worker_name": "pusher1",
                 "pusher_instances": ["pusher1", "pusher2"],
@@ -142,7 +142,7 @@ class PusherShardTestCase(BaseMultiWorkerStreamTestCase):
         )
 
         self.make_worker_hs(
-            "synapse.app.generic_worker",
+            "textrp_briij.app.generic_worker",
             {
                 "worker_name": "pusher2",
                 "pusher_instances": ["pusher1", "pusher2"],

@@ -20,7 +20,7 @@
 
 from unittest.mock import Mock
 
-from synapse.util.caches.ttlcache import TTLCache
+from textrp_briij.util.caches.ttlcache import TTLCache
 
 from tests import unittest
 

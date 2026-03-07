@@ -26,8 +26,8 @@ from twisted.internet.defer import Deferred
 from twisted.internet.error import ConnectError
 from twisted.names import dns, error
 
-from synapse.http.federation.srv_resolver import Server, SrvResolver
-from synapse.logging.context import LoggingContext, current_context
+from textrp_briij.http.federation.srv_resolver import Server, SrvResolver
+from textrp_briij.logging.context import LoggingContext, current_context
 
 from tests import unittest
 from tests.server import get_clock

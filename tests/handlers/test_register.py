@@ -24,18 +24,18 @@ from unittest.mock import AsyncMock, Mock
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.auth.internal import InternalAuth
-from synapse.api.constants import UserTypes
-from synapse.api.errors import (
+from textrp_briij.api.auth.internal import InternalAuth
+from textrp_briij.api.constants import UserTypes
+from textrp_briij.api.errors import (
     CodeMessageException,
     Codes,
     ResourceLimitError,
     SynapseError,
 )
-from synapse.module_api import ModuleApi
-from synapse.server import HomeServer
-from synapse.spam_checker_api import RegistrationBehaviour
-from synapse.types import (
+from textrp_briij.module_api import ModuleApi
+from textrp_briij.server import HomeServer
+from textrp_briij.spam_checker_api import RegistrationBehaviour
+from textrp_briij.types import (
     JsonDict,
     Requester,
     RoomAlias,
@@ -43,7 +43,7 @@ from synapse.types import (
     UserID,
     create_requester,
 )
-from synapse.util.clock import Clock
+from textrp_briij.util.clock import Clock
 
 from tests.unittest import override_config
 from tests.utils import mock_getRawHeaders

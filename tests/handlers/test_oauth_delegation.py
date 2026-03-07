@@ -40,21 +40,21 @@ from signedjson.sign import sign_json
 from twisted.internet.defer import Deferred, ensureDeferred
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.auth.mas import MasDelegatedAuth
-from synapse.api.errors import (
+from textrp_briij.api.auth.mas import MasDelegatedAuth
+from textrp_briij.api.errors import (
     AuthError,
     Codes,
     HttpResponseException,
     InvalidClientTokenError,
     SynapseError,
 )
-from synapse.appservice import ApplicationService
-from synapse.http.site import SynapseRequest
-from synapse.rest import admin
-from synapse.rest.client import account, devices, keys, login, logout, register
-from synapse.server import HomeServer
-from synapse.types import JsonDict, UserID, create_requester
-from synapse.util.clock import Clock
+from textrp_briij.appservice import ApplicationService
+from textrp_briij.http.site import SynapseRequest
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import account, devices, keys, login, logout, register
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict, UserID, create_requester
+from textrp_briij.util.clock import Clock
 
 from tests.server import FakeChannel
 from tests.test_utils import get_awaitable_result
@@ -154,7 +154,7 @@ class MSC3861OAuthDelegation(HomeserverTestCase):
         hs = self.setup_test_homeserver(proxied_http_client=self.http_client)
 
         # Import this here so that we've checked that authlib is available.
-        from synapse.api.auth.msc3861_delegated import MSC3861DelegatedAuth
+        from textrp_briij.api.auth.msc3861_delegated import MSC3861DelegatedAuth
 
         self.auth = checked_cast(MSC3861DelegatedAuth, hs.get_auth())
 

@@ -22,10 +22,10 @@
 
 from unittest.mock import Mock, patch
 
-from synapse.metrics.jemalloc import JemallocStats
-from synapse.types import JsonDict
-from synapse.util.caches.lrucache import LruCache, setup_expire_lru_cache_entries
-from synapse.util.caches.treecache import TreeCache
+from textrp_briij.metrics.jemalloc import JemallocStats
+from textrp_briij.types import JsonDict
+from textrp_briij.util.caches.lrucache import LruCache, setup_expire_lru_cache_entries
+from textrp_briij.util.caches.treecache import TreeCache
 
 from tests import unittest
 from tests.server import get_clock
@@ -393,7 +393,7 @@ class MemoryEvictionTestCase(unittest.HomeserverTestCase):
             }
         }
     )
-    @patch("synapse.util.caches.lrucache.get_jemalloc_stats")
+    @patch("textrp_briij.util.caches.lrucache.get_jemalloc_stats")
     def test_evict_memory(self, jemalloc_interface: Mock) -> None:
         mock_jemalloc_class = Mock(spec=JemallocStats)
         jemalloc_interface.return_value = mock_jemalloc_class

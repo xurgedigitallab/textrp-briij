@@ -22,12 +22,12 @@ from http import HTTPStatus
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.errors import Codes
-from synapse.events.utils import CANONICALJSON_MAX_INT, CANONICALJSON_MIN_INT
-from synapse.rest import admin
-from synapse.rest.client import login, room, sync
-from synapse.server import HomeServer
-from synapse.util.clock import Clock
+from textrp_briij.api.errors import Codes
+from textrp_briij.events.utils import CANONICALJSON_MAX_INT, CANONICALJSON_MIN_INT
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, room, sync
+from textrp_briij.server import HomeServer
+from textrp_briij.util.clock import Clock
 
 from tests.unittest import HomeserverTestCase
 

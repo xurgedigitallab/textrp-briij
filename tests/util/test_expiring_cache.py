@@ -20,7 +20,7 @@
 #
 
 
-from synapse.util.caches.expiringcache import ExpiringCache
+from textrp_briij.util.caches.expiringcache import ExpiringCache
 
 from tests.server import get_clock
 

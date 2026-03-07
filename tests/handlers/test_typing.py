@@ -28,14 +28,14 @@ from netaddr import IPSet
 from twisted.internet.testing import MemoryReactor
 from twisted.web.resource import Resource
 
-from synapse.api.constants import EduTypes
-from synapse.api.errors import AuthError
-from synapse.federation.transport.server import TransportLayerServer
-from synapse.handlers.typing import FORGET_TIMEOUT, TypingWriterHandler
-from synapse.http.federation.matrix_federation_agent import MatrixFederationAgent
-from synapse.server import HomeServer
-from synapse.types import JsonDict, Requester, StreamKeyType, UserID, create_requester
-from synapse.util.clock import Clock
+from textrp_briij.api.constants import EduTypes
+from textrp_briij.api.errors import AuthError
+from textrp_briij.federation.transport.server import TransportLayerServer
+from textrp_briij.handlers.typing import FORGET_TIMEOUT, TypingWriterHandler
+from textrp_briij.http.federation.matrix_federation_agent import MatrixFederationAgent
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict, Requester, StreamKeyType, UserID, create_requester
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.server import ThreadedMemoryReactorClock
@@ -347,7 +347,7 @@ class TypingNotificationsTestCase(unittest.HomeserverTestCase):
         self.room_members = [U_APPLE, U_BANANA, U_ONION]
 
         # Gut-wrenching
-        from synapse.handlers.typing import RoomMember
+        from textrp_briij.handlers.typing import RoomMember
 
         member = RoomMember(ROOM_ID, U_APPLE.to_string())
         self.handler._member_typing_until[member] = 1002000

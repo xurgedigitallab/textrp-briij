@@ -18,14 +18,14 @@ from parameterized import parameterized, parameterized_class
 
 from twisted.internet.testing import MemoryReactor
 
-import synapse.rest.admin
-from synapse.api.constants import EventTypes
-from synapse.api.errors import Codes
-from synapse.handlers.sliding_sync import room_lists
-from synapse.rest.client import login, room, sync
-from synapse.server import HomeServer
-from synapse.storage.databases.main.sliding_sync import CONNECTION_EXPIRY
-from synapse.util.clock import Clock
+import textrp_briij.rest.admin
+from textrp_briij.api.constants import EventTypes
+from textrp_briij.api.errors import Codes
+from textrp_briij.handlers.sliding_sync import room_lists
+from textrp_briij.rest.client import login, room, sync
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.databases.main.sliding_sync import CONNECTION_EXPIRY
+from textrp_briij.util.clock import Clock
 
 from tests.rest.client.sliding_sync.test_sliding_sync import SlidingSyncBase
 
@@ -52,7 +52,7 @@ class SlidingSyncConnectionTrackingTestCase(SlidingSyncBase):
     """
 
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
         room.register_servlets,
         sync.register_servlets,
@@ -400,7 +400,7 @@ class SlidingSyncConnectionTrackingTestCase(SlidingSyncBase):
         self.assertEqual(response_body["rooms"][room_id1]["limited"], True)
         self.assertEqual(response_body["rooms"][room_id1]["initial"], True)
 
-    @patch("synapse.handlers.sliding_sync.room_lists.NUM_ROOMS_THRESHOLD", new=5)
+    @patch("textrp_briij.handlers.sliding_sync.room_lists.NUM_ROOMS_THRESHOLD", new=5)
     def test_sliding_sync_connection_expires_with_too_much_data(self) -> None:
         """
         Test that if we have too much data to send down for incremental sync,

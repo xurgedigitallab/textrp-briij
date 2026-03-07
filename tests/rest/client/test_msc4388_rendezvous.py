@@ -21,12 +21,12 @@ from parameterized import parameterized
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.auth.mas import MasDelegatedAuth
-from synapse.rest import admin
-from synapse.rest.client import login, rendezvous
-from synapse.server import HomeServer
-from synapse.types import UserID
-from synapse.util.clock import Clock
+from textrp_briij.api.auth.mas import MasDelegatedAuth
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, rendezvous
+from textrp_briij.server import HomeServer
+from textrp_briij.types import UserID
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.unittest import checked_cast, override_config

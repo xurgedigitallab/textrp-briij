@@ -23,16 +23,16 @@ from urllib.parse import quote
 
 from twisted.internet.testing import MemoryReactor
 
-import synapse.rest.admin
-from synapse.api.constants import UserTypes
-from synapse.api.errors import SynapseError
-from synapse.api.room_versions import RoomVersion, RoomVersions
-from synapse.appservice import ApplicationService
-from synapse.rest.client import login, register, room, user_directory
-from synapse.server import HomeServer
-from synapse.storage.roommember import ProfileInfo
-from synapse.types import JsonDict, UserID, UserProfile, create_requester
-from synapse.util.clock import Clock
+import textrp_briij.rest.admin
+from textrp_briij.api.constants import UserTypes
+from textrp_briij.api.errors import SynapseError
+from textrp_briij.api.room_versions import RoomVersion, RoomVersions
+from textrp_briij.appservice import ApplicationService
+from textrp_briij.rest.client import login, register, room, user_directory
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.roommember import ProfileInfo
+from textrp_briij.types import JsonDict, UserID, UserProfile, create_requester
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.storage.test_user_directory import GetUserDirectoryTables
@@ -62,7 +62,7 @@ class UserDirectoryTestCase(unittest.HomeserverTestCase):
 
     servlets = [
         login.register_servlets,
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         register.register_servlets,
         room.register_servlets,
     ]
@@ -83,7 +83,7 @@ class UserDirectoryTestCase(unittest.HomeserverTestCase):
 
         mock_load_appservices = Mock(return_value=[self.appservice])
         with patch(
-            "synapse.storage.databases.main.appservice.load_appservices",
+            "textrp_briij.storage.databases.main.appservice.load_appservices",
             mock_load_appservices,
         ):
             hs = self.setup_test_homeserver(config=config)
@@ -1205,7 +1205,7 @@ class TestUserDirSearchDisabled(unittest.HomeserverTestCase):
         user_directory.register_servlets,
         room.register_servlets,
         login.register_servlets,
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
     ]
 
     def make_homeserver(self, reactor: MemoryReactor, clock: Clock) -> HomeServer:
@@ -1256,7 +1256,7 @@ class TestUserDirSearchDisabled(unittest.HomeserverTestCase):
 class UserDirectoryRemoteProfileTestCase(unittest.HomeserverTestCase):
     servlets = [
         login.register_servlets,
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         register.register_servlets,
         room.register_servlets,
     ]

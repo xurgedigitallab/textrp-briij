@@ -7,7 +7,7 @@ export PGHOST="localhost"
 POSTGRES_MAIN_DB_NAME="synapse_full_schema_main.$$"
 POSTGRES_COMMON_DB_NAME="synapse_full_schema_common.$$"
 POSTGRES_STATE_DB_NAME="synapse_full_schema_state.$$"
-REQUIRED_DEPS=("matrix-synapse" "psycopg2")
+REQUIRED_DEPS=("textrp-briij" "psycopg2")
 
 usage() {
   echo

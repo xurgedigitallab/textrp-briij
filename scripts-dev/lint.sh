@@ -138,7 +138,7 @@ cargo-fmt
 mypy
 
 # Generate configuration documentation from the JSON Schema
-./scripts-dev/gen_config_documentation.py schema/synapse-config.schema.yaml > docs/usage/configuration/config_documentation.md
+./scripts-dev/gen_config_documentation.py schema/briij-config.schema.yaml > docs/usage/configuration/config_documentation.md
 
 # Lint/format the in-repo Complement test code (Go)
 pushd ./complement

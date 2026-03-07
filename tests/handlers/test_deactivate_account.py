@@ -21,14 +21,14 @@
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import AccountDataTypes, EventTypes, JoinRules, Membership
-from synapse.push.rulekinds import PRIORITY_CLASS_MAP
-from synapse.rest import admin
-from synapse.rest.client import account, login, room
-from synapse.server import HomeServer
-from synapse.synapse_rust.push import PushRule
-from synapse.types import UserID, create_requester
-from synapse.util.clock import Clock
+from textrp_briij.api.constants import AccountDataTypes, EventTypes, JoinRules, Membership
+from textrp_briij.push.rulekinds import PRIORITY_CLASS_MAP
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import account, login, room
+from textrp_briij.server import HomeServer
+from textrp_briij.synapse_rust.push import PushRule
+from textrp_briij.types import UserID, create_requester
+from textrp_briij.util.clock import Clock
 
 from tests.unittest import HomeserverTestCase
 

@@ -22,11 +22,11 @@ from unittest.mock import AsyncMock, Mock
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.handlers.presence import PresenceHandler
-from synapse.rest.client import presence
-from synapse.server import HomeServer
-from synapse.types import UserID
-from synapse.util.clock import Clock
+from textrp_briij.handlers.presence import PresenceHandler
+from textrp_briij.rest.client import presence
+from textrp_briij.server import HomeServer
+from textrp_briij.types import UserID
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.unittest import override_config

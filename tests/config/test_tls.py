@@ -25,14 +25,14 @@ import idna
 
 from OpenSSL import SSL
 
-from synapse.config._base import Config, RootConfig
-from synapse.config.homeserver import HomeServerConfig
-from synapse.config.tls import ConfigError, TlsConfig
-from synapse.crypto.context_factory import (
+from textrp_briij.config._base import Config, RootConfig
+from textrp_briij.config.homeserver import HomeServerConfig
+from textrp_briij.config.tls import ConfigError, TlsConfig
+from textrp_briij.crypto.context_factory import (
     FederationPolicyForHTTPS,
     SSLClientConnectionCreator,
 )
-from synapse.types import JsonDict
+from textrp_briij.types import JsonDict
 
 from tests.unittest import TestCase
 

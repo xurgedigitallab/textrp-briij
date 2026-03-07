@@ -22,10 +22,10 @@ from unittest.mock import Mock
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.rest.client.register import register_servlets
-from synapse.server import HomeServer
-from synapse.types import JsonDict
-from synapse.util.clock import Clock
+from textrp_briij.rest.client.register import register_servlets
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 

@@ -33,22 +33,22 @@ from parameterized import parameterized
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import EventTypes
-from synapse.api.room_versions import (
+from textrp_briij.api.constants import EventTypes
+from textrp_briij.api.room_versions import (
     KNOWN_ROOM_VERSIONS,
     EventFormatVersions,
     RoomVersion,
 )
-from synapse.events import EventBase
-from synapse.rest import admin
-from synapse.rest.client import login, room
-from synapse.server import HomeServer
-from synapse.storage.database import LoggingTransaction
-from synapse.storage.types import Cursor
-from synapse.synapse_rust.events import EventInternalMetadata
-from synapse.types import JsonDict
-from synapse.util.clock import Clock
-from synapse.util.json import json_encoder
+from textrp_briij.events import EventBase
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, room
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.database import LoggingTransaction
+from textrp_briij.storage.types import Cursor
+from textrp_briij.synapse_rust.events import EventInternalMetadata
+from textrp_briij.types import JsonDict
+from textrp_briij.util.clock import Clock
+from textrp_briij.util.json import json_encoder
 
 import tests.unittest
 import tests.utils

@@ -24,21 +24,21 @@ from unittest.mock import Mock
 
 from twisted.internet.testing import MemoryReactor
 
-import synapse.rest.admin
-import synapse.storage
-from synapse.api.constants import EventTypes, JoinRules
-from synapse.api.room_versions import RoomVersions
-from synapse.rest.client import knock, login, room
-from synapse.server import HomeServer
-from synapse.types import UserID
-from synapse.util.clock import Clock
+import textrp_briij.rest.admin
+import textrp_briij.storage
+from textrp_briij.api.constants import EventTypes, JoinRules
+from textrp_briij.api.room_versions import RoomVersions
+from textrp_briij.rest.client import knock, login, room
+from textrp_briij.server import HomeServer
+from textrp_briij.types import UserID
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 
 
 class ExfiltrateData(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         login.register_servlets,
         room.register_servlets,
         knock.register_servlets,

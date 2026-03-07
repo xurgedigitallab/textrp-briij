@@ -1,6 +1,6 @@
 from parameterized import parameterized
 
-from synapse.util.caches.stream_change_cache import StreamChangeCache
+from textrp_briij.util.caches.stream_change_cache import StreamChangeCache
 
 from tests import unittest
 

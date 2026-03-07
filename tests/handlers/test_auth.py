@@ -24,11 +24,11 @@ import pymacaroons
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.errors import AuthError, ResourceLimitError
-from synapse.rest import admin
-from synapse.rest.client import login
-from synapse.server import HomeServer
-from synapse.util.clock import Clock
+from textrp_briij.api.errors import AuthError, ResourceLimitError
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login
+from textrp_briij.server import HomeServer
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 

@@ -17,11 +17,11 @@ from parameterized import parameterized_class
 
 from twisted.internet.testing import MemoryReactor
 
-import synapse.rest.admin
-from synapse.rest.client import login, sendtodevice, sync
-from synapse.server import HomeServer
-from synapse.types import JsonDict, StreamKeyType
-from synapse.util.clock import Clock
+import textrp_briij.rest.admin
+from textrp_briij.rest.client import login, sendtodevice, sync
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict, StreamKeyType
+from textrp_briij.util.clock import Clock
 
 from tests.rest.client.sliding_sync.test_sliding_sync import SlidingSyncBase
 from tests.server import TimedOutException
@@ -47,7 +47,7 @@ class SlidingSyncToDeviceExtensionTestCase(SlidingSyncBase):
     """Tests for the to-device sliding sync extension"""
 
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
         sync.register_servlets,
         sendtodevice.register_servlets,

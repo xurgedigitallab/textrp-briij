@@ -19,7 +19,7 @@
 #
 #
 
-from synapse.replication.tcp.streams._base import (
+from textrp_briij.replication.tcp.streams._base import (
     _STREAM_UPDATE_TARGET_ROW_COUNT,
     AccountDataStream,
 )

@@ -155,7 +155,7 @@ class SendEmailHandlerTestCaseIPv4(HomeserverTestCase):
         self.assertIn(b"Subject: test subject", msg)
 
     @patch(
-        "synapse.handlers.send_email.TLSMemoryBIOFactory",
+        "textrp_briij.handlers.send_email.TLSMemoryBIOFactory",
         TestingESMTPTLSClientFactory,
     )
     @override_config(

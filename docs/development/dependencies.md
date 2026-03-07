@@ -30,7 +30,7 @@ in development and our continuous integration.
 
 Separately, our "broad" dependencies—the version ranges specified in
 `pyproject.toml`—are included as metadata in our "sdists" and "wheels" [uploaded
-to PyPI](https://pypi.org/project/matrix-synapse). Installing from PyPI or from
+to PyPI](https://pypi.org/project/textrp-briij). Installing from PyPI or from
 the Synapse source tree directly will _not_ use the locked dependencies; instead,
 they'll pull in the latest version of each package available at install time.
 
@@ -79,9 +79,9 @@ phonenumbers = [
 We can see this pinned version inside the docker image for that release:
 
 ```
-$ docker pull matrixdotorg/synapse:latest
+$ docker pull textrp/briij-synapse:latest
 ...
-$ docker run --entrypoint pip matrixdotorg/synapse:latest show phonenumbers
+$ docker run --entrypoint pip textrp/briij-synapse:latest show phonenumbers
 Name: phonenumbers
 Version: 9.0.15
 Summary: Python version of Google's common library for parsing, formatting, storing and validating international phone numbers.
@@ -91,7 +91,7 @@ Author-email: dmd@lurklurk.org
 License: Apache License 2.0
 Location: /usr/local/lib/python3.12/site-packages
 Requires:
-Required-by: matrix-synapse
+Required-by: textrp-briij
 ```
 
 Whereas the wheel metadata just contains the broad dependencies:

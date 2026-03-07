@@ -2,10 +2,10 @@ from unittest import TestCase as StdlibTestCase
 
 import yaml
 
-from synapse.config import ConfigError
-from synapse.config._base import RootConfig
-from synapse.config.api import ApiConfig
-from synapse.types.state import StateFilter
+from textrp_briij.config import ConfigError
+from textrp_briij.config._base import RootConfig
+from textrp_briij.config.api import ApiConfig
+from textrp_briij.types.state import StateFilter
 
 DEFAULT_PREJOIN_STATE_PAIRS = {
     ("m.room.join_rules", ""),

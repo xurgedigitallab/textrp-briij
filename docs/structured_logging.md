@@ -7,10 +7,10 @@ such as the [ELK stack](https://opensource.com/article/18/9/open-source-log-aggr
 
 Synapse's structured logging system is configured via the file that Synapse's
 `log_config` config option points to. The file should include a formatter which
-uses the `synapse.logging.TerseJsonFormatter` class included with Synapse and a
+uses the `textrp_briij.logging.TerseJsonFormatter` class included with Synapse and a
 handler which uses the above formatter.
 
-There is also a `synapse.logging.JsonFormatter` option which does not include
+There is also a `textrp_briij.logging.JsonFormatter` option which does not include
 a timestamp in the resulting JSON. This is useful if the log ingester adds its
 own timestamp.
 
@@ -21,7 +21,7 @@ version: 1
 
 formatters:
     structured:
-        class: synapse.logging.TerseJsonFormatter
+        class: textrp_briij.logging.TerseJsonFormatter
 
 handlers:
     file:
@@ -44,7 +44,7 @@ The above logging config will set Synapse as 'INFO' logging level by default,
 with the SQL layer at 'WARNING', and will log to a file, stored as JSON.
 
 It is also possible to configure Synapse to log to a remote endpoint by using the
-`synapse.logging.RemoteHandler` class included with Synapse. It takes the
+`textrp_briij.logging.RemoteHandler` class included with Synapse. It takes the
 following arguments:
 
 - `host`: Hostname or IP address of the log aggregator.
@@ -58,11 +58,11 @@ version: 1
 
 formatters:
     structured:
-        class: synapse.logging.TerseJsonFormatter
+        class: textrp_briij.logging.TerseJsonFormatter
 
 handlers:
     remote:
-        class: synapse.logging.RemoteHandler
+        class: textrp_briij.logging.RemoteHandler
         formatter: structured
         host: 10.1.2.3
         port: 9999

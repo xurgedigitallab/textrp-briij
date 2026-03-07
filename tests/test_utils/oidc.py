@@ -32,9 +32,9 @@ import attr
 from twisted.web.http_headers import Headers
 from twisted.web.iweb import IResponse
 
-from synapse.server import HomeServer
-from synapse.util.clock import Clock
-from synapse.util.stringutils import random_string
+from textrp_briij.server import HomeServer
+from textrp_briij.util.clock import Clock
+from textrp_briij.util.stringutils import random_string
 
 from tests.test_utils import FakeResponse
 

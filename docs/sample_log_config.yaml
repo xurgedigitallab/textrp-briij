@@ -7,7 +7,7 @@
 # be ingested by ELK stacks. See [2] for details.
 #
 # [1]: https://docs.python.org/3/library/logging.config.html#configuration-dictionary-schema
-# [2]: https://element-hq.github.io/synapse/latest/structured_logging.html
+# [2]: https://docs.briij.example/synapse/latest/structured_logging.html
 
 version: 1
 
@@ -19,7 +19,7 @@ handlers:
     file:
         class: logging.handlers.TimedRotatingFileHandler
         formatter: precise
-        filename: /var/log/matrix-synapse/homeserver.log
+        filename: /var/log/textrp-briij/homeserver.log
         when: midnight
         backupCount: 3  # Does not include the current log file.
         encoding: utf8
@@ -29,7 +29,7 @@ handlers:
     # delay (of up to `period` seconds, or until the buffer is full with
     # `capacity` messages) before INFO/DEBUG logs get written.
     buffer:
-        class: synapse.logging.handlers.PeriodicallyFlushingMemoryHandler
+        class: textrp_briij.logging.handlers.PeriodicallyFlushingMemoryHandler
         target: file
 
         # The capacity is the maximum number of log lines that are buffered
@@ -57,8 +57,8 @@ handlers:
         formatter: precise
 
 loggers:
-    synapse.storage.SQL:
-        # beware: increasing this to DEBUG will make synapse log sensitive
+    textrp_briij.storage.SQL:
+        # beware: increasing this to DEBUG will make Briij by TextRP log sensitive
         # information such as access tokens.
         level: INFO
 

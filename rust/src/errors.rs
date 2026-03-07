@@ -19,7 +19,7 @@ use std::collections::HashMap;
 use http::{HeaderMap, StatusCode};
 use pyo3::{exceptions::PyValueError, import_exception};
 
-import_exception!(synapse.api.errors, SynapseError);
+import_exception!(textrp_briij.api.errors, SynapseError);
 
 impl SynapseError {
     pub fn new(
@@ -51,7 +51,7 @@ impl SynapseError {
     }
 }
 
-import_exception!(synapse.api.errors, NotFoundError);
+import_exception!(textrp_briij.api.errors, NotFoundError);
 
 impl NotFoundError {
     pub fn new() -> pyo3::PyErr {
@@ -59,7 +59,7 @@ impl NotFoundError {
     }
 }
 
-import_exception!(synapse.api.errors, HttpResponseException);
+import_exception!(textrp_briij.api.errors, HttpResponseException);
 
 impl HttpResponseException {
     pub fn new(status: StatusCode, bytes: Vec<u8>) -> pyo3::PyErr {

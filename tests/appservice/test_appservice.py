@@ -24,8 +24,8 @@ from unittest.mock import AsyncMock, Mock
 
 from twisted.internet import defer
 
-from synapse.appservice import ApplicationService, Namespace
-from synapse.types import UserID
+from textrp_briij.appservice import ApplicationService, Namespace
+from textrp_briij.types import UserID
 
 from tests import unittest
 

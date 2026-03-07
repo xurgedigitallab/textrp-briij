@@ -18,9 +18,9 @@
 # [This file includes modifications made by New Vector Limited]
 #
 #
-from synapse.api.constants import EduTypes
-from synapse.rest import admin
-from synapse.rest.client import login, sendtodevice, sync
+from textrp_briij.api.constants import EduTypes
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, sendtodevice, sync
 
 from tests.unittest import HomeserverTestCase, override_config
 

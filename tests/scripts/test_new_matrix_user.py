@@ -20,8 +20,8 @@
 
 from unittest.mock import Mock, patch
 
-from synapse._scripts.register_new_matrix_user import request_registration
-from synapse.types import JsonDict
+from textrp_briij._scripts.register_new_matrix_user import request_registration
+from textrp_briij.types import JsonDict
 
 from tests.unittest import TestCase
 
@@ -62,7 +62,7 @@ class RegisterTestCase(TestCase):
         out: list[str] = []
         err_code: list[int] = []
 
-        with patch("synapse._scripts.register_new_matrix_user.requests", requests):
+        with patch("textrp_briij._scripts.register_new_matrix_user.requests", requests):
             request_registration(
                 "user",
                 "pass",
@@ -98,7 +98,7 @@ class RegisterTestCase(TestCase):
         out: list[str] = []
         err_code: list[int] = []
 
-        with patch("synapse._scripts.register_new_matrix_user.requests", requests):
+        with patch("textrp_briij._scripts.register_new_matrix_user.requests", requests):
             request_registration(
                 "user",
                 "pass",
@@ -153,7 +153,7 @@ class RegisterTestCase(TestCase):
         out: list[str] = []
         err_code: list[int] = []
 
-        with patch("synapse._scripts.register_new_matrix_user.requests", requests):
+        with patch("textrp_briij._scripts.register_new_matrix_user.requests", requests):
             request_registration(
                 "user",
                 "pass",

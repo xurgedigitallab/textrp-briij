@@ -1,8 +1,8 @@
 from http import HTTPStatus
 
-from synapse.rest import admin
-from synapse.rest.client import directory, login, room
-from synapse.types import JsonDict
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import directory, login, room
+from textrp_briij.types import JsonDict
 
 from tests import unittest
 from tests.utils import default_config

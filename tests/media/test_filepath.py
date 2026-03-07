@@ -22,7 +22,7 @@ import inspect
 import os
 from typing import Iterable
 
-from synapse.media.filepath import MediaFilePaths, _wrap_with_jail_check
+from textrp_briij.media.filepath import MediaFilePaths, _wrap_with_jail_check
 
 from tests import unittest
 

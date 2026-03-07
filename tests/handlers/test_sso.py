@@ -24,10 +24,10 @@ from unittest.mock import Mock
 from twisted.internet.testing import MemoryReactor
 from twisted.web.http_headers import Headers
 
-from synapse.api.errors import Codes, SynapseError
-from synapse.http.client import RawHeaders
-from synapse.server import HomeServer
-from synapse.util.clock import Clock
+from textrp_briij.api.errors import Codes, SynapseError
+from textrp_briij.http.client import RawHeaders
+from textrp_briij.server import HomeServer
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.test_utils import SMALL_PNG, FakeResponse

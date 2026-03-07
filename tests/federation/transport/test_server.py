@@ -19,7 +19,7 @@
 #
 #
 
-from synapse.api.constants import EduTypes
+from textrp_briij.api.constants import EduTypes
 
 from tests import unittest
 from tests.unittest import DEBUG, override_config
@@ -50,7 +50,7 @@ class RoomDirectoryFederationTests(unittest.FederatingHomeserverTestCase):
 
     @DEBUG
     def test_edu_debugging_doesnt_explode(self) -> None:
-        """Sanity check incoming federation succeeds with `synapse.debug_8631` enabled.
+        """Sanity check incoming federation succeeds with `textrp_briij.debug_8631` enabled.
 
         Remove this when we strip out issue_8631_logger.
         """

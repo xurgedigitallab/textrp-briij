@@ -23,12 +23,12 @@ from http import HTTPStatus
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import LoginType
-from synapse.api.errors import Codes
-from synapse.rest import admin
-from synapse.rest.client import account, login, password_policy, register
-from synapse.server import HomeServer
-from synapse.util.clock import Clock
+from textrp_briij.api.constants import LoginType
+from textrp_briij.api.errors import Codes
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import account, login, password_policy, register
+from textrp_briij.server import HomeServer
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 

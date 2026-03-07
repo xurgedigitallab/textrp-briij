@@ -22,13 +22,13 @@
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import APP_SERVICE_REGISTRATION_TYPE, LoginType
-from synapse.api.errors import Codes, HttpResponseException, SynapseError
-from synapse.appservice import ApplicationService
-from synapse.rest.client import register, sync
-from synapse.server import HomeServer
-from synapse.types import JsonDict, UserID
-from synapse.util.clock import Clock
+from textrp_briij.api.constants import APP_SERVICE_REGISTRATION_TYPE, LoginType
+from textrp_briij.api.errors import Codes, HttpResponseException, SynapseError
+from textrp_briij.appservice import ApplicationService
+from textrp_briij.rest.client import register, sync
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict, UserID
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.unittest import override_config
@@ -332,7 +332,7 @@ class TestMauLimit(unittest.HomeserverTestCase):
         if channel.code != 200:
             raise HttpResponseException(
                 channel.code, channel.result["reason"], channel.result["body"]
-            ).to_synapse_error()
+            ).to_briij_error()
 
         access_token = channel.json_body["access_token"]
 
@@ -344,4 +344,4 @@ class TestMauLimit(unittest.HomeserverTestCase):
         if channel.code != 200:
             raise HttpResponseException(
                 channel.code, channel.result["reason"], channel.result["body"]
-            ).to_synapse_error()
+            ).to_briij_error()

@@ -81,26 +81,26 @@ from twisted.web.http_headers import Headers
 from twisted.web.resource import IResource
 from twisted.web.server import Request, Site
 
-from synapse.api.constants import MAX_REQUEST_SIZE
-from synapse.config.database import DatabaseConnectionConfig
-from synapse.config.homeserver import HomeServerConfig
-from synapse.events.auto_accept_invites import InviteAutoAccepter
-from synapse.events.presence_router import load_legacy_presence_router
-from synapse.handlers.auth import load_legacy_password_auth_providers
-from synapse.http.site import SynapseRequest
-from synapse.logging.context import ContextResourceUsage
-from synapse.module_api.callbacks.spamchecker_callbacks import load_legacy_spam_checkers
-from synapse.module_api.callbacks.third_party_event_rules_callbacks import (
+from textrp_briij.api.constants import MAX_REQUEST_SIZE
+from textrp_briij.config.database import DatabaseConnectionConfig
+from textrp_briij.config.homeserver import HomeServerConfig
+from textrp_briij.events.auto_accept_invites import InviteAutoAccepter
+from textrp_briij.events.presence_router import load_legacy_presence_router
+from textrp_briij.handlers.auth import load_legacy_password_auth_providers
+from textrp_briij.http.site import SynapseRequest
+from textrp_briij.logging.context import ContextResourceUsage
+from textrp_briij.module_api.callbacks.spamchecker_callbacks import load_legacy_spam_checkers
+from textrp_briij.module_api.callbacks.third_party_event_rules_callbacks import (
     load_legacy_third_party_event_rules,
 )
-from synapse.server import HomeServer
-from synapse.server_notices.consent_server_notices import ConfigError
-from synapse.storage import DataStore
-from synapse.storage.database import LoggingDatabaseConnection, make_pool
-from synapse.storage.engines import BaseDatabaseEngine, create_engine
-from synapse.storage.prepare_database import prepare_database
-from synapse.types import ISynapseReactor, JsonDict
-from synapse.util.clock import Clock
+from textrp_briij.server import HomeServer
+from textrp_briij.server_notices.consent_server_notices import ConfigError
+from textrp_briij.storage import DataStore
+from textrp_briij.storage.database import LoggingDatabaseConnection, make_pool
+from textrp_briij.storage.engines import BaseDatabaseEngine, create_engine
+from textrp_briij.storage.prepare_database import prepare_database
+from textrp_briij.types import IBriijReactor, JsonDict
+from textrp_briij.util.clock import Clock
 
 from tests.utils import (
     LEAVE_DB,
@@ -333,7 +333,7 @@ class FakeSite:
 
     server_version_string = b"1"
     site_tag = "test"
-    access_logger = logging.getLogger("synapse.access.http.fake")
+    access_logger = logging.getLogger("textrp_briij.access.http.fake")
 
     def __init__(
         self,
@@ -487,9 +487,9 @@ def make_request(
     return channel
 
 
-# ISynapseReactor implies IReactorPluggableNameResolver, but explicitly
+# IBriijReactor implies IReactorPluggableNameResolver, but explicitly
 # marking this as an implementer of the latter seems to keep mypy-zope happier.
-@implementer(IReactorPluggableNameResolver, ISynapseReactor)
+@implementer(IReactorPluggableNameResolver, IBriijReactor)
 class ThreadedMemoryReactorClock(MemoryReactorClock):
     """
     A MemoryReactorClock that supports callFromThread.
@@ -536,7 +536,7 @@ class ThreadedMemoryReactorClock(MemoryReactorClock):
         Override the call from `MemoryReactorClock` to add an additional step that
         cleans up any `whenRunningHooks` that have been called.
         This is necessary for a clean shutdown to occur as these hooks can hold
-        references to the `SynapseHomeServer`.
+        references to the `BriijHomeServer`.
         """
         super().run()
 
@@ -732,7 +732,7 @@ def validate_connector(connector: tcp.Connector, expected_ip: str) -> None:
 
 
 def make_fake_db_pool(
-    reactor: ISynapseReactor,
+    reactor: IBriijReactor,
     db_config: DatabaseConnectionConfig,
     engine: BaseDatabaseEngine,
     server_name: str,
@@ -1073,7 +1073,7 @@ def setup_test_homeserver(
     cleanup_func: Callable[[Callable[[], Optional["Deferred[None]"]]], None],
     server_name: str = "test",
     config: HomeServerConfig | None = None,
-    reactor: Optional[ISynapseReactor] = None,
+    reactor: Optional[IBriijReactor] = None,
     homeserver_to_use: type[HomeServer] = TestHomeServer,
     db_txn_limit: int | None = None,
     **extra_homeserver_attributes: Any,
@@ -1279,7 +1279,7 @@ def setup_test_homeserver(
 
     # Patch `make_pool` before initialising the database, to make database transactions
     # synchronous for testing.
-    with patch("synapse.storage.database.make_pool", side_effect=make_fake_db_pool):
+    with patch("textrp_briij.storage.database.make_pool", side_effect=make_fake_db_pool):
         hs.setup()
 
     # Ideally, setup/start would be separated but since this is historically used
@@ -1294,7 +1294,7 @@ def start_test_homeserver(
     *,
     hs: HomeServer,
     cleanup_func: Callable[[Callable[[], Optional["Deferred[None]"]]], None],
-    reactor: ISynapseReactor,
+    reactor: IBriijReactor,
 ) -> None:
     """
     Start a homeserver for testing.

@@ -21,12 +21,12 @@
 
 from pyperf import perf_counter
 
-from synapse.types import ISynapseReactor
-from synapse.util.caches.lrucache import LruCache
-from synapse.util.clock import Clock
+from textrp_briij.types import IBriijReactor
+from textrp_briij.util.caches.lrucache import LruCache
+from textrp_briij.util.clock import Clock
 
 
-async def main(reactor: ISynapseReactor, loops: int) -> float:
+async def main(reactor: IBriijReactor, loops: int) -> float:
     """
     Benchmark `loops` number of insertions into LruCache where half of them are
     evicted.

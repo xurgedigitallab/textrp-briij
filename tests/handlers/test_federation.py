@@ -26,24 +26,24 @@ from unittest.mock import AsyncMock, Mock, patch
 from twisted.internet.defer import Deferred
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import EventTypes
-from synapse.api.errors import (
+from textrp_briij.api.constants import EventTypes
+from textrp_briij.api.errors import (
     AuthError,
     Codes,
     LimitExceededError,
     NotFoundError,
     SynapseError,
 )
-from synapse.api.room_versions import RoomVersions
-from synapse.events import EventBase, make_event_from_dict
-from synapse.federation.federation_base import event_from_pdu_json
-from synapse.federation.federation_client import SendJoinResult
-from synapse.rest import admin
-from synapse.rest.client import login, room
-from synapse.server import HomeServer
-from synapse.storage.databases.main.events_worker import EventCacheEntry
-from synapse.util.clock import Clock
-from synapse.util.events import generate_fake_event_id
+from textrp_briij.api.room_versions import RoomVersions
+from textrp_briij.events import EventBase, make_event_from_dict
+from textrp_briij.federation.federation_base import event_from_pdu_json
+from textrp_briij.federation.federation_client import SendJoinResult
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, room
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.databases.main.events_worker import EventCacheEntry
+from textrp_briij.util.clock import Clock
+from textrp_briij.util.events import generate_fake_event_id
 
 from tests import unittest
 from tests.test_utils import event_injection

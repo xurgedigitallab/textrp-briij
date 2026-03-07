@@ -20,17 +20,17 @@ from typing import Any, Coroutine, Generator, TypeVar, Union
 from twisted.internet.defer import Deferred, ensureDeferred
 from twisted.internet.testing import MemoryReactor
 
-from synapse.logging.context import (
+from textrp_briij.logging.context import (
     LoggingContext,
     PreserveLoggingContext,
     _Sentinel,
     current_context,
     run_in_background,
 )
-from synapse.server import HomeServer
-from synapse.synapse_rust.http_client import HttpClient
-from synapse.util.clock import Clock
-from synapse.util.json import json_decoder
+from textrp_briij.server import HomeServer
+from textrp_briij.synapse_rust.http_client import HttpClient
+from textrp_briij.util.clock import Clock
+from textrp_briij.util.json import json_decoder
 
 from tests.unittest import HomeserverTestCase
 

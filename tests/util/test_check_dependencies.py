@@ -27,7 +27,7 @@ from unittest.mock import patch
 
 from packaging.markers import default_environment as packaging_default_environment
 
-from synapse.util.check_dependencies import (
+from textrp_briij.util.check_dependencies import (
     DependencyException,
     check_requirements,
     metadata,
@@ -77,7 +77,7 @@ class TestDependencyChecker(TestCase):
                 return distribution
 
         with patch(
-            "synapse.util.check_dependencies.metadata.distribution",
+            "textrp_briij.util.check_dependencies.metadata.distribution",
             mock_distribution,
         ):
             yield
@@ -93,7 +93,7 @@ class TestDependencyChecker(TestCase):
             return env
 
         with patch(
-            "synapse.util.check_dependencies.default_environment",
+            "textrp_briij.util.check_dependencies.default_environment",
             side_effect=fake_default_environment,
         ):
             yield
@@ -101,7 +101,7 @@ class TestDependencyChecker(TestCase):
     def test_mandatory_dependency(self) -> None:
         """Complain if a required package is missing or old."""
         with patch(
-            "synapse.util.check_dependencies.metadata.requires",
+            "textrp_briij.util.check_dependencies.metadata.requires",
             return_value=["dummypkg >= 1"],
         ):
             with self.mock_installed_package(None):
@@ -119,7 +119,7 @@ class TestDependencyChecker(TestCase):
         (https://github.com/matrix-org/synapse/issues/12223).
         """
         with patch(
-            "synapse.util.check_dependencies.metadata.requires",
+            "textrp_briij.util.check_dependencies.metadata.requires",
             return_value=["dummypkg >= 1"],
         ):
             with self.mock_installed_package(distribution_with_no_version):
@@ -129,10 +129,10 @@ class TestDependencyChecker(TestCase):
         """Both generic and per-extra checks should ignore dev dependencies."""
         with (
             patch(
-                "synapse.util.check_dependencies.metadata.requires",
+                "textrp_briij.util.check_dependencies.metadata.requires",
                 return_value=["dummypkg >= 1; extra == 'mypy'"],
             ),
-            patch("synapse.util.check_dependencies.RUNTIME_EXTRAS", {"cool-extra"}),
+            patch("textrp_briij.util.check_dependencies.RUNTIME_EXTRAS", {"cool-extra"}),
         ):
             # We're testing that none of these calls raise.
             with self.mock_installed_package(None):
@@ -148,7 +148,7 @@ class TestDependencyChecker(TestCase):
     def test_generic_check_of_optional_dependency(self) -> None:
         """Complain if an optional package is old."""
         with patch(
-            "synapse.util.check_dependencies.metadata.requires",
+            "textrp_briij.util.check_dependencies.metadata.requires",
             return_value=["dummypkg >= 1; extra == 'cool-extra'"],
         ):
             with self.mock_installed_package(None):
@@ -164,10 +164,10 @@ class TestDependencyChecker(TestCase):
         """Complain if a package required for an extra is missing or old."""
         with (
             patch(
-                "synapse.util.check_dependencies.metadata.requires",
+                "textrp_briij.util.check_dependencies.metadata.requires",
                 return_value=["dummypkg >= 1; extra == 'cool-extra'"],
             ),
-            patch("synapse.util.check_dependencies.RUNTIME_EXTRAS", {"cool-extra"}),
+            patch("textrp_briij.util.check_dependencies.RUNTIME_EXTRAS", {"cool-extra"}),
         ):
             with self.mock_installed_package(None):
                 self.assertRaises(DependencyException, check_requirements, "cool-extra")
@@ -184,7 +184,7 @@ class TestDependencyChecker(TestCase):
         (Regression test, see https://github.com/matrix-org/synapse/issues/12176.)
         """
         with patch(
-            "synapse.util.check_dependencies.metadata.requires",
+            "textrp_briij.util.check_dependencies.metadata.requires",
             return_value=["dummypkg >= 1"],
         ):
             with self.mock_installed_package(old_release_candidate):
@@ -200,7 +200,7 @@ class TestDependencyChecker(TestCase):
         https://github.com/matrix-org/synapse/issues/13926.
         """
         with patch(
-            "synapse.util.check_dependencies.metadata.requires",
+            "textrp_briij.util.check_dependencies.metadata.requires",
             return_value=["setuptools-rust >= 1.3"],
         ):
             with self.mock_installed_package(None):
@@ -223,7 +223,7 @@ class TestDependencyChecker(TestCase):
         ]
 
         with patch(
-            "synapse.util.check_dependencies.metadata.requires",
+            "textrp_briij.util.check_dependencies.metadata.requires",
             return_value=requirements,
         ):
             with self.mock_python_version("3.9"):

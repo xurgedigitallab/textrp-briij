@@ -1,4 +1,4 @@
-from synapse.synapse_rust import sum_as_string
+from textrp_briij.synapse_rust import sum_as_string
 
 from tests import unittest
 

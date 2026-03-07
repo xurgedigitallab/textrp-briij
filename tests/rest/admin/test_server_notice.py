@@ -22,14 +22,14 @@ from typing import Sequence
 
 from twisted.internet.testing import MemoryReactor
 
-import synapse.rest.admin
-from synapse.api.errors import Codes
-from synapse.rest.client import login, room, sync
-from synapse.server import HomeServer
-from synapse.storage.roommember import RoomsForUser
-from synapse.types import JsonDict
-from synapse.util.clock import Clock
-from synapse.util.stringutils import random_string
+import textrp_briij.rest.admin
+from textrp_briij.api.errors import Codes
+from textrp_briij.rest.client import login, room, sync
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.roommember import RoomsForUser
+from textrp_briij.types import JsonDict
+from textrp_briij.util.clock import Clock
+from textrp_briij.util.stringutils import random_string
 
 from tests import unittest
 from tests.unittest import override_config
@@ -37,7 +37,7 @@ from tests.unittest import override_config
 
 class ServerNoticeTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
         room.register_servlets,
         sync.register_servlets,

@@ -3,6 +3,7 @@
 #
 # Copyright 2019 The Matrix.org Foundation C.I.C.
 # Copyright (C) 2023 New Vector, Ltd
+# Copyright (C) 2026 TextRP https://textrp.io
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -32,12 +33,12 @@ from twisted.internet.protocol import ServerFactory
 from twisted.logger import LogBeginner, LogPublisher
 from twisted.protocols.basic import LineOnlyReceiver
 
-from synapse.config.logger import _setup_stdlib_logging, one_time_logging_setup
-from synapse.logging import RemoteHandler
-from synapse.synapse_rust import reset_logging_config
-from synapse.types import ISynapseReactor
-from synapse.util.clock import Clock
-from synapse.util.duration import Duration
+from textrp_briij.config.logger import _setup_stdlib_logging, one_time_logging_setup
+from textrp_briij.logging import RemoteHandler
+from textrp_briij.synapse_rust import reset_logging_config
+from textrp_briij.types import IBriijReactor
+from textrp_briij.util.clock import Clock
+from textrp_briij.util.duration import Duration
 
 
 class LineCounter(LineOnlyReceiver):
@@ -61,7 +62,7 @@ class Factory(ServerFactory):
     on_done: Deferred | None
 
 
-async def main(reactor: ISynapseReactor, loops: int) -> float:
+async def main(reactor: IBriijReactor, loops: int) -> float:
     """
     Benchmark how long it takes to send `loops` messages.
     """
@@ -101,11 +102,13 @@ async def main(reactor: ISynapseReactor, loops: int) -> float:
     assert isinstance(address, (IPv4Address, IPv6Address))
     log_config = {
         "version": 1,
-        "loggers": {"synapse": {"level": "DEBUG", "handlers": ["remote"]}},
-        "formatters": {"tersejson": {"class": "synapse.logging.TerseJsonFormatter"}},
+        "loggers": {"textrp_briij": {"level": "DEBUG", "handlers": ["remote"]}},
+        "formatters": {
+            "tersejson": {"class": "textrp_briij.logging.TerseJsonFormatter"}
+        },
         "handlers": {
             "remote": {
-                "class": "synapse.logging.RemoteHandler",
+                "class": "textrp_briij.logging.RemoteHandler",
                 "formatter": "tersejson",
                 "host": address.host,
                 "port": address.port,
@@ -114,7 +117,7 @@ async def main(reactor: ISynapseReactor, loops: int) -> float:
         },
     }
 
-    logger = logging.getLogger("synapse")
+    logger = logging.getLogger("textrp_briij")
     one_time_logging_setup(logBeginner=beginner)
     _setup_stdlib_logging(
         hs_config,  # type: ignore[arg-type]
@@ -126,7 +129,7 @@ async def main(reactor: ISynapseReactor, loops: int) -> float:
     reset_logging_config()
 
     # Wait for it to connect...
-    for handler in logging.getLogger("synapse").handlers:
+    for handler in logging.getLogger("textrp_briij").handlers:
         if isinstance(handler, RemoteHandler):
             break
     else:

@@ -33,16 +33,16 @@ from twisted.internet import defer, reactor
 from twisted.internet.defer import CancelledError, Deferred
 from twisted.internet.interfaces import IReactorTime
 
-from synapse.api.errors import SynapseError
-from synapse.logging.context import (
+from textrp_briij.api.errors import SynapseError
+from textrp_briij.logging.context import (
     SENTINEL_CONTEXT,
     LoggingContext,
     PreserveLoggingContext,
     current_context,
     make_deferred_yieldable,
 )
-from synapse.util.caches import descriptors
-from synapse.util.caches.descriptors import _CacheContext, cached, cachedList
+from textrp_briij.util.caches import descriptors
+from textrp_briij.util.caches.descriptors import _CacheContext, cached, cachedList
 
 from tests import unittest
 from tests.server import get_clock

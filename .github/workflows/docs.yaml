@@ -87,7 +87,7 @@ jobs:
           # Copy schema files that are independent from current Synapse version.
           cp -r -t book/schema schema/v*/
           # Convert config schema from YAML source file to JSON.
-          yq < schema/synapse-config.schema.yaml \
+          yq < schema/briij-config.schema.yaml \
             > book/schema/synapse-config.schema.json
 
       # Deploy to the target directory.

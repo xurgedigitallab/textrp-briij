@@ -27,14 +27,14 @@ from twisted.internet import defer
 from twisted.internet.defer import CancelledError, Deferred, ensureDeferred
 from twisted.python.failure import Failure
 
-from synapse.logging.context import (
+from textrp_briij.logging.context import (
     SENTINEL_CONTEXT,
     LoggingContext,
     PreserveLoggingContext,
     current_context,
     make_deferred_yieldable,
 )
-from synapse.util.async_helpers import (
+from textrp_briij.util.async_helpers import (
     AwakenableSleeper,
     ObservableDeferred,
     concurrently_execute,

@@ -20,11 +20,11 @@
 #
 from typing import Any
 
-import synapse.server
-from synapse.api.constants import EventTypes
-from synapse.api.room_versions import KNOWN_ROOM_VERSIONS
-from synapse.events import EventBase
-from synapse.events.snapshot import EventContext
+import textrp_briij.server
+from textrp_briij.api.constants import EventTypes
+from textrp_briij.api.room_versions import KNOWN_ROOM_VERSIONS
+from textrp_briij.events import EventBase
+from textrp_briij.events.snapshot import EventContext
 
 """
 Utility functions for poking events into the storage of the server under test.
@@ -32,7 +32,7 @@ Utility functions for poking events into the storage of the server under test.
 
 
 async def inject_member_event(
-    hs: synapse.server.HomeServer,
+    hs: textrp_briij.server.HomeServer,
     room_id: str,
     sender: str,
     membership: str,
@@ -60,7 +60,7 @@ async def inject_member_event(
 
 
 async def inject_event(
-    hs: synapse.server.HomeServer,
+    hs: textrp_briij.server.HomeServer,
     room_version: str | None = None,
     prev_event_ids: list[str] | None = None,
     **kwargs: Any,
@@ -85,7 +85,7 @@ async def inject_event(
 
 
 async def create_event(
-    hs: synapse.server.HomeServer,
+    hs: textrp_briij.server.HomeServer,
     room_version: str | None = None,
     prev_event_ids: list[str] | None = None,
     **kwargs: Any,
@@ -118,7 +118,7 @@ async def create_event(
 
 
 async def mark_event_as_partial_state(
-    hs: synapse.server.HomeServer,
+    hs: textrp_briij.server.HomeServer,
     event_id: str,
     room_id: str,
 ) -> None:

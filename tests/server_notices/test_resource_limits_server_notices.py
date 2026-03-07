@@ -21,17 +21,17 @@ from unittest.mock import AsyncMock, Mock
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import EventTypes, LimitBlockingTypes, ServerNoticeMsgType
-from synapse.api.errors import ResourceLimitError
-from synapse.rest import admin
-from synapse.rest.client import login, room, sync
-from synapse.server import HomeServer
-from synapse.server_notices.resource_limits_server_notices import (
+from textrp_briij.api.constants import EventTypes, LimitBlockingTypes, ServerNoticeMsgType
+from textrp_briij.api.errors import ResourceLimitError
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, room, sync
+from textrp_briij.server import HomeServer
+from textrp_briij.server_notices.resource_limits_server_notices import (
     ResourceLimitsServerNotices,
 )
-from synapse.server_notices.server_notices_sender import ServerNoticesSender
-from synapse.types import JsonDict
-from synapse.util.clock import Clock
+from textrp_briij.server_notices.server_notices_sender import ServerNoticesSender
+from textrp_briij.types import JsonDict
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.unittest import override_config

@@ -20,9 +20,9 @@
 #
 from unittest import mock
 
-from synapse.notifier import Notifier
-from synapse.replication.tcp.handler import ReplicationCommandHandler
-from synapse.util.retryutils import NotRetryingDestination, get_retry_limiter
+from textrp_briij.notifier import Notifier
+from textrp_briij.replication.tcp.handler import ReplicationCommandHandler
+from textrp_briij.util.retryutils import NotRetryingDestination, get_retry_limiter
 
 from tests.unittest import HomeserverTestCase
 

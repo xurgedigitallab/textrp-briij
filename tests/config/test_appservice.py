@@ -19,8 +19,8 @@
 #
 #
 
-from synapse.config._base import RootConfig
-from synapse.config.appservice import AppServiceConfig, ConfigError
+from textrp_briij.config._base import RootConfig
+from textrp_briij.config.appservice import AppServiceConfig, ConfigError
 
 from tests.unittest import TestCase
 

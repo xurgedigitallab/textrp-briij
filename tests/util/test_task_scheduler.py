@@ -22,12 +22,12 @@
 from twisted.internet.defer import Deferred
 from twisted.internet.testing import MemoryReactor
 
-from synapse.logging.context import make_deferred_yieldable
-from synapse.server import HomeServer
-from synapse.types import JsonMapping, ScheduledTask, TaskStatus
-from synapse.util.clock import Clock
-from synapse.util.duration import Duration
-from synapse.util.task_scheduler import TaskScheduler
+from textrp_briij.logging.context import make_deferred_yieldable
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonMapping, ScheduledTask, TaskStatus
+from textrp_briij.util.clock import Clock
+from textrp_briij.util.duration import Duration
+from textrp_briij.util.task_scheduler import TaskScheduler
 
 from tests.replication._base import BaseMultiWorkerStreamTestCase
 from tests.unittest import HomeserverTestCase, override_config
@@ -312,7 +312,7 @@ class TestTaskSchedulerWithBackgroundWorker(BaseMultiWorkerStreamTestCase):
     def test_schedule_task(self) -> None:
         """Check that a task scheduled to run now is launch right away on the background worker."""
         bg_worker_hs = self.make_worker_hs(
-            "synapse.app.generic_worker",
+            "textrp_briij.app.generic_worker",
             extra_config={"worker_name": "worker1"},
         )
         bg_worker_hs.get_task_scheduler().register_action(self._test_task, "_test_task")

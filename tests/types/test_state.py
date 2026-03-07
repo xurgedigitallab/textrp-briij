@@ -1,7 +1,7 @@
 from immutabledict import immutabledict
 
-from synapse.api.constants import EventTypes
-from synapse.types.state import StateFilter
+from textrp_briij.api.constants import EventTypes
+from textrp_briij.types.state import StateFilter
 
 from tests.unittest import TestCase
 

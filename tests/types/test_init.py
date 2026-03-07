@@ -1,5 +1,5 @@
-from synapse.api.errors import SynapseError
-from synapse.types import RoomID
+from textrp_briij.api.errors import SynapseError
+from textrp_briij.types import RoomID
 
 from tests.unittest import TestCase
 

@@ -15,15 +15,15 @@
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.server import HomeServer
-from synapse.storage.database import LoggingTransaction
-from synapse.storage.databases.main.thread_subscriptions import (
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.database import LoggingTransaction
+from textrp_briij.storage.databases.main.thread_subscriptions import (
     AutomaticSubscriptionConflicted,
     ThreadSubscriptionsWorkerStore,
 )
-from synapse.storage.engines.sqlite import Sqlite3Engine
-from synapse.types import EventOrderings
-from synapse.util.clock import Clock
+from textrp_briij.storage.engines.sqlite import Sqlite3Engine
+from textrp_briij.types import EventOrderings
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 

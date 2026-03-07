@@ -24,7 +24,7 @@ from unittest import mock
 from twisted.internet.defer import ensureDeferred
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import (
+from textrp_briij.api.constants import (
     EventContentFields,
     EventTypes,
     HistoryVisibility,
@@ -33,16 +33,16 @@ from synapse.api.constants import (
     RestrictedJoinRuleTypes,
     RoomTypes,
 )
-from synapse.api.errors import AuthError, NotFoundError, SynapseError
-from synapse.api.room_versions import RoomVersions
-from synapse.events import make_event_from_dict
-from synapse.federation.transport.client import TransportLayerClient
-from synapse.handlers.room_summary import _child_events_comparison_key, _RoomEntry
-from synapse.rest import admin
-from synapse.rest.client import login, room
-from synapse.server import HomeServer
-from synapse.types import JsonDict, UserID, create_requester
-from synapse.util.clock import Clock
+from textrp_briij.api.errors import AuthError, NotFoundError, SynapseError
+from textrp_briij.api.room_versions import RoomVersions
+from textrp_briij.events import make_event_from_dict
+from textrp_briij.federation.transport.client import TransportLayerClient
+from textrp_briij.handlers.room_summary import _child_events_comparison_key, _RoomEntry
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, room
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict, UserID, create_requester
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.unittest import override_config
@@ -754,7 +754,7 @@ class SpaceSummaryTestCase(unittest.HomeserverTestCase):
         ]
 
         with mock.patch(
-            "synapse.handlers.room_summary.RoomSummaryHandler._summarize_remote_room_hierarchy",
+            "textrp_briij.handlers.room_summary.RoomSummaryHandler._summarize_remote_room_hierarchy",
             new=summarize_remote_room_hierarchy,
         ):
             result = self.get_success(
@@ -802,7 +802,7 @@ class SpaceSummaryTestCase(unittest.HomeserverTestCase):
         ]
 
         with mock.patch(
-            "synapse.handlers.room_summary.RoomSummaryHandler._summarize_remote_room_hierarchy",
+            "textrp_briij.handlers.room_summary.RoomSummaryHandler._summarize_remote_room_hierarchy",
             new=summarize_remote_room_hierarchy,
         ):
             result = self.get_success(
@@ -952,7 +952,7 @@ class SpaceSummaryTestCase(unittest.HomeserverTestCase):
         ]
 
         with mock.patch(
-            "synapse.handlers.room_summary.RoomSummaryHandler._summarize_remote_room_hierarchy",
+            "textrp_briij.handlers.room_summary.RoomSummaryHandler._summarize_remote_room_hierarchy",
             new=summarize_remote_room_hierarchy,
         ):
             result = self.get_success(
@@ -998,7 +998,7 @@ class SpaceSummaryTestCase(unittest.HomeserverTestCase):
         ]
 
         with mock.patch(
-            "synapse.handlers.room_summary.RoomSummaryHandler._summarize_remote_room_hierarchy",
+            "textrp_briij.handlers.room_summary.RoomSummaryHandler._summarize_remote_room_hierarchy",
             new=summarize_remote_room_hierarchy,
         ):
             result = self.get_success(
@@ -1059,7 +1059,7 @@ class SpaceSummaryTestCase(unittest.HomeserverTestCase):
         ]
 
         with mock.patch(
-            "synapse.federation.transport.client.TransportLayerClient.get_room_hierarchy",
+            "textrp_briij.federation.transport.client.TransportLayerClient.get_room_hierarchy",
             new=get_room_hierarchy,
         ):
             result = self.get_success(
@@ -1129,7 +1129,7 @@ class SpaceSummaryTestCase(unittest.HomeserverTestCase):
         ]
 
         with mock.patch(
-            "synapse.handlers.room_summary.RoomSummaryHandler._summarize_remote_room_hierarchy",
+            "textrp_briij.handlers.room_summary.RoomSummaryHandler._summarize_remote_room_hierarchy",
             new=summarize_remote_room_hierarchy,
         ):
             result = self.get_success(
@@ -1237,7 +1237,7 @@ class RoomSummaryTestCase(unittest.HomeserverTestCase):
             return requested_room_entry, {}, set()
 
         with mock.patch(
-            "synapse.handlers.room_summary.RoomSummaryHandler._summarize_remote_room_hierarchy",
+            "textrp_briij.handlers.room_summary.RoomSummaryHandler._summarize_remote_room_hierarchy",
             new=summarize_remote_room_hierarchy,
         ):
             result = self.get_success(

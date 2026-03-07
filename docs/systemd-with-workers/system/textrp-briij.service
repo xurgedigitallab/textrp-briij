@@ -1,0 +1,23 @@
+[Unit]
+Description=Briij by TextRP master
+
+# This service should be restarted when the Briij by TextRP target is restarted.
+PartOf=textrp-briij.target
+ReloadPropagatedFrom=textrp-briij.target
+
+[Service]
+Type=notify
+NotifyAccess=main
+User=textrp-briij
+RuntimeDirectory=textrp-briij
+WorkingDirectory=/var/lib/textrp-briij
+EnvironmentFile=-/etc/default/textrp-briij
+ExecStartPre=/opt/venvs/textrp-briij/bin/python -m textrp_briij.app.homeserver --config-path=/etc/textrp-briij/homeserver.yaml --config-path=/etc/textrp-briij/conf.d/ --generate-keys
+ExecStart=/opt/venvs/textrp-briij/bin/python -m textrp_briij.app.homeserver --config-path=/etc/textrp-briij/homeserver.yaml --config-path=/etc/textrp-briij/conf.d/
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+RestartSec=3
+SyslogIdentifier=textrp-briij
+
+[Install]
+WantedBy=textrp-briij.target

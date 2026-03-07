@@ -24,13 +24,13 @@ from unittest.mock import patch
 from twisted.internet import defer
 from twisted.internet.testing import MemoryReactor
 
-from synapse.rest import admin
-from synapse.rest.client import devices
-from synapse.server import HomeServer
-from synapse.storage.databases.main.deviceinbox import (
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import devices
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.databases.main.deviceinbox import (
     DEVICE_FEDERATION_INBOX_CLEANUP_DELAY,
 )
-from synapse.util.clock import Clock
+from textrp_briij.util.clock import Clock
 
 from tests.unittest import HomeserverTestCase
 
@@ -211,7 +211,7 @@ class DeviceInboxFederationInboxCleanupTestCase(HomeserverTestCase):
 
         # Mock to report the update as not completed
         with patch(
-            "synapse.storage.background_updates.BackgroundUpdater.has_completed_background_update"
+            "textrp_briij.storage.background_updates.BackgroundUpdater.has_completed_background_update"
         ) as mock:
             mock.return_value = False
 

@@ -25,12 +25,12 @@ from parameterized import parameterized
 
 from twisted.internet.testing import MemoryReactor
 
-import synapse.types
-from synapse.api.errors import AuthError, SynapseError
-from synapse.rest import admin
-from synapse.server import HomeServer
-from synapse.types import JsonDict, UserID
-from synapse.util.clock import Clock
+import textrp_briij.types
+from textrp_briij.api.errors import AuthError, SynapseError
+from textrp_briij.rest import admin
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict, UserID
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 
@@ -81,7 +81,7 @@ class ProfileTestCase(unittest.HomeserverTestCase):
     def test_set_my_name(self) -> None:
         self.get_success(
             self.handler.set_displayname(
-                self.frank, synapse.types.create_requester(self.frank), "Frank Jr."
+                self.frank, textrp_briij.types.create_requester(self.frank), "Frank Jr."
             )
         )
 
@@ -93,7 +93,7 @@ class ProfileTestCase(unittest.HomeserverTestCase):
         # Set displayname again
         self.get_success(
             self.handler.set_displayname(
-                self.frank, synapse.types.create_requester(self.frank), "Frank"
+                self.frank, textrp_briij.types.create_requester(self.frank), "Frank"
             )
         )
 
@@ -105,7 +105,7 @@ class ProfileTestCase(unittest.HomeserverTestCase):
         # Set displayname to an empty string
         self.get_success(
             self.handler.set_displayname(
-                self.frank, synapse.types.create_requester(self.frank), ""
+                self.frank, textrp_briij.types.create_requester(self.frank), ""
             )
         )
 
@@ -127,7 +127,7 @@ class ProfileTestCase(unittest.HomeserverTestCase):
         # Setting displayname a second time is forbidden
         self.get_failure(
             self.handler.set_displayname(
-                self.frank, synapse.types.create_requester(self.frank), "Frank Jr."
+                self.frank, textrp_briij.types.create_requester(self.frank), "Frank Jr."
             ),
             SynapseError,
         )
@@ -135,7 +135,7 @@ class ProfileTestCase(unittest.HomeserverTestCase):
     def test_set_my_name_noauth(self) -> None:
         self.get_failure(
             self.handler.set_displayname(
-                self.frank, synapse.types.create_requester(self.bob), "Frank Jr."
+                self.frank, textrp_briij.types.create_requester(self.bob), "Frank Jr."
             ),
             AuthError,
         )
@@ -197,7 +197,7 @@ class ProfileTestCase(unittest.HomeserverTestCase):
         self.get_success(
             self.handler.set_avatar_url(
                 self.frank,
-                synapse.types.create_requester(self.frank),
+                textrp_briij.types.create_requester(self.frank),
                 "http://my.server/pic.gif",
             )
         )
@@ -211,7 +211,7 @@ class ProfileTestCase(unittest.HomeserverTestCase):
         self.get_success(
             self.handler.set_avatar_url(
                 self.frank,
-                synapse.types.create_requester(self.frank),
+                textrp_briij.types.create_requester(self.frank),
                 "http://my.server/me.png",
             )
         )
@@ -225,7 +225,7 @@ class ProfileTestCase(unittest.HomeserverTestCase):
         self.get_success(
             self.handler.set_avatar_url(
                 self.frank,
-                synapse.types.create_requester(self.frank),
+                textrp_briij.types.create_requester(self.frank),
                 "",
             )
         )
@@ -251,7 +251,7 @@ class ProfileTestCase(unittest.HomeserverTestCase):
         self.get_failure(
             self.handler.set_avatar_url(
                 self.frank,
-                synapse.types.create_requester(self.frank),
+                textrp_briij.types.create_requester(self.frank),
                 "http://my.server/pic.gif",
             ),
             SynapseError,

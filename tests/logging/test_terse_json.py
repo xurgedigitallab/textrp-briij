@@ -27,10 +27,10 @@ from unittest.mock import Mock, patch
 from twisted.web.http import HTTPChannel
 from twisted.web.server import Request
 
-from synapse.http.site import SynapseRequest
-from synapse.logging._terse_json import JsonFormatter, TerseJsonFormatter
-from synapse.logging.context import LoggingContext, LoggingContextFilter
-from synapse.types import JsonDict
+from textrp_briij.http.site import SynapseRequest
+from textrp_briij.logging._terse_json import JsonFormatter, TerseJsonFormatter
+from textrp_briij.logging.context import LoggingContext, LoggingContextFilter
+from textrp_briij.types import JsonDict
 
 from tests.logging import LoggerCleanupMixin
 from tests.server import FakeChannel, get_clock

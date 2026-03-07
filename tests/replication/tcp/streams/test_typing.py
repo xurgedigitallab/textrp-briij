@@ -20,9 +20,9 @@
 #
 import logging
 
-from synapse.handlers.typing import RoomMember, TypingWriterHandler
-from synapse.replication.tcp.streams import TypingStream
-from synapse.util.caches.stream_change_cache import StreamChangeCache
+from textrp_briij.handlers.typing import RoomMember, TypingWriterHandler
+from textrp_briij.replication.tcp.streams import TypingStream
+from textrp_briij.util.caches.stream_change_cache import StreamChangeCache
 
 from tests.replication._base import BaseStreamTestCase
 

@@ -31,26 +31,26 @@ from parameterized import parameterized
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import EventContentFields, EventTypes, Membership
-from synapse.api.room_versions import RoomVersion, RoomVersions
-from synapse.events import EventBase, make_event_from_dict
-from synapse.events.utils import strip_event
-from synapse.federation.federation_base import (
+from textrp_briij.api.constants import EventContentFields, EventTypes, Membership
+from textrp_briij.api.room_versions import RoomVersion, RoomVersions
+from textrp_briij.events import EventBase, make_event_from_dict
+from textrp_briij.events.utils import strip_event
+from textrp_briij.federation.federation_base import (
     event_from_pdu_json,
 )
-from synapse.federation.transport.client import SendJoinResponse
-from synapse.http.matrixfederationclient import (
+from textrp_briij.federation.transport.client import SendJoinResponse
+from textrp_briij.http.matrixfederationclient import (
     ByteParser,
 )
-from synapse.http.types import QueryParams
-from synapse.rest import admin
-from synapse.rest.client import login, room, sync
-from synapse.server import HomeServer
-from synapse.types import JsonDict, MutableStateMap, StateMap
-from synapse.types.handlers.sliding_sync import (
+from textrp_briij.http.types import QueryParams
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, room, sync
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict, MutableStateMap, StateMap
+from textrp_briij.types.handlers.sliding_sync import (
     StateValues,
 )
-from synapse.util.clock import Clock
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.utils import test_timeout

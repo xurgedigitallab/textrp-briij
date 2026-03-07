@@ -20,9 +20,9 @@
 #
 from unittest.mock import MagicMock, patch
 
-from synapse.storage.database import make_conn
-from synapse.storage.engines import PostgresEngine
-from synapse.storage.engines._base import IncorrectDatabaseSetup
+from textrp_briij.storage.database import make_conn
+from textrp_briij.storage.engines import PostgresEngine
+from textrp_briij.storage.engines._base import IncorrectDatabaseSetup
 
 from tests.unittest import HomeserverTestCase
 from tests.utils import USE_POSTGRES_FOR_TESTS
@@ -32,7 +32,7 @@ class UnsafeLocaleTest(HomeserverTestCase):
     if not USE_POSTGRES_FOR_TESTS:
         skip = "Requires Postgres"
 
-    @patch("synapse.storage.engines.postgres.PostgresEngine.get_db_locale")
+    @patch("textrp_briij.storage.engines.postgres.PostgresEngine.get_db_locale")
     def test_unsafe_locale(self, mock_db_locale: MagicMock) -> None:
         mock_db_locale.return_value = ("B", "B")
         database = self.hs.get_datastores().databases[0]

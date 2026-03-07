@@ -22,10 +22,10 @@
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.server import HomeServer
-from synapse.storage.database import LoggingTransaction
-from synapse.storage.engines import PostgresEngine
-from synapse.util.clock import Clock
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.database import LoggingTransaction
+from textrp_briij.storage.engines import PostgresEngine
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 

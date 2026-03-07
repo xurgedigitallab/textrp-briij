@@ -22,9 +22,9 @@
 from signedjson.key import decode_signing_key_base64
 from signedjson.types import SigningKey
 
-from synapse.api.room_versions import RoomVersions
-from synapse.crypto.event_signing import add_hashes_and_signatures
-from synapse.events import make_event_from_dict
+from textrp_briij.api.room_versions import RoomVersions
+from textrp_briij.crypto.event_signing import add_hashes_and_signatures
+from textrp_briij.events import make_event_from_dict
 
 from tests import unittest
 

@@ -28,9 +28,9 @@ import sqlite3
 
 import pydot
 
-from synapse.api.room_versions import KNOWN_ROOM_VERSIONS
-from synapse.events import make_event_from_dict
-from synapse.util.frozenutils import unfreeze
+from textrp_briij.api.room_versions import KNOWN_ROOM_VERSIONS
+from textrp_briij.events import make_event_from_dict
+from textrp_briij.util.frozenutils import unfreeze
 
 
 def make_graph(db_name: str, room_id: str, file_prefix: str, limit: int) -> None:

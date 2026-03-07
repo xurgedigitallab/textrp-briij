@@ -23,7 +23,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ValidationError
 
-from synapse.types.rest.client import EmailRequestTokenBody
+from textrp_briij.types.rest.client import EmailRequestTokenBody
 
 
 class ThreepidMediumEnumTestCase(stdlib_unittest.TestCase):

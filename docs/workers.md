@@ -57,11 +57,11 @@ The appropriate dependencies must also be installed for Synapse. If using a
 virtualenv, these can be installed with:
 
 ```sh
-pip install "matrix-synapse[redis]"
+pip install "textrp-briij[redis]"
 ```
 
 Note that these dependencies are included when synapse is installed with `pip
-install matrix-synapse[all]`. They are also included in the debian packages from
+install textrp-briij[all]`. They are also included in the debian packages from
 `packages.matrix.org` and in the docker images at
 https://hub.docker.com/r/ectorim/synapse/.
 
@@ -122,7 +122,7 @@ redis:
     enabled: true
     # For additional Redis configuration options (TLS, authentication, etc.), 
     # see the Synapse configuration documentation:
-    # https://element-hq.github.io/synapse/latest/usage/configuration/config_documentation.html#redis
+    # https://docs.briij.example/synapse/latest/usage/configuration/config_documentation.html#redis
 
 instance_map:
     main:

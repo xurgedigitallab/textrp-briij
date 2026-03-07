@@ -27,18 +27,18 @@ from twisted.internet.testing import MemoryReactor
 from twisted.python.failure import Failure
 from twisted.web.resource import Resource
 
-from synapse.app.generic_worker import GenericWorkerServer
-from synapse.config.workers import InstanceTcpLocationConfig, InstanceUnixLocationConfig
-from synapse.http.site import SynapseRequest, SynapseSite
-from synapse.replication.http import ReplicationRestResource
-from synapse.replication.tcp.client import ReplicationDataHandler
-from synapse.replication.tcp.protocol import (
+from textrp_briij.app.generic_worker import GenericWorkerServer
+from textrp_briij.config.workers import InstanceTcpLocationConfig, InstanceUnixLocationConfig
+from textrp_briij.http.site import SynapseRequest, SynapseSite
+from textrp_briij.replication.http import ReplicationRestResource
+from textrp_briij.replication.tcp.client import ReplicationDataHandler
+from textrp_briij.replication.tcp.protocol import (
     ClientReplicationStreamProtocol,
     ServerReplicationStreamProtocol,
 )
-from synapse.replication.tcp.resource import ReplicationStreamProtocolFactory
-from synapse.server import HomeServer
-from synapse.util.clock import Clock
+from textrp_briij.replication.tcp.resource import ReplicationStreamProtocolFactory
+from textrp_briij.server import HomeServer
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.server import FakeTransport
@@ -115,7 +115,7 @@ class BaseStreamTestCase(unittest.HomeserverTestCase):
 
     def _get_worker_hs_config(self) -> dict:
         config = self.default_config()
-        config["worker_app"] = "synapse.app.generic_worker"
+        config["worker_app"] = "textrp_briij.app.generic_worker"
         config["instance_map"] = {"main": {"host": "testserv", "port": 8765}}
         return config
 
@@ -331,7 +331,7 @@ class BaseMultiWorkerStreamTestCase(unittest.HomeserverTestCase):
         stream to the master HS.
 
         Args:
-            worker_app: Type of worker, e.g. `synapse.app.generic_worker`.
+            worker_app: Type of worker, e.g. `textrp_briij.app.generic_worker`.
             extra_config: Any extra config to use for this instances.
             **kwargs: Options that get passed to `self.setup_test_homeserver`,
                 useful to e.g. pass some mocks for things like `federation_http_client`
@@ -392,7 +392,7 @@ class BaseMultiWorkerStreamTestCase(unittest.HomeserverTestCase):
             servlet(worker_hs, resource)
 
         self._hs_to_site[worker_hs] = SynapseSite(
-            logger_name="synapse.access.http.fake",
+            logger_name="textrp_briij.access.http.fake",
             site_tag="{}-{}".format(
                 worker_hs.config.server.server_name, worker_hs.get_instance_name()
             ),

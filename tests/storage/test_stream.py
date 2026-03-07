@@ -26,29 +26,29 @@ from immutabledict import immutabledict
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import (
+from textrp_briij.api.constants import (
     Direction,
     EventTypes,
     JoinRules,
     Membership,
     RelationTypes,
 )
-from synapse.api.filtering import Filter
-from synapse.crypto.event_signing import add_hashes_and_signatures
-from synapse.events import FrozenEventV3
-from synapse.federation.federation_client import SendJoinResult
-from synapse.rest import admin
-from synapse.rest.client import login, room
-from synapse.server import HomeServer
-from synapse.storage.databases.main.stream import CurrentStateDeltaMembership
-from synapse.types import (
+from textrp_briij.api.filtering import Filter
+from textrp_briij.crypto.event_signing import add_hashes_and_signatures
+from textrp_briij.events import FrozenEventV3
+from textrp_briij.federation.federation_client import SendJoinResult
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, room
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.databases.main.stream import CurrentStateDeltaMembership
+from textrp_briij.types import (
     JsonDict,
     PersistedEventPosition,
     RoomStreamToken,
     UserID,
     create_requester,
 )
-from synapse.util.clock import Clock
+from textrp_briij.util.clock import Clock
 
 from tests.test_utils.event_injection import create_event
 from tests.unittest import FederatingHomeserverTestCase, HomeserverTestCase
@@ -1470,11 +1470,11 @@ class GetCurrentStateDeltaMembershipChangesForUserFederationTestCase(
                 mock_send_join,
             ),
             patch(
-                "synapse.event_auth._is_membership_change_allowed",
+                "textrp_briij.event_auth._is_membership_change_allowed",
                 return_value=None,
             ),
             patch(
-                "synapse.handlers.federation_event.check_state_dependent_auth_rules",
+                "textrp_briij.handlers.federation_event.check_state_dependent_auth_rules",
                 return_value=None,
             ),
         ):

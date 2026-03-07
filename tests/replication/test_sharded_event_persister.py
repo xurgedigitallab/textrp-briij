@@ -23,11 +23,11 @@ from unittest.mock import patch
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.rest import admin
-from synapse.rest.client import login, room, sync
-from synapse.server import HomeServer
-from synapse.storage.util.id_generators import MultiWriterIdGenerator
-from synapse.util.clock import Clock
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, room, sync
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.util.id_generators import MultiWriterIdGenerator
+from textrp_briij.util.clock import Clock
 
 from tests.replication._base import BaseMultiWorkerStreamTestCase
 from tests.server import make_request
@@ -69,7 +69,7 @@ class EventPersisterShardTestCase(BaseMultiWorkerStreamTestCase):
         # We control the room ID generation by patching out the
         # `_generate_room_id` method
         with patch(
-            "synapse.handlers.room.RoomCreationHandler._generate_room_id"
+            "textrp_briij.handlers.room.RoomCreationHandler._generate_room_id"
         ) as mock:
             mock.side_effect = lambda: room_id
             self.helper.create_room_as(user_id, tok=tok)
@@ -80,12 +80,12 @@ class EventPersisterShardTestCase(BaseMultiWorkerStreamTestCase):
         """
 
         self.make_worker_hs(
-            "synapse.app.generic_worker",
+            "textrp_briij.app.generic_worker",
             {"worker_name": "worker1"},
         )
 
         self.make_worker_hs(
-            "synapse.app.generic_worker",
+            "textrp_briij.app.generic_worker",
             {"worker_name": "worker2"},
         )
 
@@ -130,17 +130,17 @@ class EventPersisterShardTestCase(BaseMultiWorkerStreamTestCase):
         """
 
         self.make_worker_hs(
-            "synapse.app.generic_worker",
+            "textrp_briij.app.generic_worker",
             {"worker_name": "worker1"},
         )
 
         worker_hs2 = self.make_worker_hs(
-            "synapse.app.generic_worker",
+            "textrp_briij.app.generic_worker",
             {"worker_name": "worker2"},
         )
 
         sync_hs = self.make_worker_hs(
-            "synapse.app.generic_worker",
+            "textrp_briij.app.generic_worker",
             {"worker_name": "sync"},
         )
         sync_hs_site = self._hs_to_site[sync_hs]

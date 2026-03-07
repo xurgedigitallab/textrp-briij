@@ -25,10 +25,10 @@ from typing import Any, Mapping
 import attr
 from parameterized import parameterized
 
-from synapse.api.constants import EventContentFields
-from synapse.api.room_versions import RoomVersions
-from synapse.events import EventBase, make_event_from_dict
-from synapse.events.utils import (
+from textrp_briij.api.constants import EventContentFields
+from textrp_briij.api.room_versions import RoomVersions
+from textrp_briij.events import EventBase, make_event_from_dict
+from textrp_briij.events.utils import (
     PowerLevelsContent,
     SerializeEventConfig,
     _split_field,
@@ -40,8 +40,8 @@ from synapse.events.utils import (
     prune_event,
     serialize_event,
 )
-from synapse.types import JsonDict, create_requester
-from synapse.util.frozenutils import freeze
+from textrp_briij.types import JsonDict, create_requester
+from textrp_briij.util.frozenutils import freeze
 
 
 def MockEvent(**kwargs: Any) -> EventBase:

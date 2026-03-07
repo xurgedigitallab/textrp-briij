@@ -18,10 +18,10 @@ from unittest.mock import Mock
 from twisted.internet.defer import Deferred
 from twisted.internet.testing import MemoryReactor
 
-from synapse.logging.context import PreserveLoggingContext, make_deferred_yieldable
-from synapse.server import HomeServer
-from synapse.util.background_queue import BackgroundQueue
-from synapse.util.clock import Clock
+from textrp_briij.logging.context import PreserveLoggingContext, make_deferred_yieldable
+from textrp_briij.server import HomeServer
+from textrp_briij.util.background_queue import BackgroundQueue
+from textrp_briij.util.clock import Clock
 
 from tests.unittest import HomeserverTestCase, logcontext_clean
 

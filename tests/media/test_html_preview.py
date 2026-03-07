@@ -19,7 +19,7 @@
 #
 #
 
-from synapse.media.preview_html import (
+from textrp_briij.media.preview_html import (
     _get_html_media_encodings,
     decode_body,
     parse_html_to_open_graph,

@@ -23,14 +23,14 @@ from http import HTTPStatus
 
 from twisted.web.server import Request
 
-from synapse.api.errors import Codes
-from synapse.http.server import JsonResource
-from synapse.replication.http import REPLICATION_PREFIX
-from synapse.replication.http._base import ReplicationEndpoint
-from synapse.server import HomeServer
-from synapse.types import JsonDict
-from synapse.util.cancellation import cancellable
-from synapse.util.duration import Duration
+from textrp_briij.api.errors import Codes
+from textrp_briij.http.server import JsonResource
+from textrp_briij.replication.http import REPLICATION_PREFIX
+from textrp_briij.replication.http._base import ReplicationEndpoint
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict
+from textrp_briij.util.cancellation import cancellable
+from textrp_briij.util.duration import Duration
 
 from tests import unittest
 from tests.http.server._base import disconnect_and_assert

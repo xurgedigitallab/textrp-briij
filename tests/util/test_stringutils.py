@@ -19,8 +19,8 @@
 #
 #
 
-from synapse.api.errors import SynapseError
-from synapse.util.stringutils import (
+from textrp_briij.api.errors import SynapseError
+from textrp_briij.util.stringutils import (
     assert_valid_client_secret,
     base62_encode,
     is_namedspaced_grammar,

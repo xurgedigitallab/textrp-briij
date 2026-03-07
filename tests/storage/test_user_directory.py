@@ -25,19 +25,19 @@ from unittest.mock import Mock, patch
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import EventTypes, Membership, UserTypes
-from synapse.appservice import ApplicationService
-from synapse.rest import admin
-from synapse.rest.client import login, register, room
-from synapse.server import HomeServer
-from synapse.storage import DataStore
-from synapse.storage.background_updates import _BackgroundUpdateHandler
-from synapse.storage.databases.main.user_directory import (
+from textrp_briij.api.constants import EventTypes, Membership, UserTypes
+from textrp_briij.appservice import ApplicationService
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, register, room
+from textrp_briij.server import HomeServer
+from textrp_briij.storage import DataStore
+from textrp_briij.storage.background_updates import _BackgroundUpdateHandler
+from textrp_briij.storage.databases.main.user_directory import (
     _parse_words_with_icu,
 )
-from synapse.storage.roommember import ProfileInfo
-from synapse.types import UserID
-from synapse.util.clock import Clock
+from textrp_briij.storage.roommember import ProfileInfo
+from textrp_briij.types import UserID
+from textrp_briij.util.clock import Clock
 
 from tests.server import ThreadedMemoryReactorClock
 from tests.test_utils.event_injection import inject_member_event
@@ -159,7 +159,7 @@ class UserDirectoryInitialPopulationTestcase(HomeserverTestCase):
 
         mock_load_appservices = Mock(return_value=[self.appservice])
         with patch(
-            "synapse.storage.databases.main.appservice.load_appservices",
+            "textrp_briij.storage.databases.main.appservice.load_appservices",
             mock_load_appservices,
         ):
             hs = super().make_homeserver(reactor, clock)

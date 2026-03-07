@@ -27,19 +27,19 @@ from unittest.mock import AsyncMock
 
 from twisted.internet.testing import MemoryReactor
 
-import synapse.rest.admin
-from synapse.api.constants import (
+import textrp_briij.rest.admin
+from textrp_briij.api.constants import (
     APP_SERVICE_REGISTRATION_TYPE,
     ApprovalNoticeMedium,
     LoginType,
 )
-from synapse.api.errors import Codes
-from synapse.appservice import ApplicationService
-from synapse.rest.client import account, account_validity, login, logout, register, sync
-from synapse.server import HomeServer
-from synapse.storage._base import db_to_json
-from synapse.types import JsonDict, UserID
-from synapse.util.clock import Clock
+from textrp_briij.api.errors import Codes
+from textrp_briij.appservice import ApplicationService
+from textrp_briij.rest.client import account, account_validity, login, logout, register, sync
+from textrp_briij.server import HomeServer
+from textrp_briij.storage._base import db_to_json
+from textrp_briij.types import JsonDict, UserID
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.server import ThreadedMemoryReactorClock
@@ -50,7 +50,7 @@ class RegisterRestServletTestCase(unittest.HomeserverTestCase):
     servlets = [
         login.register_servlets,
         register.register_servlets,
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
     ]
     url = b"/_matrix/client/r0/register"
 
@@ -869,7 +869,7 @@ class RegisterRestServletTestCase(unittest.HomeserverTestCase):
 class AccountValidityTestCase(unittest.HomeserverTestCase):
     servlets = [
         register.register_servlets,
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         login.register_servlets,
         sync.register_servlets,
         logout.register_servlets,
@@ -984,7 +984,7 @@ class AccountValidityTestCase(unittest.HomeserverTestCase):
 class AccountValidityRenewalByEmailTestCase(unittest.HomeserverTestCase):
     servlets = [
         register.register_servlets,
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         login.register_servlets,
         sync.register_servlets,
         account_validity.register_servlets,
@@ -1010,7 +1010,9 @@ class AccountValidityRenewalByEmailTestCase(unittest.HomeserverTestCase):
         # Email config.
 
         templates = (
-            importlib_resources.files("synapse").joinpath("res").joinpath("templates")
+            importlib_resources.files("textrp_briij")
+            .joinpath("res")
+            .joinpath("templates")
         )
         config["email"] = {
             "enable_notifs": True,
@@ -1199,7 +1201,7 @@ class AccountValidityRenewalByEmailTestCase(unittest.HomeserverTestCase):
 
 
 class AccountValidityBackgroundJobTestCase(unittest.HomeserverTestCase):
-    servlets = [synapse.rest.admin.register_servlets_for_client_rest_resource]
+    servlets = [textrp_briij.rest.admin.register_servlets_for_client_rest_resource]
 
     def make_homeserver(self, reactor: MemoryReactor, clock: Clock) -> HomeServer:
         self.validity_period = 10

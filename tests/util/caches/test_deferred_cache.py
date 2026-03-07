@@ -23,7 +23,7 @@ from functools import partial
 
 from twisted.internet import defer
 
-from synapse.util.caches.deferred_cache import DeferredCache
+from textrp_briij.util.caches.deferred_cache import DeferredCache
 
 from tests.server import get_clock
 from tests.unittest import TestCase

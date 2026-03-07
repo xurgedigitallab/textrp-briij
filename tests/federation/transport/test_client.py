@@ -24,10 +24,10 @@ from unittest.mock import Mock
 
 import ijson.common
 
-from synapse.api.room_versions import RoomVersions
-from synapse.federation.transport.client import SendJoinParser
-from synapse.types import JsonDict
-from synapse.util import ExceptionBundle
+from textrp_briij.api.room_versions import RoomVersions
+from textrp_briij.federation.transport.client import SendJoinParser
+from textrp_briij.types import JsonDict
+from textrp_briij.util import ExceptionBundle
 
 from tests.unittest import TestCase
 

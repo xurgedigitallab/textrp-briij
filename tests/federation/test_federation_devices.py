@@ -23,11 +23,11 @@ from unittest.mock import AsyncMock, Mock
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.handlers.device import DeviceListUpdater
-from synapse.server import HomeServer
-from synapse.types import JsonDict
-from synapse.util.clock import Clock
-from synapse.util.retryutils import NotRetryingDestination
+from textrp_briij.handlers.device import DeviceListUpdater
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict
+from textrp_briij.util.clock import Clock
+from textrp_briij.util.retryutils import NotRetryingDestination
 
 from tests import unittest
 

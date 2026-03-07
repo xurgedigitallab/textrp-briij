@@ -5,9 +5,9 @@ This document aims to get you started with contributing to Synapse!
 # 1. Who can contribute to Synapse?
 
 Everyone is welcome to contribute code to
-[Synapse](https://github.com/element-hq/synapse), provided that they are willing
+[Synapse](https://github.com/textrp/briij-synapse), provided that they are willing
 to license their contributions to Element under a [Contributor License
-Agreement](https://cla-assistant.io/element-hq/synapse) (CLA). This ensures that
+Agreement](https://cla-assistant.io/textrp/briij-synapse) (CLA). This ensures that
 their contribution will be made available under an OSI-approved open-source
 license, currently Affero General Public License v3 (AGPLv3).
 
@@ -99,8 +99,8 @@ Now edit `homeserver.yaml`, things you might want to change include:
 
 - Set a `server_name`
 - Adjusting paths to be correct for your system like the `log_config` to point to the log config you just copied
-- Using a [PostgreSQL database instead of SQLite](https://element-hq.github.io/synapse/latest/usage/configuration/config_documentation.html#database)
-- Adding a [`registration_shared_secret`](https://element-hq.github.io/synapse/latest/usage/configuration/config_documentation.html#registration_shared_secret) so you can use [`register_new_matrix_user` command](https://element-hq.github.io/synapse/latest/setup/installation.html#registering-a-user).
+- Using a [PostgreSQL database instead of SQLite](https://docs.briij.example/synapse/latest/usage/configuration/config_documentation.html#database)
+- Adding a [`registration_shared_secret`](https://docs.briij.example/synapse/latest/usage/configuration/config_documentation.html#registration_shared_secret) so you can use [`register_new_matrix_user` command](https://docs.briij.example/synapse/latest/setup/installation.html#registering-a-user).
 
 And then run Synapse with the following command:
 
@@ -111,7 +111,7 @@ poetry run python -m synapse.app.homeserver -c homeserver.yaml
 If you get an error like the following:
 
 ```
-importlib.metadata.PackageNotFoundError: matrix-synapse
+importlib.metadata.PackageNotFoundError: textrp-briij
 ```
 
 this probably indicates that the `poetry install` step did not complete cleanly - go back and
@@ -124,22 +124,22 @@ Join our developer community on Matrix: [#synapse-dev:matrix.org](https://matrix
 
 # 6. Pick an issue.
 
-Fix your favorite problem or perhaps find a [Good First Issue](https://github.com/element-hq/synapse/issues?q=is%3Aopen+is%3Aissue+label%3A%22Good+First+Issue%22)
+Fix your favorite problem or perhaps find a [Good First Issue](https://github.com/textrp/briij-synapse/issues?q=is%3Aopen+is%3Aissue+label%3A%22Good+First+Issue%22)
 to work on.
 
 
 # 7. Turn coffee into code and documentation!
 
 There is a growing amount of documentation located in the
-[`docs`](https://github.com/element-hq/synapse/tree/develop/docs)
-directory, with a rendered version [available online](https://element-hq.github.io/synapse).
+[`docs`](https://github.com/textrp/briij-synapse/tree/develop/docs)
+directory, with a rendered version [available online](https://docs.briij.example/synapse).
 This documentation is intended primarily for sysadmins running their
 own Synapse instance, as well as developers interacting externally with
 Synapse.
-[`docs/development`](https://github.com/element-hq/synapse/tree/develop/docs/development)
+[`docs/development`](https://github.com/textrp/briij-synapse/tree/develop/docs/development)
 exists primarily to house documentation for
 Synapse developers.
-[`docs/admin_api`](https://github.com/element-hq/synapse/tree/develop/docs/admin_api) houses documentation
+[`docs/admin_api`](https://github.com/textrp/briij-synapse/tree/develop/docs/admin_api) houses documentation
 regarding Synapse's Admin API, which is used mostly by sysadmins and external
 service developers.
 
@@ -149,7 +149,7 @@ options and documentation](../code_style.md#configuration-code-and-documentation
 
 We welcome improvements and additions to our documentation itself! When
 writing new pages, please
-[build `docs` to a book](https://github.com/element-hq/synapse/tree/develop/docs#adding-to-the-documentation)
+[build `docs` to a book](https://github.com/textrp/briij-synapse/tree/develop/docs#adding-to-the-documentation)
 to check that your contributions render correctly. The docs are written in
 [GitHub-Flavoured Markdown](https://guides.github.com/features/mastering-markdown/).
 
@@ -363,7 +363,7 @@ The above will run a monolithic (single-process) Synapse with SQLite as the data
   - If setting `WORKERS=1`, optionally set `WORKER_TYPES=` to declare which worker
     types you wish to test. A simple comma-delimited string containing the worker types
     defined from the `WORKERS_CONFIG` template in
-    [here](https://github.com/element-hq/synapse/blob/develop/docker/configure_workers_and_start.py#L54).
+    [here](https://github.com/textrp/briij-synapse/blob/develop/docker/configure_workers_and_start.py#L54).
     A safe example would be `WORKER_TYPES="federation_inbound, federation_sender, synchrotron"`.
     See the [worker documentation](../workers.md) for additional information on workers.
 - Passing `ASYNCIO_REACTOR=1` as an environment variable to use the Twisted asyncio reactor instead of the default one.
@@ -432,7 +432,7 @@ in the format of `PRnumber.type`. The type can be one of the following:
 * `misc` (for internal-only changes)
 
 This file will become part of our [changelog](
-https://github.com/element-hq/synapse/blob/master/CHANGES.md) at the next
+https://github.com/textrp/briij-synapse/blob/master/CHANGES.md) at the next
 release, so the content of the file should be a short description of your
 change in the same style as the rest of the changelog. The file can contain Markdown
 formatting, and must end with a full stop (.) or an exclamation mark (!) for
@@ -464,7 +464,7 @@ There are two options for solving this:
    add the changelog file to your branch, or:
 
 1. Look at the [list of all
-   issues/PRs](https://github.com/element-hq/synapse/issues?q=), add one to the
+   issues/PRs](https://github.com/textrp/briij-synapse/issues?q=), add one to the
    highest number you see, and quickly open the PR before somebody else claims
    your number.
 
@@ -500,12 +500,12 @@ separate pull requests.)
 ## Sign off
 
 After you make a PR a comment from @CLAassistant will appear asking you to sign
-the [CLA](https://cla-assistant.io/element-hq/synapse).
+the [CLA](https://cla-assistant.io/textrp/briij-synapse).
 This will link a page to allow you to confirm that you have read and agreed to
 the CLA by signing in with GitHub.
 
 Alternatively, you can sign off before opening a PR by going to
-<https://cla-assistant.io/element-hq/synapse>.
+<https://cla-assistant.io/textrp/briij-synapse>.
 
 We accept contributions under a legally identifiable name, such as
 your name on government documentation or common-law names (names

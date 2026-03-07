@@ -1,7 +1,7 @@
-/matrix-synapse-py3.*.debhelper
-/matrix-synapse-py3.debhelper.log
-/matrix-synapse-py3.substvars
-/matrix-synapse-*/
+/textrp-briij-py3.*.debhelper
+/textrp-briij-py3.debhelper.log
+/textrp-briij-py3.substvars
+/textrp-briij-*/
 /files
 /debhelper-build-stamp
 /.debhelper

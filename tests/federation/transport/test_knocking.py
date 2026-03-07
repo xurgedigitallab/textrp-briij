@@ -23,15 +23,15 @@ from typing import Any
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import EventTypes, JoinRules, Membership
-from synapse.api.room_versions import RoomVersion, RoomVersions
-from synapse.events import EventBase, builder
-from synapse.events.snapshot import EventContext
-from synapse.rest import admin
-from synapse.rest.client import login, room
-from synapse.server import HomeServer
-from synapse.types import RoomAlias
-from synapse.util.clock import Clock
+from textrp_briij.api.constants import EventTypes, JoinRules, Membership
+from textrp_briij.api.room_versions import RoomVersion, RoomVersions
+from textrp_briij.events import EventBase, builder
+from textrp_briij.events.snapshot import EventContext
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, room
+from textrp_briij.server import HomeServer
+from textrp_briij.types import RoomAlias
+from textrp_briij.util.clock import Clock
 
 from tests.test_utils import event_injection
 from tests.unittest import FederatingHomeserverTestCase, HomeserverTestCase

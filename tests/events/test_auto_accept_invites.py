@@ -28,19 +28,19 @@ from parameterized import parameterized
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import EventTypes
-from synapse.api.errors import SynapseError
-from synapse.config._base import RootConfig
-from synapse.config.auto_accept_invites import AutoAcceptInvitesConfig
-from synapse.events.auto_accept_invites import InviteAutoAccepter
-from synapse.federation.federation_base import event_from_pdu_json
-from synapse.handlers.sync import JoinedSyncResult, SyncRequestKey
-from synapse.module_api import ModuleApi
-from synapse.rest import admin
-from synapse.rest.client import login, room
-from synapse.server import HomeServer
-from synapse.types import StreamToken, UserID, UserInfo, create_requester
-from synapse.util.clock import Clock
+from textrp_briij.api.constants import EventTypes
+from textrp_briij.api.errors import SynapseError
+from textrp_briij.config._base import RootConfig
+from textrp_briij.config.auto_accept_invites import AutoAcceptInvitesConfig
+from textrp_briij.events.auto_accept_invites import InviteAutoAccepter
+from textrp_briij.federation.federation_base import event_from_pdu_json
+from textrp_briij.handlers.sync import JoinedSyncResult, SyncRequestKey
+from textrp_briij.module_api import ModuleApi
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, room
+from textrp_briij.server import HomeServer
+from textrp_briij.types import StreamToken, UserID, UserInfo, create_requester
+from textrp_briij.util.clock import Clock
 
 from tests.handlers.test_sync import generate_sync_config
 from tests.unittest import (

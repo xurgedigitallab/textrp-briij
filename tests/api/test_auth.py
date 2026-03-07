@@ -25,21 +25,21 @@ import pymacaroons
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.auth.internal import InternalAuth
-from synapse.api.auth_blocking import AuthBlocking
-from synapse.api.constants import UserTypes
-from synapse.api.errors import (
+from textrp_briij.api.auth.internal import InternalAuth
+from textrp_briij.api.auth_blocking import AuthBlocking
+from textrp_briij.api.constants import UserTypes
+from textrp_briij.api.errors import (
     AuthError,
     Codes,
     InvalidClientTokenError,
     MissingClientTokenError,
     ResourceLimitError,
 )
-from synapse.appservice import ApplicationService
-from synapse.server import HomeServer
-from synapse.storage.databases.main.registration import TokenLookupResult
-from synapse.types import Requester, UserID
-from synapse.util.clock import Clock
+from textrp_briij.appservice import ApplicationService
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.databases.main.registration import TokenLookupResult
+from textrp_briij.types import Requester, UserID
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.utils import mock_getRawHeaders

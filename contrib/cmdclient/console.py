@@ -772,7 +772,7 @@ def main(server_url, identity_server_url, username, token, config_path):
     # the command line client
     syn_cmd = SynapseCmd(http_client, server_url, identity_server_url, username, token)
 
-    # load synapse.json config from a previous session
+    # load textrp_briij.json config from a previous session
     global CONFIG_JSON
     CONFIG_JSON = config_path  # bit cheeky, but just overwrite the global
     try:

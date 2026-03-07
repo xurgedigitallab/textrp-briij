@@ -24,14 +24,14 @@ from unittest.mock import AsyncMock, Mock
 
 from twisted.internet.testing import MemoryReactor
 
-import synapse.api.errors
-import synapse.rest.admin
-from synapse.api.constants import EventTypes
-from synapse.events import EventBase
-from synapse.rest.client import directory, login, room
-from synapse.server import HomeServer
-from synapse.types import JsonDict, RoomAlias, create_requester
-from synapse.util.clock import Clock
+import textrp_briij.api.errors
+import textrp_briij.rest.admin
+from textrp_briij.api.constants import EventTypes
+from textrp_briij.events import EventBase
+from textrp_briij.rest.client import directory, login, room
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict, RoomAlias, create_requester
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 
@@ -113,7 +113,7 @@ class DirectoryTestCase(unittest.HomeserverTestCase):
 
 class TestCreateAlias(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
         room.register_servlets,
         directory.register_servlets,
@@ -161,7 +161,7 @@ class TestCreateAlias(unittest.HomeserverTestCase):
                 self.room_alias,
                 other_room_id,
             ),
-            synapse.api.errors.SynapseError,
+            textrp_briij.api.errors.SynapseError,
         )
 
     def test_create_alias_admin(self) -> None:
@@ -181,7 +181,7 @@ class TestCreateAlias(unittest.HomeserverTestCase):
 
 class TestDeleteAlias(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
         room.register_servlets,
         directory.register_servlets,
@@ -224,7 +224,7 @@ class TestDeleteAlias(unittest.HomeserverTestCase):
             self.handler.delete_association(
                 create_requester(self.test_user), self.room_alias
             ),
-            synapse.api.errors.AuthError,
+            textrp_briij.api.errors.AuthError,
         )
 
     def test_delete_alias_creator(self) -> None:
@@ -243,7 +243,7 @@ class TestDeleteAlias(unittest.HomeserverTestCase):
         # Confirm the alias is gone.
         self.get_failure(
             self.handler.get_association(self.room_alias),
-            synapse.api.errors.SynapseError,
+            textrp_briij.api.errors.SynapseError,
         )
 
     def test_delete_alias_admin(self) -> None:
@@ -262,7 +262,7 @@ class TestDeleteAlias(unittest.HomeserverTestCase):
         # Confirm the alias is gone.
         self.get_failure(
             self.handler.get_association(self.room_alias),
-            synapse.api.errors.SynapseError,
+            textrp_briij.api.errors.SynapseError,
         )
 
     def test_delete_alias_sufficient_power(self) -> None:
@@ -288,7 +288,7 @@ class TestDeleteAlias(unittest.HomeserverTestCase):
         # Confirm the alias is gone.
         self.get_failure(
             self.handler.get_association(self.room_alias),
-            synapse.api.errors.SynapseError,
+            textrp_briij.api.errors.SynapseError,
         )
 
 
@@ -296,7 +296,7 @@ class CanonicalAliasTestCase(unittest.HomeserverTestCase):
     """Test modifications of the canonical alias when delete aliases."""
 
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
         room.register_servlets,
         directory.register_servlets,
@@ -466,7 +466,7 @@ class TestCreateAliasACL(unittest.HomeserverTestCase):
 
 class TestCreatePublishedRoomACL(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         login.register_servlets,
         directory.register_servlets,
         room.register_servlets,

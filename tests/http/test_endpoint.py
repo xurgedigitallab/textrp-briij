@@ -17,7 +17,7 @@
 # [This file includes modifications made by New Vector Limited]
 #
 #
-from synapse.util.stringutils import parse_and_validate_server_name, parse_server_name
+from textrp_briij.util.stringutils import parse_and_validate_server_name, parse_server_name
 
 from tests import unittest
 

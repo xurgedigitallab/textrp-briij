@@ -22,12 +22,12 @@ from unittest.mock import patch
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import EventContentFields, EventTypes, Membership, RoomTypes
-from synapse.config.server import DEFAULT_ROOM_VERSION
-from synapse.rest import admin
-from synapse.rest.client import login, room, room_upgrade_rest_servlet
-from synapse.server import HomeServer
-from synapse.util.clock import Clock
+from textrp_briij.api.constants import EventContentFields, EventTypes, Membership, RoomTypes
+from textrp_briij.config.server import DEFAULT_ROOM_VERSION
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, room, room_upgrade_rest_servlet
+from textrp_briij.server import HomeServer
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.server import FakeChannel
@@ -223,7 +223,7 @@ class UpgradeRoomTest(unittest.HomeserverTestCase):
 
         # Synapse refuses to accept new stringy power level events. Bypass this by
         # neutering the validation.
-        with patch("synapse.events.validator.jsonschema.validate"):
+        with patch("textrp_briij.events.validator.jsonschema.validate"):
             # Note: https://github.com/matrix-org/matrix-spec/issues/853 plans to forbid
             # string power levels in new rooms. For this test to have a clean
             # conscience, we ought to ensure it's upgrading from a sufficiently old

@@ -1,7 +1,7 @@
 [project]
-name = "matrix-synapse"
+name = "textrp-briij"
 version = "1.148.0"
-description = "Homeserver for the Matrix decentralised comms protocol"
+description = "Briij by TextRP homeserver for the Matrix protocol"
 readme = "README.rst"
 authors = [
     { name = "Matrix.org Team and Contributors", email = "packages@matrix.org" }
@@ -207,27 +207,43 @@ all = [
 ]
 
 [project.urls]
-repository = "https://github.com/element-hq/synapse"
-documentation = "https://element-hq.github.io/synapse/latest"
-"Issue Tracker" = "https://github.com/element-hq/synapse/issues"
+repository = "https://github.com/textrp/briij-synapse"
+documentation = "https://docs.briij.example/synapse/latest"
+"Issue Tracker" = "https://github.com/textrp/briij-synapse/issues"
 
 [project.scripts]
-synapse_homeserver = "synapse.app.homeserver:main"
-synapse_worker = "synapse.app.generic_worker:main"
-synctl = "synapse._scripts.synctl:main"
+synapse_homeserver = "textrp_briij.app.homeserver:main"
+synapse_worker = "textrp_briij.app.generic_worker:main"
+synctl = "textrp_briij._scripts.synctl:main"
 
-export_signing_key = "synapse._scripts.export_signing_key:main"
-generate_config = "synapse._scripts.generate_config:main"
-generate_log_config = "synapse._scripts.generate_log_config:main"
-generate_signing_key = "synapse._scripts.generate_signing_key:main"
-hash_password = "synapse._scripts.hash_password:main"
-register_new_matrix_user = "synapse._scripts.register_new_matrix_user:main"
-synapse_port_db = "synapse._scripts.synapse_port_db:main"
-synapse_review_recent_signups = "synapse._scripts.review_recent_signups:main"
-update_synapse_database = "synapse._scripts.update_synapse_database:main"
+export_signing_key = "textrp_briij._scripts.export_signing_key:main"
+generate_config = "textrp_briij._scripts.generate_config:main"
+generate_log_config = "textrp_briij._scripts.generate_log_config:main"
+generate_signing_key = "textrp_briij._scripts.generate_signing_key:main"
+hash_password = "textrp_briij._scripts.hash_password:main"
+register_new_matrix_user = "textrp_briij._scripts.register_new_matrix_user:main"
+synapse_port_db = "textrp_briij._scripts.synapse_port_db:main"
+synapse_review_recent_signups = "textrp_briij._scripts.synapse_review_recent_signups:main"
+update_synapse_database = "textrp_briij._scripts.update_synapse_database:main"
+
+textrp_briij_homeserver = "textrp_briij.app.homeserver:main"
+textrp_briij_worker = "textrp_briij.app.generic_worker:main"
+textrp_briij_ctl = "textrp_briij._scripts.synctl:main"
+textrp_briij_export_signing_key = "textrp_briij._scripts.export_signing_key:main"
+textrp_briij_generate_config = "textrp_briij._scripts.generate_config:main"
+textrp_briij_generate_log_config = "textrp_briij._scripts.generate_log_config:main"
+textrp_briij_generate_signing_key = "textrp_briij._scripts.generate_signing_key:main"
+textrp_briij_hash_password = "textrp_briij._scripts.hash_password:main"
+textrp_briij_register_new_matrix_user = "textrp_briij._scripts.register_new_matrix_user:main"
+textrp_briij_port_db = "textrp_briij._scripts.synapse_port_db:main"
+textrp_briij_review_recent_signups = "textrp_briij._scripts.synapse_review_recent_signups:main"
+textrp_briij_update_database = "textrp_briij._scripts.update_synapse_database:main"
 
 [tool.poetry]
-packages = [{ include = "synapse" }]
+packages = [
+    { include = "textrp_briij" },
+    { include = "synapse" },
+]
 
 [tool.poetry.build]
 # Compile our rust module when using `poetry install`. This is still required
@@ -307,7 +323,7 @@ tomli = ">=1.2.3"
 sqlglot = ">=28.0.0"
 
 [tool.towncrier]
-    package = "synapse"
+    package = "textrp_briij"
     filename = "CHANGES.md"
     directory = "changelog.d"
     issue_format = "[\\#{issue}](https://github.com/element-hq/synapse/issues/{issue})"
@@ -399,7 +415,7 @@ extend-safe-fixes = [
 [tool.ruff.lint.isort]
 combine-as-imports = true
 section-order = ["future", "standard-library", "third-party", "twisted", "first-party", "testing", "local-folder"]
-known-first-party = ["synapse"]
+known-first-party = ["textrp_briij", "synapse"]
 
 [tool.ruff.lint.isort.sections]
 twisted = ["twisted", "OpenSSL"]
@@ -419,7 +435,7 @@ extend-immutable-calls = [
 
 [tool.maturin]
 manifest-path = "rust/Cargo.toml"
-module-name = "synapse.synapse_rust"
+module-name = "textrp_briij.synapse_rust"
 python-source = "."
 include = [
     { path = "AUTHORS.rst", format = "sdist" },
@@ -489,4 +505,4 @@ environment= { PATH = "$PATH:$HOME/.cargo/bin" }
 # Python version.
 before-build = "rm -rf {project}/build"
 build-frontend = "build"
-test-command = "python -c 'from synapse.synapse_rust import sum_as_string; print(sum_as_string(1, 2))'"
+test-command = "python -c 'from textrp_briij.synapse_rust import sum_as_string; print(sum_as_string(1, 2))'"

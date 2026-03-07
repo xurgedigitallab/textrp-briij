@@ -25,9 +25,9 @@ from unittest.mock import Mock, call, patch
 
 from twisted.internet import defer
 
-from synapse.storage._base import SQLBaseStore
-from synapse.storage.database import DatabasePool
-from synapse.storage.engines import create_engine
+from textrp_briij.storage._base import SQLBaseStore
+from textrp_briij.storage.database import DatabasePool
+from textrp_briij.storage.engines import create_engine
 
 from tests import unittest
 from tests.server import TestHomeServer

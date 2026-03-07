@@ -21,7 +21,7 @@
 
 from parameterized import parameterized
 
-from synapse.http.proxy import (
+from textrp_briij.http.proxy import (
     HOP_BY_HOP_HEADERS_LOWERCASE,
     parse_connection_header_value,
 )

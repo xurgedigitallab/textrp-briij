@@ -26,16 +26,16 @@ from parameterized import parameterized
 
 from twisted.internet.testing import MemoryReactor
 
-import synapse.rest.admin
-from synapse.http.site import XForwardedForRequest
-from synapse.rest.client import login
-from synapse.server import HomeServer
-from synapse.storage.databases.main.client_ips import (
+import textrp_briij.rest.admin
+from textrp_briij.http.site import XForwardedForRequest
+from textrp_briij.rest.client import login
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.databases.main.client_ips import (
     LAST_SEEN_GRANULARITY,
     DeviceLastConnectionInfo,
 )
-from synapse.types import UserID
-from synapse.util.clock import Clock
+from textrp_briij.types import UserID
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.server import make_request
@@ -718,7 +718,7 @@ class ClientIpStoreTestCase(unittest.HomeserverTestCase):
 
 class ClientIpAuthTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
     ]
 

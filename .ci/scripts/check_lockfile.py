@@ -17,7 +17,7 @@ except Exception:
         """\
     Lockfile is not version 2.1. You probably need to upgrade poetry on your local box
     and re-run `poetry lock`. See the Poetry cheat sheet at
-    https://element-hq.github.io/synapse/develop/development/dependencies.html
+    https://docs.briij.example/synapse/develop/development/dependencies.html
     """
     )
     raise

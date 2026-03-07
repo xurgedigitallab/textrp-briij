@@ -29,15 +29,15 @@ from unittest.mock import AsyncMock, Mock
 
 from twisted.internet import defer
 
-from synapse.api.auth.internal import InternalAuth
-from synapse.api.constants import EventTypes, Membership
-from synapse.api.room_versions import RoomVersions
-from synapse.events import EventBase, make_event_from_dict
-from synapse.events.snapshot import EventContext
-from synapse.state import StateHandler, StateResolutionHandler, _make_state_cache_entry
-from synapse.types import MutableStateMap, StateMap
-from synapse.types.state import StateFilter
-from synapse.util.macaroons import MacaroonGenerator
+from textrp_briij.api.auth.internal import InternalAuth
+from textrp_briij.api.constants import EventTypes, Membership
+from textrp_briij.api.room_versions import RoomVersions
+from textrp_briij.events import EventBase, make_event_from_dict
+from textrp_briij.events.snapshot import EventContext
+from textrp_briij.state import StateHandler, StateResolutionHandler, _make_state_cache_entry
+from textrp_briij.types import MutableStateMap, StateMap
+from textrp_briij.types.state import StateFilter
+from textrp_briij.util.macaroons import MacaroonGenerator
 
 from tests import unittest
 from tests.server import get_clock

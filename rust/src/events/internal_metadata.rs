@@ -2,6 +2,7 @@
  * This file is licensed under the Affero General Public License (AGPL) version 3.
  *
  * Copyright (C) 2024 New Vector, Ltd
+ * Copyright (C) 2026 TextRP https://textrp.io
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -317,7 +318,7 @@ impl EventInternalMetadata {
     /// outliers.
     ///
     /// See also
-    /// https://element-hq.github.io/synapse/develop/development/room-dag-concepts.html#out-of-band-membership-events.
+    /// https://docs.briij.example/synapse/develop/development/room-dag-concepts.html#out-of-band-membership-events.
     ///
     /// (Added in synapse 0.99.0, so may be unreliable for events received
     /// before that)

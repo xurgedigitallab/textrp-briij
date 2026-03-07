@@ -19,7 +19,7 @@
 #
 import sys
 
-from synapse.logging.formatter import LogFormatter
+from textrp_briij.logging.formatter import LogFormatter
 
 from tests import unittest
 

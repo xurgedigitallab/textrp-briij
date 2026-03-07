@@ -23,11 +23,11 @@ from typing import Collection
 
 from twisted.internet.testing import MemoryReactor
 
-import synapse.api.errors
-from synapse.api.constants import EduTypes
-from synapse.server import HomeServer
-from synapse.types import JsonDict
-from synapse.util.clock import Clock
+import textrp_briij.api.errors
+from textrp_briij.api.constants import EduTypes
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict
+from textrp_briij.util.clock import Clock
 
 from tests.unittest import HomeserverTestCase
 
@@ -348,6 +348,6 @@ class DeviceStoreTestCase(HomeserverTestCase):
             self.store.update_device(
                 "user_id", "unknown_device_id", new_display_name="display_name 2"
             ),
-            synapse.api.errors.StoreError,
+            textrp_briij.api.errors.StoreError,
         )
         self.assertEqual(404, exc.value.code)

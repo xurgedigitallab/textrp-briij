@@ -23,12 +23,12 @@ from parameterized import parameterized
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.app.generic_worker import GenericWorkerServer
-from synapse.app.homeserver import SynapseHomeServer
-from synapse.config.server import parse_listener_def
-from synapse.server import HomeServer
-from synapse.types import JsonDict
-from synapse.util.clock import Clock
+from textrp_briij.app.generic_worker import GenericWorkerServer
+from textrp_briij.app.homeserver import BriijHomeServer
+from textrp_briij.config.server import parse_listener_def
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict
+from textrp_briij.util.clock import Clock
 
 from tests.server import make_request
 from tests.unittest import HomeserverTestCase
@@ -91,10 +91,10 @@ class FederationReaderOpenIDListenerTests(HomeserverTestCase):
         self.assertEqual(channel.code, 401)
 
 
-@patch("synapse.app.homeserver.KeyResource", new=Mock())
+@patch("textrp_briij.app.homeserver.KeyResource", new=Mock())
 class SynapseHomeserverOpenIDListenerTests(HomeserverTestCase):
     def make_homeserver(self, reactor: MemoryReactor, clock: Clock) -> HomeServer:
-        hs = self.setup_test_homeserver(homeserver_to_use=SynapseHomeServer)
+        hs = self.setup_test_homeserver(homeserver_to_use=BriijHomeServer)
         return hs
 
     @parameterized.expand(
@@ -120,7 +120,7 @@ class SynapseHomeserverOpenIDListenerTests(HomeserverTestCase):
 
         # Listen with the config
         hs = self.hs
-        assert isinstance(hs, SynapseHomeServer)
+        assert isinstance(hs, BriijHomeServer)
         hs._listener_http(self.hs.config, parse_listener_def(0, config))
 
         # Grab the resource from the site that was told to listen

@@ -1,6 +1,6 @@
 # Creating multiple stream writers with a bash script
 
-This script creates multiple [stream writer](https://github.com/element-hq/synapse/blob/develop/docs/workers.md#stream-writers) workers.
+This script creates multiple [stream writer](https://github.com/textrp/briij-synapse/blob/develop/docs/workers.md#stream-writers) workers.
 
 Stream writers require both replication and HTTP listeners.
 
@@ -53,7 +53,7 @@ worker_listeners:
       - names: [client]
 
 #worker_pid_file: DATADIR/${STREAM_WRITERS[$i]}.pid
-worker_log_config: /etc/matrix-synapse/stream-writer-log.yaml
+worker_log_config: /etc/textrp-briij/stream-writer-log.yaml
 EOF
 HOMESERVER_YAML_INSTANCE_MAP+=$"  ${STREAM_WRITERS[$i]}_stream_writer:
     host: 127.0.0.1
@@ -71,7 +71,7 @@ cat << EXAMPLECONFIG
 # Don't forget to configure your reverse proxy and
 # necessary endpoints to their respective worker.
 
-# See https://github.com/element-hq/synapse/blob/develop/docs/workers.md
+# See https://github.com/textrp/briij-synapse/blob/develop/docs/workers.md
 # for more information.
 
 # Remember: Under NO circumstances should the replication
@@ -102,7 +102,7 @@ You should receive an output similar to the following:
 # Don't forget to configure your reverse proxy and
 # necessary endpoints to their respective worker.
 
-# See https://github.com/element-hq/synapse/blob/develop/docs/workers.md
+# See https://github.com/textrp/briij-synapse/blob/develop/docs/workers.md
 # for more information
 
 # Remember: Under NO circumstances should the replication
@@ -144,8 +144,8 @@ If you do this, back up your original configuration file first:
 
 ```console
 # Back up homeserver.yaml first
-cp /etc/matrix-synapse/homeserver.yaml /etc/matrix-synapse/homeserver.yaml.bak
+cp /etc/textrp-briij/homeserver.yaml /etc/textrp-briij/homeserver.yaml.bak
 
 # Create workers and write output to your homeserver.yaml
-./create_stream_writers.sh >> /etc/matrix-synapse/homeserver.yaml
+./create_stream_writers.sh >> /etc/textrp-briij/homeserver.yaml
 ```

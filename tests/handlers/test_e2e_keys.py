@@ -28,14 +28,14 @@ from signedjson import key as key, sign as sign
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import RoomEncryptionAlgorithms
-from synapse.api.errors import Codes, SynapseError
-from synapse.appservice import ApplicationService
-from synapse.handlers.device import DeviceWriterHandler
-from synapse.server import HomeServer
-from synapse.storage.databases.main.appservice import _make_exclusive_regex
-from synapse.types import JsonDict, UserID
-from synapse.util.clock import Clock
+from textrp_briij.api.constants import RoomEncryptionAlgorithms
+from textrp_briij.api.errors import Codes, SynapseError
+from textrp_briij.appservice import ApplicationService
+from textrp_briij.handlers.device import DeviceWriterHandler
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.databases.main.appservice import _make_exclusive_regex
+from textrp_briij.types import JsonDict, UserID
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.unittest import override_config

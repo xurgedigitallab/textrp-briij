@@ -23,15 +23,15 @@ from parameterized import parameterized
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import EventTypes, RelationTypes
-from synapse.api.room_versions import RoomVersion, RoomVersions
-from synapse.rest import admin
-from synapse.rest.client import login, room, sync
-from synapse.server import HomeServer
-from synapse.storage._base import db_to_json
-from synapse.storage.database import LoggingTransaction
-from synapse.types import JsonDict
-from synapse.util.clock import Clock
+from textrp_briij.api.constants import EventTypes, RelationTypes
+from textrp_briij.api.room_versions import RoomVersion, RoomVersions
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, room, sync
+from textrp_briij.server import HomeServer
+from textrp_briij.storage._base import db_to_json
+from textrp_briij.storage.database import LoggingTransaction
+from textrp_briij.types import JsonDict
+from textrp_briij.util.clock import Clock
 
 from tests.unittest import HomeserverTestCase, override_config
 

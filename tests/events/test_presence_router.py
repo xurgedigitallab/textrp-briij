@@ -25,16 +25,16 @@ import attr
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import EduTypes
-from synapse.events.presence_router import PresenceRouter, load_legacy_presence_router
-from synapse.federation.units import Transaction
-from synapse.handlers.presence import UserPresenceState
-from synapse.module_api import ModuleApi
-from synapse.rest import admin
-from synapse.rest.client import login, presence, room
-from synapse.server import HomeServer
-from synapse.types import JsonDict, StreamToken, create_requester
-from synapse.util.clock import Clock
+from textrp_briij.api.constants import EduTypes
+from textrp_briij.events.presence_router import PresenceRouter, load_legacy_presence_router
+from textrp_briij.federation.units import Transaction
+from textrp_briij.handlers.presence import UserPresenceState
+from textrp_briij.module_api import ModuleApi
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, presence, room
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict, StreamToken, create_requester
+from textrp_briij.util.clock import Clock
 
 from tests.handlers.test_sync import SyncRequestKey, generate_sync_config
 from tests.unittest import (

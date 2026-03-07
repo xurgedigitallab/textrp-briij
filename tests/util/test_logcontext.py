@@ -24,7 +24,7 @@ from typing import Callable, Generator, cast
 
 from twisted.internet import defer, reactor as _reactor
 
-from synapse.logging.context import (
+from textrp_briij.logging.context import (
     SENTINEL_CONTEXT,
     LoggingContext,
     PreserveLoggingContext,
@@ -35,16 +35,16 @@ from synapse.logging.context import (
     run_coroutine_in_background,
     run_in_background,
 )
-from synapse.types import ISynapseReactor
-from synapse.util.clock import Clock
-from synapse.util.duration import Duration
+from textrp_briij.types import IBriijReactor
+from textrp_briij.util.clock import Clock
+from textrp_briij.util.duration import Duration
 
 from tests import unittest
 from tests.unittest import logcontext_clean
 
 logger = logging.getLogger(__name__)
 
-reactor = cast(ISynapseReactor, _reactor)
+reactor = cast(IBriijReactor, _reactor)
 
 
 class LoggingContextTestCase(unittest.TestCase):

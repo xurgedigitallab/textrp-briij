@@ -23,12 +23,12 @@ from http import HTTPStatus
 
 from twisted.internet.testing import MemoryReactor
 
-import synapse.rest.admin
-from synapse.api.urls import ConsentURIBuilder
-from synapse.rest.client import login, room
-from synapse.rest.consent import consent_resource
-from synapse.server import HomeServer
-from synapse.util.clock import Clock
+import textrp_briij.rest.admin
+from textrp_briij.api.urls import ConsentURIBuilder
+from textrp_briij.rest.client import login, room
+from textrp_briij.rest.consent import consent_resource
+from textrp_briij.server import HomeServer
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.server import FakeSite, make_request
@@ -36,7 +36,7 @@ from tests.server import FakeSite, make_request
 
 class ConsentResourceTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         room.register_servlets,
         login.register_servlets,
     ]

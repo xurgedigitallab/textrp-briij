@@ -19,7 +19,7 @@ connect to a postgres database.
     virtualenv](setup/installation.md#installing-as-a-python-module-from-pypi), you can install
     the library with:
 
-        ~/synapse/env/bin/pip install "matrix-synapse[postgres]"
+        ~/synapse/env/bin/pip install "textrp-briij[postgres]"
 
     (substituting the path to your virtualenv for `~/synapse/env`, if
     you used a different path). You will require the postgres

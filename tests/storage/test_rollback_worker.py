@@ -22,13 +22,13 @@ from unittest import mock
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.app.generic_worker import GenericWorkerServer
-from synapse.server import HomeServer
-from synapse.storage.database import LoggingDatabaseConnection
-from synapse.storage.prepare_database import PrepareDatabaseException, prepare_database
-from synapse.storage.schema import SCHEMA_VERSION
-from synapse.types import JsonDict
-from synapse.util.clock import Clock
+from textrp_briij.app.generic_worker import GenericWorkerServer
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.database import LoggingDatabaseConnection
+from textrp_briij.storage.prepare_database import PrepareDatabaseException, prepare_database
+from textrp_briij.storage.schema import SCHEMA_VERSION
+from textrp_briij.types import JsonDict
+from textrp_briij.util.clock import Clock
 
 from tests.unittest import HomeserverTestCase
 

@@ -1,9 +1,9 @@
-from synapse.storage.invite_rule import (
+from textrp_briij.storage.invite_rule import (
     AllowAllInviteRulesConfig,
     InviteRule,
     MSC4155InviteRulesConfig,
 )
-from synapse.types import UserID
+from textrp_briij.types import UserID
 
 from tests import unittest
 

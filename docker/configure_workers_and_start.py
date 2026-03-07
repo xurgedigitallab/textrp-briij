@@ -24,33 +24,33 @@
 # nginx and supervisord configs depending on the workers requested.
 #
 # The environment variables it reads are:
-#   * SYNAPSE_SERVER_NAME: The desired server_name of the homeserver.
-#   * SYNAPSE_REPORT_STATS: Whether to report stats.
-#   * SYNAPSE_WORKER_TYPES: A comma separated list of worker names as specified in WORKERS_CONFIG
+#   * BRIIJ_SERVER_NAME: The desired server_name of the homeserver.
+#   * BRIIJ_REPORT_STATS: Whether to report stats.
+#   * BRIIJ_WORKER_TYPES: A comma separated list of worker names as specified in WORKERS_CONFIG
 #         below. Leave empty for no workers. Add a ':' and a number at the end to
 #         multiply that worker. Append multiple worker types with '+' to merge the
 #         worker types into a single worker. Add a name and a '=' to the front of a
 #         worker type to give this instance a name in logs and nginx.
 #         Examples:
-#         SYNAPSE_WORKER_TYPES='event_persister, federation_sender, client_reader'
-#         SYNAPSE_WORKER_TYPES='event_persister:2, federation_sender:2, client_reader'
-#         SYNAPSE_WORKER_TYPES='stream_writers=account_data+presence+typing'
-#   * SYNAPSE_AS_REGISTRATION_DIR: If specified, a directory in which .yaml and .yml files
+#         BRIIJ_WORKER_TYPES='event_persister, federation_sender, client_reader'
+#         BRIIJ_WORKER_TYPES='event_persister:2, federation_sender:2, client_reader'
+#         BRIIJ_WORKER_TYPES='stream_writers=account_data+presence+typing'
+#   * BRIIJ_AS_REGISTRATION_DIR: If specified, a directory in which .yaml and .yml files
 #         will be treated as Application Service registration files.
-#   * SYNAPSE_TLS_CERT: Path to a TLS certificate in PEM format.
-#   * SYNAPSE_TLS_KEY: Path to a TLS key. If this and SYNAPSE_TLS_CERT are specified,
+#   * BRIIJ_TLS_CERT: Path to a TLS certificate in PEM format.
+#   * BRIIJ_TLS_KEY: Path to a TLS key. If this and BRIIJ_TLS_CERT are specified,
 #         Nginx will be configured to serve TLS on port 8448.
-#   * SYNAPSE_USE_EXPERIMENTAL_FORKING_LAUNCHER: Whether to use the forking launcher,
+#   * BRIIJ_USE_EXPERIMENTAL_FORKING_LAUNCHER: Whether to use the forking launcher,
 #         only intended for usage in Complement at the moment.
 #         No stability guarantees are provided.
-#   * SYNAPSE_LOG_LEVEL: Set this to DEBUG, INFO, WARNING or ERROR to change the
+#   * BRIIJ_LOG_LEVEL: Set this to DEBUG, INFO, WARNING or ERROR to change the
 #         log level. INFO is the default.
-#   * SYNAPSE_LOG_SENSITIVE: If unset, SQL and SQL values won't be logged,
-#         regardless of the SYNAPSE_LOG_LEVEL setting.
-#   * SYNAPSE_LOG_TESTING: if set, Synapse will log additional information useful
+#   * BRIIJ_LOG_SENSITIVE: If unset, SQL and SQL values won't be logged,
+#         regardless of the BRIIJ_LOG_LEVEL setting.
+#   * BRIIJ_LOG_TESTING: if set, Synapse will log additional information useful
 #     for testing.
-#   * SYNAPSE_USE_UNIX_SOCKET: TODO
-#   * `SYNAPSE_ENABLE_METRICS`: if set to `1`, the metrics listener will be enabled on the
+#   * BRIIJ_USE_UNIX_SOCKET: TODO
+#   * `BRIIJ_ENABLE_METRICS`: if set to `1`, the metrics listener will be enabled on the
 #      main and worker processes. Defaults to `0` (disabled). The main process will listen on
 #      port `19090` and workers on port `19091 + <worker index>`.
 #
@@ -100,14 +100,14 @@ WORKER_PLACEHOLDER_NAME = "placeholder_name"
 #   have to attach by instance_map to the master process and have client endpoints.
 WORKERS_CONFIG: dict[str, dict[str, Any]] = {
     "pusher": {
-        "app": "synapse.app.generic_worker",
+        "app": "textrp_briij.app.generic_worker",
         "listener_resources": [],
         "endpoint_patterns": [],
         "shared_extra_conf": {},
         "worker_extra_conf": "",
     },
     "user_dir": {
-        "app": "synapse.app.generic_worker",
+        "app": "textrp_briij.app.generic_worker",
         "listener_resources": ["client"],
         "endpoint_patterns": [
             "^/_matrix/client/(api/v1|r0|v3|unstable)/user_directory/search$"
@@ -118,7 +118,7 @@ WORKERS_CONFIG: dict[str, dict[str, Any]] = {
         "worker_extra_conf": "",
     },
     "media_repository": {
-        "app": "synapse.app.generic_worker",
+        "app": "textrp_briij.app.generic_worker",
         "listener_resources": ["media", "client"],
         "endpoint_patterns": [
             "^/_matrix/media/",
@@ -138,7 +138,7 @@ WORKERS_CONFIG: dict[str, dict[str, Any]] = {
         "worker_extra_conf": "enable_media_repo: true",
     },
     "appservice": {
-        "app": "synapse.app.generic_worker",
+        "app": "textrp_briij.app.generic_worker",
         "listener_resources": [],
         "endpoint_patterns": [],
         "shared_extra_conf": {
@@ -147,14 +147,14 @@ WORKERS_CONFIG: dict[str, dict[str, Any]] = {
         "worker_extra_conf": "",
     },
     "federation_sender": {
-        "app": "synapse.app.generic_worker",
+        "app": "textrp_briij.app.generic_worker",
         "listener_resources": [],
         "endpoint_patterns": [],
         "shared_extra_conf": {},
         "worker_extra_conf": "",
     },
     "synchrotron": {
-        "app": "synapse.app.generic_worker",
+        "app": "textrp_briij.app.generic_worker",
         "listener_resources": ["client"],
         "endpoint_patterns": [
             "^/_matrix/client/(v2_alpha|r0|v3)/sync$",
@@ -166,7 +166,7 @@ WORKERS_CONFIG: dict[str, dict[str, Any]] = {
         "worker_extra_conf": "",
     },
     "client_reader": {
-        "app": "synapse.app.generic_worker",
+        "app": "textrp_briij.app.generic_worker",
         "listener_resources": ["client"],
         "endpoint_patterns": [
             "^/_matrix/client/(api/v1|r0|v3|unstable)/publicRooms$",
@@ -208,7 +208,7 @@ WORKERS_CONFIG: dict[str, dict[str, Any]] = {
         "worker_extra_conf": "",
     },
     "federation_reader": {
-        "app": "synapse.app.generic_worker",
+        "app": "textrp_briij.app.generic_worker",
         "listener_resources": ["federation"],
         "endpoint_patterns": [
             "^/_matrix/federation/v1/version$",
@@ -238,21 +238,21 @@ WORKERS_CONFIG: dict[str, dict[str, Any]] = {
         "worker_extra_conf": "",
     },
     "federation_inbound": {
-        "app": "synapse.app.generic_worker",
+        "app": "textrp_briij.app.generic_worker",
         "listener_resources": ["federation"],
         "endpoint_patterns": ["/_matrix/federation/(v1|v2)/send/"],
         "shared_extra_conf": {},
         "worker_extra_conf": "",
     },
     "event_persister": {
-        "app": "synapse.app.generic_worker",
+        "app": "textrp_briij.app.generic_worker",
         "listener_resources": ["replication"],
         "endpoint_patterns": [],
         "shared_extra_conf": {},
         "worker_extra_conf": "",
     },
     "background_worker": {
-        "app": "synapse.app.generic_worker",
+        "app": "textrp_briij.app.generic_worker",
         "listener_resources": [],
         "endpoint_patterns": [],
         # This worker cannot be sharded. Therefore, there should only ever be one
@@ -261,7 +261,7 @@ WORKERS_CONFIG: dict[str, dict[str, Any]] = {
         "worker_extra_conf": "",
     },
     "event_creator": {
-        "app": "synapse.app.generic_worker",
+        "app": "textrp_briij.app.generic_worker",
         "listener_resources": ["client"],
         "endpoint_patterns": [
             "^/_matrix/client/(api/v1|r0|v3|unstable)/rooms/.*/redact",
@@ -275,7 +275,7 @@ WORKERS_CONFIG: dict[str, dict[str, Any]] = {
         "worker_extra_conf": "",
     },
     "account_data": {
-        "app": "synapse.app.generic_worker",
+        "app": "textrp_briij.app.generic_worker",
         "listener_resources": ["client", "replication"],
         "endpoint_patterns": [
             "^/_matrix/client/(r0|v3|unstable)/.*/tags",
@@ -285,14 +285,14 @@ WORKERS_CONFIG: dict[str, dict[str, Any]] = {
         "worker_extra_conf": "",
     },
     "presence": {
-        "app": "synapse.app.generic_worker",
+        "app": "textrp_briij.app.generic_worker",
         "listener_resources": ["client", "replication"],
         "endpoint_patterns": ["^/_matrix/client/(api/v1|r0|v3|unstable)/presence/"],
         "shared_extra_conf": {},
         "worker_extra_conf": "",
     },
     "receipts": {
-        "app": "synapse.app.generic_worker",
+        "app": "textrp_briij.app.generic_worker",
         "listener_resources": ["client", "replication"],
         "endpoint_patterns": [
             "^/_matrix/client/(r0|v3|unstable)/rooms/.*/receipt",
@@ -302,21 +302,21 @@ WORKERS_CONFIG: dict[str, dict[str, Any]] = {
         "worker_extra_conf": "",
     },
     "to_device": {
-        "app": "synapse.app.generic_worker",
+        "app": "textrp_briij.app.generic_worker",
         "listener_resources": ["client", "replication"],
         "endpoint_patterns": ["^/_matrix/client/(r0|v3|unstable)/sendToDevice/"],
         "shared_extra_conf": {},
         "worker_extra_conf": "",
     },
     "device_lists": {
-        "app": "synapse.app.generic_worker",
+        "app": "textrp_briij.app.generic_worker",
         "listener_resources": ["client", "replication"],
         "endpoint_patterns": [],
         "shared_extra_conf": {},
         "worker_extra_conf": "",
     },
     "typing": {
-        "app": "synapse.app.generic_worker",
+        "app": "textrp_briij.app.generic_worker",
         "listener_resources": ["client", "replication"],
         "endpoint_patterns": [
             "^/_matrix/client/(api/v1|r0|v3|unstable)/rooms/.*/typing"
@@ -325,14 +325,14 @@ WORKERS_CONFIG: dict[str, dict[str, Any]] = {
         "worker_extra_conf": "",
     },
     "push_rules": {
-        "app": "synapse.app.generic_worker",
+        "app": "textrp_briij.app.generic_worker",
         "listener_resources": ["client", "replication"],
         "endpoint_patterns": ["^/_matrix/client/(api/v1|r0|v3|unstable)/pushrules/"],
         "shared_extra_conf": {},
         "worker_extra_conf": "",
     },
     "thread_subscriptions": {
-        "app": "synapse.app.generic_worker",
+        "app": "textrp_briij.app.generic_worker",
         "listener_resources": ["client", "replication"],
         "endpoint_patterns": [
             "^/_matrix/client/unstable/io.element.msc4306/.*",
@@ -359,7 +359,7 @@ NGINX_LOCATION_REGEX_CONFIG_BLOCK = """
 # Example of what happens if you try to use `proxy_pass http://localhost:19090/_synapse/metrics`
 # with `NGINX_LOCATION_REGEX_CONFIG_BLOCK`:
 # ```
-# nginx | 2025/12/31 22:58:34 [emerg] 21#21: "proxy_pass" cannot have URI part in location given by regular expression, or inside named location, or inside "if" statement, or inside "limit_except" block in /etc/nginx/conf.d/matrix-synapse.conf:732
+# nginx | 2025/12/31 22:58:34 [emerg] 21#21: "proxy_pass" cannot have URI part in location given by regular expression, or inside named location, or inside "if" statement, or inside "limit_except" block in /etc/nginx/conf.d/matrix-textrp_briij.conf:732
 # ```
 NGINX_LOCATION_EXACT_CONFIG_BLOCK = """
     location = {endpoint} {{
@@ -538,7 +538,7 @@ def add_worker_roles_to_shared_config(
 
             # Map of stream writer instance names to host/ports combos
             # For now, all stream writers need http replication ports
-            if os.environ.get("SYNAPSE_USE_UNIX_SOCKET", False):
+            if os.environ.get("BRIIJ_USE_UNIX_SOCKET", False):
                 instance_map[worker_name] = {
                     "path": f"/run/worker.{worker_port}",
                 }
@@ -690,7 +690,7 @@ def generate_base_homeserver_config() -> None:
     """
     # start.py already does this for us, so just call that.
     # note that this script is copied in in the official, monolith dockerfile
-    os.environ["SYNAPSE_HTTP_PORT"] = str(MAIN_PROCESS_HTTP_LISTENER_PORT)
+    os.environ["BRIIJ_HTTP_PORT"] = str(MAIN_PROCESS_HTTP_LISTENER_PORT)
     subprocess.run([sys.executable, "/start.py", "migrate_config"], check=True)
 
 
@@ -873,9 +873,9 @@ def generate_worker_files(
     # into files at the correct indentation below.
 
     # Convenience helper for if using unix sockets instead of host:port
-    using_unix_sockets = environ.get("SYNAPSE_USE_UNIX_SOCKET", False)
+    using_unix_sockets = environ.get("BRIIJ_USE_UNIX_SOCKET", False)
 
-    enable_metrics = environ.get("SYNAPSE_ENABLE_METRICS", "0") == "1"
+    enable_metrics = environ.get("BRIIJ_ENABLE_METRICS", "0") == "1"
 
     # First read the original config file and extract the listeners block. Then we'll
     # add another listener for replication. Later we'll write out the result to the
@@ -1196,7 +1196,7 @@ def generate_worker_files(
 
     # Find application service registrations
     appservice_registrations = None
-    appservice_registration_dir = os.environ.get("SYNAPSE_AS_REGISTRATION_DIR")
+    appservice_registration_dir = os.environ.get("BRIIJ_AS_REGISTRATION_DIR")
     if appservice_registration_dir:
         # Scan for all YAML files that should be application service registrations.
         appservice_registrations = [
@@ -1234,11 +1234,11 @@ def generate_worker_files(
     # Nginx config
     convert(
         "/conf/nginx.conf.j2",
-        "/etc/nginx/conf.d/matrix-synapse.conf",
+        "/etc/nginx/conf.d/matrix-textrp_briij.conf",
         worker_locations=nginx_location_config,
         upstream_directives=nginx_upstream_config,
-        tls_cert_path=os.environ.get("SYNAPSE_TLS_CERT"),
-        tls_key_path=os.environ.get("SYNAPSE_TLS_KEY"),
+        tls_cert_path=os.environ.get("BRIIJ_TLS_CERT"),
+        tls_key_path=os.environ.get("BRIIJ_TLS_KEY"),
         using_unix_sockets=using_unix_sockets,
         nginx_prometheus_metrics_service_discovery=nginx_prometheus_metrics_service_discovery,
     )
@@ -1254,11 +1254,11 @@ def generate_worker_files(
     )
 
     convert(
-        "/conf/synapse.supervisord.conf.j2",
-        "/etc/supervisor/conf.d/synapse.conf",
+        "/conf/textrp_briij.supervisord.conf.j2",
+        "/etc/supervisor/conf.d/textrp_briij.conf",
         workers=worker_descriptors,
         main_config_path=config_path,
-        use_forking_launcher=environ.get("SYNAPSE_USE_EXPERIMENTAL_FORKING_LAUNCHER"),
+        use_forking_launcher=environ.get("BRIIJ_USE_EXPERIMENTAL_FORKING_LAUNCHER"),
     )
 
     # healthcheck config
@@ -1284,14 +1284,14 @@ def generate_worker_log_config(
     """
     # Check whether we should write worker logs to disk, in addition to the console
     extra_log_template_args: dict[str, str | None] = {}
-    if environ.get("SYNAPSE_WORKERS_WRITE_LOGS_TO_DISK"):
+    if environ.get("BRIIJ_WORKERS_WRITE_LOGS_TO_DISK"):
         extra_log_template_args["LOG_FILE_PATH"] = f"{data_dir}/logs/{worker_name}.log"
 
-    extra_log_template_args["SYNAPSE_LOG_LEVEL"] = environ.get("SYNAPSE_LOG_LEVEL")
-    extra_log_template_args["SYNAPSE_LOG_SENSITIVE"] = environ.get(
-        "SYNAPSE_LOG_SENSITIVE"
+    extra_log_template_args["BRIIJ_LOG_LEVEL"] = environ.get("BRIIJ_LOG_LEVEL")
+    extra_log_template_args["BRIIJ_LOG_SENSITIVE"] = environ.get(
+        "BRIIJ_LOG_SENSITIVE"
     )
-    extra_log_template_args["SYNAPSE_LOG_TESTING"] = environ.get("SYNAPSE_LOG_TESTING")
+    extra_log_template_args["BRIIJ_LOG_TESTING"] = environ.get("BRIIJ_LOG_TESTING")
 
     # Render and write the file
     log_config_filepath = f"/conf/workers/{worker_name}.log.config"
@@ -1301,7 +1301,7 @@ def generate_worker_log_config(
         worker_name=worker_name,
         **extra_log_template_args,
         include_worker_name_in_log_line=environ.get(
-            "SYNAPSE_USE_EXPERIMENTAL_FORKING_LAUNCHER"
+            "BRIIJ_USE_EXPERIMENTAL_FORKING_LAUNCHER"
         ),
     )
     return log_config_filepath
@@ -1316,13 +1316,13 @@ def main(args: list[str], environ: MutableMapping[str, str]) -> None:
     )
     opts = parser.parse_args(args)
 
-    config_dir = environ.get("SYNAPSE_CONFIG_DIR", "/data")
-    config_path = environ.get("SYNAPSE_CONFIG_PATH", config_dir + "/homeserver.yaml")
-    data_dir = environ.get("SYNAPSE_DATA_DIR", "/data")
+    config_dir = environ.get("BRIIJ_CONFIG_DIR", "/data")
+    config_path = environ.get("BRIIJ_CONFIG_PATH", config_dir + "/homeserver.yaml")
+    data_dir = environ.get("BRIIJ_DATA_DIR", "/data")
 
-    # override SYNAPSE_NO_TLS, we don't support TLS in worker mode,
+    # override BRIIJ_NO_TLS, we don't support TLS in worker mode,
     # this needs to be handled by a frontend proxy
-    environ["SYNAPSE_NO_TLS"] = "yes"
+    environ["BRIIJ_NO_TLS"] = "yes"
 
     # Generate the base homeserver config if one does not yet exist
     if not os.path.exists(config_path):
@@ -1336,7 +1336,7 @@ def main(args: list[str], environ: MutableMapping[str, str]) -> None:
     if not os.path.exists(mark_filepath):
         # Collect and validate worker_type requests
         # Read the desired worker configuration from the environment
-        worker_types_env = environ.get("SYNAPSE_WORKER_TYPES", "").strip()
+        worker_types_env = environ.get("BRIIJ_WORKER_TYPES", "").strip()
         # Only process worker_types if they exist
         if not worker_types_env:
             # No workers, just the main process
@@ -1376,10 +1376,10 @@ def main(args: list[str], environ: MutableMapping[str, str]) -> None:
 
     # Empty strings are falsy in Python so this default is fine. We just can't have these
     # be undefined because supervisord will complain about our
-    # `%(ENV_SYNAPSE_HTTP_PROXY)s` usage.
-    environ.setdefault("SYNAPSE_HTTP_PROXY", "")
-    environ.setdefault("SYNAPSE_HTTPS_PROXY", "")
-    environ.setdefault("SYNAPSE_NO_PROXY", "")
+    # `%(ENV_BRIIJ_HTTP_PROXY)s` usage.
+    environ.setdefault("BRIIJ_HTTP_PROXY", "")
+    environ.setdefault("BRIIJ_HTTPS_PROXY", "")
+    environ.setdefault("BRIIJ_NO_PROXY", "")
 
     # Start supervisord, which will start Synapse, all of the configured worker
     # processes, redis, nginx etc. according to the config we created above.

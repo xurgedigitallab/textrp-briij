@@ -19,8 +19,8 @@
 #
 #
 
-import synapse.app.homeserver
-from synapse.config._base import ConfigError
+import textrp_briij.app.homeserver
+from textrp_briij.config._base import ConfigError
 
 from tests.config.utils import ConfigFileTestCase
 
@@ -38,12 +38,12 @@ class HomeserverAppStartTestCase(ConfigFileTestCase):
         # Ensure that starting master process with worker config raises an exception
         with self.assertRaises(ConfigError):
             # Do a normal homeserver creation and setup
-            homeserver_config = synapse.app.homeserver.load_or_generate_config(
+            homeserver_config = textrp_briij.app.homeserver.load_or_generate_config(
                 ["-c", self.config_file]
             )
             # XXX: The error will be raised at this point
-            hs = synapse.app.homeserver.create_homeserver(homeserver_config)
+            hs = textrp_briij.app.homeserver.create_homeserver(homeserver_config)
             # Continue with the setup. We don't expect this to run because we raised
             # earlier, but in the future, the code could be refactored to raise the
             # error in a different place.
-            synapse.app.homeserver.setup(hs)
+            textrp_briij.app.homeserver.setup(hs)

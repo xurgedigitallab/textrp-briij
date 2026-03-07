@@ -24,8 +24,8 @@ from typing import Generator, cast
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.server import HomeServer
-from synapse.util.clock import Clock
+from textrp_briij.server import HomeServer
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 

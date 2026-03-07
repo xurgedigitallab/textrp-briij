@@ -16,14 +16,14 @@ from unittest.mock import AsyncMock
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.app.phone_stats_home import (
+from textrp_briij.app.phone_stats_home import (
     PHONE_HOME_INTERVAL,
     start_phone_stats_home,
 )
-from synapse.rest import admin, login, register, room
-from synapse.server import HomeServer
-from synapse.types import JsonDict
-from synapse.util.clock import Clock
+from textrp_briij.rest import admin, login, register, room
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.server import ThreadedMemoryReactorClock
@@ -258,6 +258,6 @@ class PhoneHomeStatsTestCase(unittest.HomeserverTestCase):
             self.hs.get_datastores().main.database_engine.server_version,
         )
 
-        synapse_logger = logging.getLogger("synapse")
-        log_level = synapse_logger.getEffectiveLevel()
+        textrp_logger = logging.getLogger("textrp_briij")
+        log_level = textrp_logger.getEffectiveLevel()
         self.assertEqual(phone_home_stats["log_level"], logging.getLevelName(log_level))

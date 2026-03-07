@@ -2,6 +2,7 @@
  * This file is licensed under the Affero General Public License (AGPL) version 3.
  *
  * Copyright (C) 2026 Element Creations Ltd
+ * Copyright (C) 2026 TextRP https://textrp.io
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -361,10 +362,10 @@ pub fn register_module(py: Python<'_>, m: &Bound<'_, PyModule>) -> PyResult<()> 
     m.add_submodule(&child_module)?;
 
     // We need to manually add the module to sys.modules to make `from
-    // synapse.synapse_rust import rendezvous` work.
-    py.import("sys")?
-        .getattr("modules")?
-        .set_item("synapse.synapse_rust.msc4388_rendezvous", child_module)?;
+    // textrp_briij.synapse_rust import rendezvous` work (and keep legacy aliases).
+    let modules = py.import("sys")?.getattr("modules")?;
+    modules.set_item("textrp_briij.synapse_rust.msc4388_rendezvous", &child_module)?;
+    modules.set_item("synapse.synapse_rust.msc4388_rendezvous", &child_module)?;
 
     Ok(())
 }

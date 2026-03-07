@@ -1,4 +1,4 @@
-Source: matrix-synapse-py3
+Source: textrp-briij-py3
 Section: contrib/python
 Priority: extra
 Maintainer: Synapse Packaging team <packages@matrix.org>
@@ -18,21 +18,21 @@ Build-Depends:
  python3-venv,
  tar,
 Standards-Version: 3.9.8
-Homepage: https://github.com/element-hq/synapse
+Homepage: https://github.com/textrp/briij-synapse
 
-Package: matrix-synapse-py3
+Package: textrp-briij-py3
 Architecture: any
-Provides: matrix-synapse
+Provides: textrp-briij
 Conflicts:
- matrix-synapse (<< 0.34.0.1-0matrix2),
- matrix-synapse (>= 0.34.0.1-1),
+ textrp-briij (<< 0.34.0.1-0matrix2),
+ textrp-briij (>= 0.34.0.1-1),
 Pre-Depends: dpkg (>= 1.16.1)
 Depends:
  adduser,
  debconf,
  ${misc:Depends},
  ${shlibs:Depends},
- ${synapse:pydepends},
+ ${textrp-briij:pydepends},
 # some of our scripts use perl, but none of them are important,
 # so we put perl:Depends in Suggests rather than Depends.
 Recommends:
@@ -43,5 +43,4 @@ Suggests:
  ${perl:Depends},
 Description: Open federated Instant Messaging and VoIP server
  Matrix is an ambitious new ecosystem for open federated Instant
- Messaging and VoIP. Synapse is a reference Matrix server
- implementation.
+ Messaging and VoIP. Briij by TextRP is a Matrix server implementation.

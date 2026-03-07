@@ -59,7 +59,7 @@ jobs:
       # Dump installed versions for debugging.
       - run: poetry run pip list > before.txt
       # Upgrade all runtime dependencies only. This is intended to mimic a fresh
-      # `pip install matrix-synapse[all]` as closely as possible.
+      # `pip install textrp-briij[all]` as closely as possible.
       - run: poetry update --without dev
       - run: poetry run pip list > after.txt && (diff -u before.txt after.txt || true)
       - name: Remove unhelpful options from mypy config

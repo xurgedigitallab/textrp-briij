@@ -27,13 +27,13 @@ from parameterized import parameterized
 from twisted.internet.testing import MemoryReactor
 from twisted.web.resource import Resource
 
-import synapse.rest.admin
-from synapse.http.server import JsonResource
-from synapse.rest.admin import VersionServlet
-from synapse.rest.client import login, media, room
-from synapse.server import HomeServer
-from synapse.types import UserID
-from synapse.util.clock import Clock
+import textrp_briij.rest.admin
+from textrp_briij.http.server import JsonResource
+from textrp_briij.rest.admin import VersionServlet
+from textrp_briij.rest.client import login, media, room
+from textrp_briij.server import HomeServer
+from textrp_briij.types import UserID
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.test_utils import SMALL_PNG
@@ -58,8 +58,8 @@ class QuarantineMediaTestCase(unittest.HomeserverTestCase):
     """Test /quarantine_media admin API."""
 
     servlets = [
-        synapse.rest.admin.register_servlets,
-        synapse.rest.admin.register_servlets_for_media_repo,
+        textrp_briij.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets_for_media_repo,
         login.register_servlets,
         media.register_servlets,
         room.register_servlets,
@@ -457,7 +457,7 @@ class QuarantineMediaTestCase(unittest.HomeserverTestCase):
 
 class PurgeHistoryTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
         room.register_servlets,
     ]
@@ -505,7 +505,7 @@ class PurgeHistoryTestCase(unittest.HomeserverTestCase):
 
 class ExperimentalFeaturesTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
     ]
 

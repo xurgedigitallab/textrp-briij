@@ -20,8 +20,8 @@
 #
 import logging
 
-import synapse
-from synapse.module_api import cached
+import textrp_briij
+from textrp_briij.module_api import cached
 
 from tests.replication._base import BaseMultiWorkerStreamTestCase
 from tests.server import get_clock
@@ -46,14 +46,14 @@ class TestCache:
 
 class ModuleCacheInvalidationTestCase(BaseMultiWorkerStreamTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
     ]
 
     def test_module_cache_full_invalidation(self) -> None:
         main_cache = TestCache()
         self.hs.get_module_api().register_cached_function(main_cache.cached_function)
 
-        worker_hs = self.make_worker_hs("synapse.app.generic_worker")
+        worker_hs = self.make_worker_hs("textrp_briij.app.generic_worker")
 
         worker_cache = TestCache()
         worker_hs.get_module_api().register_cached_function(

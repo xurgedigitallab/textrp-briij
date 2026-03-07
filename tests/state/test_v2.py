@@ -30,19 +30,19 @@ import attr
 
 from twisted.internet import defer
 
-from synapse.api.constants import EventTypes, JoinRules, Membership
-from synapse.api.room_versions import RoomVersions
-from synapse.event_auth import auth_types_for_event
-from synapse.events import EventBase, make_event_from_dict
-from synapse.state.v2 import (
+from textrp_briij.api.constants import EventTypes, JoinRules, Membership
+from textrp_briij.api.room_versions import RoomVersions
+from textrp_briij.event_auth import auth_types_for_event
+from textrp_briij.events import EventBase, make_event_from_dict
+from textrp_briij.state.v2 import (
     _get_auth_chain_difference,
     _get_power_level_for_sender,
     lexicographical_topological_sort,
     resolve_events_with_store,
 )
-from synapse.storage.databases.main.event_federation import StateDifference
-from synapse.types import EventID, StateMap
-from synapse.util.duration import Duration
+from textrp_briij.storage.databases.main.event_federation import StateDifference
+from textrp_briij.types import EventID, StateMap
+from textrp_briij.util.duration import Duration
 
 from tests import unittest
 

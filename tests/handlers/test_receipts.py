@@ -23,10 +23,10 @@ from copy import deepcopy
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import EduTypes, ReceiptTypes
-from synapse.server import HomeServer
-from synapse.types import JsonDict
-from synapse.util.clock import Clock
+from textrp_briij.api.constants import EduTypes, ReceiptTypes
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 

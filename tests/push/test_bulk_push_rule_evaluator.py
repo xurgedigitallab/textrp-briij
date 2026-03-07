@@ -27,14 +27,14 @@ from parameterized import parameterized
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import EventContentFields, EventTypes, RelationTypes
-from synapse.api.room_versions import RoomVersions
-from synapse.push.bulk_push_rule_evaluator import BulkPushRuleEvaluator
-from synapse.rest import admin
-from synapse.rest.client import login, push_rule, register, room
-from synapse.server import HomeServer
-from synapse.types import JsonDict, create_requester
-from synapse.util.clock import Clock
+from textrp_briij.api.constants import EventContentFields, EventTypes, RelationTypes
+from textrp_briij.api.room_versions import RoomVersions
+from textrp_briij.push.bulk_push_rule_evaluator import BulkPushRuleEvaluator
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, push_rule, register, room
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict, create_requester
+from textrp_briij.util.clock import Clock
 
 from tests.unittest import HomeserverTestCase, override_config
 
@@ -123,9 +123,9 @@ class TestBulkPushRuleEvaluator(HomeserverTestCase):
         # We have seen stringy and null values for "room" in the wild, so presumably
         # some of this validation was missing in the past.
         with (
-            patch("synapse.events.validator.validate_canonicaljson"),
-            patch("synapse.events.validator.jsonschema.validate"),
-            patch("synapse.handlers.event_auth.check_state_dependent_auth_rules"),
+            patch("textrp_briij.events.validator.validate_canonicaljson"),
+            patch("textrp_briij.events.validator.jsonschema.validate"),
+            patch("textrp_briij.handlers.event_auth.check_state_dependent_auth_rules"),
         ):
             pl_event_id = self.helper.send_state(
                 self.room_id,
@@ -256,7 +256,7 @@ class TestBulkPushRuleEvaluator(HomeserverTestCase):
         #
         # Avoid C-S validation as these aren't expected.
         with patch(
-            "synapse.events.validator.EventValidator.validate_new",
+            "textrp_briij.events.validator.EventValidator.validate_new",
             new=lambda s, event, config: True,
         ):
             mentions: Any
@@ -306,7 +306,7 @@ class TestBulkPushRuleEvaluator(HomeserverTestCase):
         #
         # Avoid C-S validation as these aren't expected.
         with patch(
-            "synapse.events.validator.EventValidator.validate_new",
+            "textrp_briij.events.validator.EventValidator.validate_new",
             new=lambda s, event, config: True,
         ):
             self.assertFalse(
@@ -371,7 +371,7 @@ class TestBulkPushRuleEvaluator(HomeserverTestCase):
         #
         # Avoid C-S validation as these aren't expected.
         with patch(
-            "synapse.events.validator.EventValidator.validate_new",
+            "textrp_briij.events.validator.EventValidator.validate_new",
             new=lambda s, event, config: True,
         ):
             mentions: Any

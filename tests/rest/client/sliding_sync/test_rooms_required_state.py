@@ -18,13 +18,13 @@ from parameterized import parameterized, parameterized_class
 
 from twisted.internet.testing import MemoryReactor
 
-import synapse.rest.admin
-from synapse.api.constants import EventContentFields, EventTypes, JoinRules, Membership
-from synapse.handlers.sliding_sync import StateValues
-from synapse.rest.client import knock, login, room, sync
-from synapse.server import HomeServer
-from synapse.storage.databases.main.events import DeltaState, SlidingSyncTableChanges
-from synapse.util.clock import Clock
+import textrp_briij.rest.admin
+from textrp_briij.api.constants import EventContentFields, EventTypes, JoinRules, Membership
+from textrp_briij.handlers.sliding_sync import StateValues
+from textrp_briij.rest.client import knock, login, room, sync
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.databases.main.events import DeltaState, SlidingSyncTableChanges
+from textrp_briij.util.clock import Clock
 
 from tests.rest.client.sliding_sync.test_sliding_sync import SlidingSyncBase
 from tests.test_utils.event_injection import mark_event_as_partial_state
@@ -63,7 +63,7 @@ class SlidingSyncRoomsRequiredStateTestCase(SlidingSyncBase):
     """
 
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
         knock.register_servlets,
         room.register_servlets,

@@ -21,20 +21,20 @@
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.server import HomeServer
-from synapse.storage.database import (
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.database import (
     DatabasePool,
     LoggingDatabaseConnection,
     LoggingTransaction,
 )
-from synapse.storage.types import Cursor
-from synapse.storage.util.id_generators import MultiWriterIdGenerator
-from synapse.storage.util.sequence import (
+from textrp_briij.storage.types import Cursor
+from textrp_briij.storage.util.id_generators import MultiWriterIdGenerator
+from textrp_briij.storage.util.sequence import (
     LocalSequenceGenerator,
     PostgresSequenceGenerator,
     SequenceGenerator,
 )
-from synapse.util.clock import Clock
+from textrp_briij.util.clock import Clock
 
 from tests.unittest import HomeserverTestCase
 from tests.utils import USE_POSTGRES_FOR_TESTS

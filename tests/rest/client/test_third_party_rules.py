@@ -24,25 +24,25 @@ from unittest.mock import AsyncMock, Mock
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import EventTypes, LoginType, Membership
-from synapse.api.errors import SynapseError
-from synapse.api.room_versions import RoomVersion
-from synapse.config.homeserver import HomeServerConfig
-from synapse.events import EventBase
-from synapse.module_api.callbacks.third_party_event_rules_callbacks import (
+from textrp_briij.api.constants import EventTypes, LoginType, Membership
+from textrp_briij.api.errors import SynapseError
+from textrp_briij.api.room_versions import RoomVersion
+from textrp_briij.config.homeserver import HomeServerConfig
+from textrp_briij.events import EventBase
+from textrp_briij.module_api.callbacks.third_party_event_rules_callbacks import (
     load_legacy_third_party_event_rules,
 )
-from synapse.rest import admin
-from synapse.rest.client import account, login, profile, room
-from synapse.server import HomeServer
-from synapse.types import JsonDict, Requester, StateMap
-from synapse.util.clock import Clock
-from synapse.util.frozenutils import unfreeze
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import account, login, profile, room
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict, Requester, StateMap
+from textrp_briij.util.clock import Clock
+from textrp_briij.util.frozenutils import unfreeze
 
 from tests import unittest
 
 if TYPE_CHECKING:
-    from synapse.module_api import ModuleApi
+    from textrp_briij.module_api import ModuleApi
 
 thread_local = threading.local()
 

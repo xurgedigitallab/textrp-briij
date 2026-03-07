@@ -47,7 +47,7 @@ RUN curl -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path --default-tool
 # Make a base copy of the editable source tree, so that we have something to
 # install and build now — even though it's going to be covered up by a mount
 # at runtime.
-COPY synapse /editable-src/synapse/
+COPY textrp_briij /editable-src/textrp_briij/
 COPY rust /editable-src/rust/
 # ... and what we need to `pip install`.
 COPY pyproject.toml poetry.lock README.rst build_rust.py Cargo.toml Cargo.lock /editable-src/
@@ -59,7 +59,7 @@ RUN cd /editable-src && poetry install --extras all
 # Make copies of useful things for inspection:
 # - the Rust module (must be copied to the editable source tree before startup)
 # - poetry.lock is useful for checking if dependencies have changed.
-RUN cp /editable-src/synapse/synapse_rust.abi3.so /synapse_rust.abi3.so.bak
+RUN cp /editable-src/textrp_briij/synapse_rust.abi3.so /synapse_rust.abi3.so.bak
 RUN cp /editable-src/poetry.lock /poetry.lock.bak
 
 

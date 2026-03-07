@@ -25,9 +25,9 @@ pub fn register_module(py: Python<'_>, m: &Bound<'_, PyModule>) -> PyResult<()> 
 
     m.add_submodule(&child_module)?;
 
-    py.import("sys")?
-        .getattr("modules")?
-        .set_item("synapse.synapse_rust.segmenter", child_module)?;
+    let modules = py.import("sys")?.getattr("modules")?;
+    modules.set_item("textrp_briij.synapse_rust.segmenter", &child_module)?;
+    modules.set_item("synapse.synapse_rust.segmenter", &child_module)?;
 
     Ok(())
 }

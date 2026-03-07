@@ -1,16 +1,15 @@
 [package]
-# We name the package `synapse` so that things like logging have the right
-# logging target.
-name = "synapse"
+# We name the package `textrp_briij` so that logging targets match the rebrand.
+name = "textrp_briij"
 
-# dummy version. See pyproject.toml for the Synapse's version number.
+# dummy version. See pyproject.toml for the Briij's version number.
 version = "0.1.0"
 
 edition = "2021"
 rust-version = "1.82.0"
 
 [lib]
-name = "synapse"
+name = "textrp_briij"
 # We generate a `cdylib` for Python and a standard `lib` for running
 # tests/benchmarks.
 crate-type = ["lib", "cdylib"]
@@ -19,7 +18,7 @@ crate-type = ["lib", "cdylib"]
 # It is left here for compatibilty with maturin < 0.15.
 [package.metadata.maturin]
 # This is where we tell maturin where to place the built library.
-name = "synapse.synapse_rust"
+name = "textrp_briij.synapse_rust"
 
 [dependencies]
 anyhow = "1.0.63"

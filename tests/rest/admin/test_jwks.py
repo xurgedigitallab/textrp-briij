@@ -22,7 +22,7 @@
 
 from twisted.web.resource import Resource
 
-from synapse.rest.synapse.client import build_synapse_client_resource_tree
+from textrp_briij.rest.briij.client import build_briij_client_resource_tree
 
 from tests.unittest import HomeserverTestCase, override_config, skip_unless
 from tests.utils import HAS_AUTHLIB
@@ -34,7 +34,7 @@ class JWKSTestCase(HomeserverTestCase):
 
     def create_resource_dict(self) -> dict[str, Resource]:
         d = super().create_resource_dict()
-        d.update(build_synapse_client_resource_tree(self.hs))
+        d.update(build_briij_client_resource_tree(self.hs))
         return d
 
     def test_empty_jwks(self) -> None:

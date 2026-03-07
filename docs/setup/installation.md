@@ -33,9 +33,9 @@ for most users.
 #### Docker images and Ansible playbooks
 
 There is an official synapse image available at
-<https://hub.docker.com/r/matrixdotorg/synapse> or at [`ghcr.io/element-hq/synapse`](https://ghcr.io/element-hq/synapse)
+<https://hub.docker.com/r/textrp/briij-synapse> or at [`ghcr.io/textrp/briij-synapse`](https://ghcr.io/textrp/briij-synapse)
 which can be used with the docker-compose file available at
-[contrib/docker](https://github.com/element-hq/synapse/tree/develop/contrib/docker).
+[contrib/docker](https://github.com/textrp/briij-synapse/tree/develop/contrib/docker).
 Further information on this including configuration options is available in the README
 on hub.docker.com.
 
@@ -65,7 +65,7 @@ sudo wget -O /usr/share/keyrings/matrix-org-archive-keyring.gpg https://packages
 echo "deb [signed-by=/usr/share/keyrings/matrix-org-archive-keyring.gpg] https://packages.matrix.org/debian/ $(lsb_release -cs) main" |
     sudo tee /etc/apt/sources.list.d/matrix-org.list
 sudo apt update
-sudo apt install matrix-synapse-py3
+sudo apt install textrp-briij-py3
 ```
 
 Packages are also published for release candidates. To enable the prerelease
@@ -76,7 +76,7 @@ sudo wget -O /usr/share/keyrings/matrix-org-archive-keyring.gpg https://packages
 echo "deb [signed-by=/usr/share/keyrings/matrix-org-archive-keyring.gpg] https://packages.matrix.org/debian/ $(lsb_release -cs) main prerelease" |
     sudo tee /etc/apt/sources.list.d/matrix-org.list
 sudo apt update
-sudo apt install matrix-synapse-py3
+sudo apt install textrp-briij-py3
 ```
 
 The fingerprint of the repository signing key (as shown by `gpg
@@ -84,51 +84,51 @@ The fingerprint of the repository signing key (as shown by `gpg
 `AAF9AE843A7584B5A3E4CD2BCF45A512DE2DA058`.
 
 When installing with Debian packages, you might prefer to place files in
-`/etc/matrix-synapse/conf.d/` to override your configuration without editing
-the main configuration file at `/etc/matrix-synapse/homeserver.yaml`.
+`/etc/textrp-briij/conf.d/` to override your configuration without editing
+the main configuration file at `/etc/textrp-briij/homeserver.yaml`.
 By doing that, you won't be asked if you want to replace your configuration
 file when you upgrade the Debian package to a later version.
 
 ##### Downstream Debian packages
 
 Andrej Shadura maintains a
-[`matrix-synapse`](https://packages.debian.org/sid/matrix-synapse) package in
+[`textrp-briij`](https://packages.debian.org/sid/textrp-briij) package in
 the Debian repositories.
 For `forky` (14) and `sid` (rolling release), it can be installed simply with:
 
 ```sh
-sudo apt install matrix-synapse
+sudo apt install textrp-briij
 ```
 
-The downstream Debian `matrix-synapse` package is not available for `trixie` (13) and older. Consider using the Matrix.org packages (above).
+The downstream Debian `textrp-briij` package is not available for `trixie` (13) and older. Consider using the Matrix.org packages (above).
 
 ##### Downstream Ubuntu packages
 
 We do not recommend using the packages in the default Ubuntu repository
 at this time, as they are [old and suffer from known security vulnerabilities](
-    https://bugs.launchpad.net/ubuntu/+source/matrix-synapse/+bug/1848709
+    https://bugs.launchpad.net/ubuntu/+source/textrp-briij/+bug/1848709
 ).
 The latest version of Synapse can be installed from [our repository](#matrixorg-packages).
 
 #### Fedora
 
 Synapse is in the Fedora repositories as
-[`matrix-synapse`](https://src.fedoraproject.org/rpms/matrix-synapse):
+[`textrp-briij`](https://src.fedoraproject.org/rpms/textrp-briij):
 
 ```sh
-sudo dnf install matrix-synapse
+sudo dnf install textrp-briij
 ```
 
 Additionally, Oleg Girko provides Fedora RPMs at
-<https://obs.infoserver.lv/project/monitor/matrix-synapse>
+<https://obs.infoserver.lv/project/monitor/textrp-briij>
 
 #### OpenSUSE
 
 Synapse is in the OpenSUSE repositories as
-[`matrix-synapse`](https://software.opensuse.org/package/matrix-synapse):
+[`textrp-briij`](https://software.opensuse.org/package/textrp-briij):
 
 ```sh
-sudo zypper install matrix-synapse
+sudo zypper install textrp-briij
 ```
 
 #### SUSE Linux Enterprise Server
@@ -139,7 +139,7 @@ Unofficial package are built for SLES 15 in the openSUSE:Backports:SLE-15 reposi
 #### ArchLinux
 
 The quickest way to get up and running with ArchLinux is probably with the package provided by ArchLinux
-<https://archlinux.org/packages/extra/x86_64/matrix-synapse/>, which should pull in most of
+<https://archlinux.org/packages/extra/x86_64/textrp-briij/>, which should pull in most of
 the necessary dependencies.
 
 pip may be outdated (6.0.7-1 and needs to be upgraded to 6.0.8-1 ):
@@ -180,8 +180,8 @@ xbps-install -S synapse
 
 Synapse can be installed via FreeBSD Ports or Packages contributed by Brendan Molloy from:
 
-- Ports: `cd /usr/ports/net-im/py-matrix-synapse && make install clean`
-- Packages: `pkg install py38-matrix-synapse`
+- Ports: `cd /usr/ports/net-im/py-textrp-briij && make install clean`
+- Packages: `pkg install py38-textrp-briij`
 
 #### OpenBSD
 
@@ -226,10 +226,10 @@ virtualenv -p python3 ~/synapse/env
 source ~/synapse/env/bin/activate
 pip install --upgrade pip
 pip install --upgrade setuptools
-pip install matrix-synapse
+pip install textrp-briij
 ```
 
-This will download Synapse from [PyPI](https://pypi.org/project/matrix-synapse)
+This will download Synapse from [PyPI](https://pypi.org/project/textrp-briij)
 and install it, along with the python libraries it uses, into a virtual environment
 under `~/synapse/env`.  Feel free to pick a different directory if you
 prefer.
@@ -239,7 +239,7 @@ update flag:
 
 ```sh
 source ~/synapse/env/bin/activate
-pip install -U matrix-synapse
+pip install -U textrp-briij
 ```
 
 Before you can start Synapse, you will need to generate a configuration
@@ -358,7 +358,7 @@ python3.12 -m venv ~/synapse/env
 source ~/synapse/env/bin/activate
 pip install --upgrade pip
 pip install --upgrade setuptools
-pip install matrix-synapse
+pip install textrp-briij
 ```
 
 ##### macOS

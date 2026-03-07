@@ -33,23 +33,23 @@ from twisted.internet import defer
 from twisted.internet.defer import Deferred, ensureDeferred
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.errors import SynapseError
-from synapse.crypto import keyring
-from synapse.crypto.keyring import (
+from textrp_briij.api.errors import SynapseError
+from textrp_briij.crypto import keyring
+from textrp_briij.crypto.keyring import (
     PerspectivesKeyFetcher,
     ServerKeyFetcher,
     StoreKeyFetcher,
 )
-from synapse.logging.context import (
+from textrp_briij.logging.context import (
     ContextRequest,
     LoggingContext,
     current_context,
     make_deferred_yieldable,
 )
-from synapse.server import HomeServer
-from synapse.storage.keys import FetchKeyResult
-from synapse.types import JsonDict
-from synapse.util.clock import Clock
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.keys import FetchKeyResult
+from textrp_briij.types import JsonDict
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.unittest import logcontext_clean, override_config

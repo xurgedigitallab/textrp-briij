@@ -23,18 +23,18 @@ from unittest.mock import Mock, patch
 
 from twisted.internet.testing import MemoryReactor
 
-import synapse.rest.admin
-from synapse.api.constants import EduTypes, EventTypes
-from synapse.rest.client import (
+import textrp_briij.rest.admin
+from textrp_briij.api.constants import EduTypes, EventTypes
+from textrp_briij.rest.client import (
     directory,
     login,
     profile,
     room,
     room_upgrade_rest_servlet,
 )
-from synapse.server import HomeServer
-from synapse.types import UserID, create_requester
-from synapse.util.clock import Clock
+from textrp_briij.server import HomeServer
+from textrp_briij.types import UserID, create_requester
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 
@@ -59,7 +59,7 @@ class _ShadowBannedBase(unittest.HomeserverTestCase):
 @patch("random.randint", new=lambda a, b: 0)
 class RoomTestCase(_ShadowBannedBase):
     servlets = [
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         directory.register_servlets,
         login.register_servlets,
         room.register_servlets,
@@ -250,7 +250,7 @@ class RoomTestCase(_ShadowBannedBase):
 @patch("random.randint", new=lambda a, b: 0)
 class ProfileTestCase(_ShadowBannedBase):
     servlets = [
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         login.register_servlets,
         profile.register_servlets,
         room.register_servlets,

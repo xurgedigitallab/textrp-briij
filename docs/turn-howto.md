@@ -50,7 +50,7 @@ After updating the homeserver configuration, you must restart synapse:
     ```
   * If you use systemd:
     ```sh
-    systemctl restart matrix-synapse.service
+    systemctl restart textrp-briij.service
     ```
 ... and then reload any clients (or wait an hour for them to refresh their
 settings).

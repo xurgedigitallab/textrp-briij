@@ -25,20 +25,20 @@ from typing import Awaitable, Callable, NoReturn
 from twisted.internet.defer import Deferred
 from twisted.web.resource import Resource
 
-from synapse.api.errors import Codes, RedirectException, SynapseError
-from synapse.config.server import parse_listener_def
-from synapse.http.server import (
+from textrp_briij.api.errors import Codes, RedirectException, SynapseError
+from textrp_briij.config.server import parse_listener_def
+from textrp_briij.http.server import (
     DirectServeHtmlResource,
     DirectServeJsonResource,
     JsonResource,
     OptionsResource,
 )
-from synapse.http.site import SynapseRequest, SynapseSite
-from synapse.logging.context import make_deferred_yieldable
-from synapse.types import JsonDict
-from synapse.util.cancellation import cancellable
-from synapse.util.clock import Clock
-from synapse.util.duration import Duration
+from textrp_briij.http.site import SynapseRequest, SynapseSite
+from textrp_briij.logging.context import make_deferred_yieldable
+from textrp_briij.types import JsonDict
+from textrp_briij.util.cancellation import cancellable
+from textrp_briij.util.clock import Clock
+from textrp_briij.util.duration import Duration
 
 from tests import unittest
 from tests.http.server._base import disconnect_and_assert

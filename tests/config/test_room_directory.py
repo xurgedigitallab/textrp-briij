@@ -21,13 +21,13 @@ import yaml
 
 from twisted.internet.testing import MemoryReactor
 
-import synapse.rest.admin
-import synapse.rest.client.login
-import synapse.rest.client.room
-from synapse.config._base import RootConfig
-from synapse.config.room_directory import RoomDirectoryConfig
-from synapse.server import HomeServer
-from synapse.util.clock import Clock
+import textrp_briij.rest.admin
+import textrp_briij.rest.client.login
+import textrp_briij.rest.client.room
+from textrp_briij.config._base import RootConfig
+from textrp_briij.config.room_directory import RoomDirectoryConfig
+from textrp_briij.server import HomeServer
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.unittest import override_config
@@ -38,9 +38,9 @@ class RoomDirectoryConfigTestCase(unittest.HomeserverTestCase):
         self.store = hs.get_datastores().main
 
     servlets = [
-        synapse.rest.admin.register_servlets,
-        synapse.rest.client.login.register_servlets,
-        synapse.rest.client.room.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
+        textrp_briij.rest.client.login.register_servlets,
+        textrp_briij.rest.client.room.register_servlets,
     ]
 
     def test_alias_creation_acl(self) -> None:

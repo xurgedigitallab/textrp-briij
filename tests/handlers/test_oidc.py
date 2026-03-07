@@ -27,13 +27,13 @@ import pymacaroons
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.handlers.sso import MappingException
-from synapse.http.site import SynapseRequest
-from synapse.server import HomeServer
-from synapse.types import JsonDict, UserID
-from synapse.util.clock import Clock
-from synapse.util.macaroons import get_value_from_macaroon
-from synapse.util.stringutils import random_string
+from textrp_briij.handlers.sso import MappingException
+from textrp_briij.http.site import SynapseRequest
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict, UserID
+from textrp_briij.util.clock import Clock
+from textrp_briij.util.macaroons import get_value_from_macaroon
+from textrp_briij.util.stringutils import random_string
 
 from tests.test_utils import FakeResponse, get_awaitable_result
 from tests.test_utils.oidc import FakeAuthorizationGrant, FakeOidcServer
@@ -44,7 +44,7 @@ try:
     from authlib.oidc.core import UserInfo
     from authlib.oidc.discovery import OpenIDProviderMetadata
 
-    from synapse.handlers.oidc import Token, UserAttributeDict
+    from textrp_briij.handlers.oidc import Token, UserAttributeDict
 
     HAS_OIDC = True
 except ImportError:
@@ -852,7 +852,7 @@ class OidcHandlerTestCase(HomeserverTestCase):
         self.fake_server.post_token_handler.return_value = FakeResponse.json(
             code=400, payload={"error": "foo", "error_description": "bar"}
         )
-        from synapse.handlers.oidc import OidcError
+        from textrp_briij.handlers.oidc import OidcError
 
         exc = self.get_failure(
             self.provider._exchange_code(code, code_verifier=""), OidcError
@@ -1634,7 +1634,7 @@ class OidcHandlerTestCase(HomeserverTestCase):
         client_redirect_url: str,
         ui_auth_session_id: str = "",
     ) -> str:
-        from synapse.handlers.oidc import OidcSessionData
+        from textrp_briij.handlers.oidc import OidcSessionData
 
         return self.handler._macaroon_generator.generate_oidc_session_token(
             state=state,

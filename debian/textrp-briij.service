@@ -1,0 +1,21 @@
+[Unit]
+Description=Briij by TextRP Matrix homeserver
+
+[Service]
+Type=notify
+User=textrp-briij
+WorkingDirectory=/var/lib/textrp-briij
+ExecStartPre=/opt/venvs/textrp-briij/bin/python -m textrp_briij.app.homeserver --config-path=/etc/textrp-briij/homeserver.yaml --config-path=/etc/textrp-briij/conf.d/ --generate-keys
+ExecStart=/opt/venvs/textrp-briij/bin/python -m textrp_briij.app.homeserver --config-path=/etc/textrp-briij/homeserver.yaml --config-path=/etc/textrp-briij/conf.d/
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+RestartSec=3
+SyslogIdentifier=textrp-briij
+
+# The environment file is not shipped by default anymore and the below directive
+# is for backwards compatibility only. Please use your homeserver.yaml if
+# possible.
+EnvironmentFile=-/etc/default/textrp-briij
+
+[Install]
+WantedBy=multi-user.target

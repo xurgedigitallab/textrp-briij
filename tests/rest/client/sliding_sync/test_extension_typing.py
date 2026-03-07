@@ -17,12 +17,12 @@ from parameterized import parameterized_class
 
 from twisted.internet.testing import MemoryReactor
 
-import synapse.rest.admin
-from synapse.api.constants import EduTypes
-from synapse.rest.client import login, room, sync
-from synapse.server import HomeServer
-from synapse.types import StreamKeyType
-from synapse.util.clock import Clock
+import textrp_briij.rest.admin
+from textrp_briij.api.constants import EduTypes
+from textrp_briij.rest.client import login, room, sync
+from textrp_briij.server import HomeServer
+from textrp_briij.types import StreamKeyType
+from textrp_briij.util.clock import Clock
 
 from tests.rest.client.sliding_sync.test_sliding_sync import SlidingSyncBase
 from tests.server import TimedOutException
@@ -48,7 +48,7 @@ class SlidingSyncTypingExtensionTestCase(SlidingSyncBase):
     """Tests for the typing notification sliding sync extension"""
 
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
         room.register_servlets,
         sync.register_servlets,

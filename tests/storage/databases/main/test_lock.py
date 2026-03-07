@@ -25,9 +25,9 @@ from twisted.internet.base import ReactorBase
 from twisted.internet.defer import Deferred
 from twisted.internet.testing import MemoryReactor
 
-from synapse.server import HomeServer
-from synapse.storage.databases.main.lock import _LOCK_TIMEOUT_MS, _RENEWAL_INTERVAL
-from synapse.util.clock import Clock
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.databases.main.lock import _LOCK_TIMEOUT_MS, _RENEWAL_INTERVAL
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 

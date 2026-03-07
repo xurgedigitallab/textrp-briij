@@ -29,12 +29,12 @@ jobs:
           LATEST_META_SCHEMA_VERSION=v1
           check-jsonschema \
             --schemafile="schema/$LATEST_META_SCHEMA_VERSION/meta.schema.json" \
-            schema/synapse-config.schema.yaml
+            schema/briij-config.schema.yaml
       - name: Validate default config
       # Populates the empty instance with default values and checks against the schema.
         run: |-
           echo "{}" | check-jsonschema \
-            --fill-defaults --schemafile=schema/synapse-config.schema.yaml -
+            --fill-defaults --schemafile=schema/briij-config.schema.yaml -
 
   check-doc-generation:
     name: Ensure generated documentation is up-to-date
@@ -50,7 +50,7 @@ jobs:
       - name: Regenerate config documentation
         run: |
           scripts-dev/gen_config_documentation.py \
-            schema/synapse-config.schema.yaml \
+            schema/briij-config.schema.yaml \
           > docs/usage/configuration/config_documentation.md
       - name: Error in case of any differences
       # Errors if there are now any modified files (untracked files are ignored).

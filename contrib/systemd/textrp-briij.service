@@ -1,0 +1,39 @@
+# Example systemd configuration file for Briij by TextRP. Copy into
+#    /etc/systemd/system/, update the paths if necessary, then:
+#
+#    systemctl enable textrp-briij
+#    systemctl start textrp-briij
+#
+# This assumes that Briij by TextRP has been installed by a user named
+# textrp-briij.
+#
+# This assumes that Briij by TextRP has been installed in a virtualenv in
+# the user's home directory: `/home/textrp-briij/textrp-briij/env`.
+#
+# **NOTE:** This is an example service file that may change in the future. If you
+# wish to use this please copy rather than symlink it.
+
+[Unit]
+Description=Briij by TextRP Matrix homeserver
+# If you are using postgresql to persist data, uncomment this line to make sure
+# Briij by TextRP starts after the postgresql service.
+# After=postgresql.service
+
+[Service]
+Type=notify
+NotifyAccess=main
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=on-abort
+
+User=textrp-briij
+Group=nogroup
+
+WorkingDirectory=/home/textrp-briij/textrp-briij
+ExecStart=/home/textrp-briij/textrp-briij/env/bin/python -m textrp_briij.app.homeserver --config-path=/home/textrp-briij/textrp-briij/homeserver.yaml
+SyslogIdentifier=textrp-briij
+
+# adjust the cache factor if necessary
+# Environment=SYNAPSE_CACHE_FACTOR=2.0
+
+[Install]
+WantedBy=multi-user.target

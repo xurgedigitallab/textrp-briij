@@ -14,7 +14,7 @@ Add a new job to the main prometheus.conf file:
     name: "synapse"
 
     target_group: {
-      target: "http://SERVER.LOCATION.HERE:PORT/_synapse/metrics"
+      target: "http://SERVER.LOCATION.HERE:PORT/_briij/metrics"
     }
   }
 ```
@@ -25,7 +25,7 @@ Add a new job to the main prometheus.yml file:
 
 ```yaml
   - job_name: "synapse"
-    metrics_path: "/_synapse/metrics"
+    metrics_path: "/_briij/metrics"
     # when endpoint uses https:
     scheme: "https"
 
@@ -34,13 +34,13 @@ Add a new job to the main prometheus.yml file:
 ```
 
 An example of a Prometheus configuration with workers can be found in
-[metrics-howto.md](https://element-hq.github.io/synapse/latest/metrics-howto.html).
+[metrics-howto.md](https://docs.briij.example/synapse/latest/metrics-howto.html).
 
 To use `synapse.rules` add
 
 ```yaml
   rule_files:
-    - "/PATH/TO/synapse-v2.rules"
+    - "/PATH/TO/briij-v2.rules"
 ```
 
 Metrics are disabled by default when running synapse; they must be enabled

@@ -23,12 +23,12 @@ from unittest import mock
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.app.generic_worker import GenericWorkerServer
-from synapse.replication.tcp.commands import FederationAckCommand
-from synapse.replication.tcp.protocol import IReplicationConnection
-from synapse.replication.tcp.streams.federation import FederationStream
-from synapse.server import HomeServer
-from synapse.util.clock import Clock
+from textrp_briij.app.generic_worker import GenericWorkerServer
+from textrp_briij.replication.tcp.commands import FederationAckCommand
+from textrp_briij.replication.tcp.protocol import IReplicationConnection
+from textrp_briij.replication.tcp.streams.federation import FederationStream
+from textrp_briij.server import HomeServer
+from textrp_briij.util.clock import Clock
 
 from tests.unittest import HomeserverTestCase
 
@@ -36,7 +36,7 @@ from tests.unittest import HomeserverTestCase
 class FederationAckTestCase(HomeserverTestCase):
     def default_config(self) -> dict:
         config = super().default_config()
-        config["worker_app"] = "synapse.app.generic_worker"
+        config["worker_app"] = "textrp_briij.app.generic_worker"
         config["worker_name"] = "federation_sender1"
         config["federation_sender_instances"] = ["federation_sender1"]
         config["instance_map"] = {"main": {"host": "127.0.0.1", "port": 0}}

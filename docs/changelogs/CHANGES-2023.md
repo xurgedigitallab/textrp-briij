@@ -755,7 +755,7 @@ No significant changes since 1.90.0rc1.
 
 ### Updates to the Docker image
 
-- Add `org.opencontainers.image.version` labels to Docker containers [published by Matrix.org](https://hub.docker.com/r/matrixdotorg/synapse). Contributed by Mo Balaa. ([\#15972](https://github.com/matrix-org/synapse/issues/15972), [\#16009](https://github.com/matrix-org/synapse/issues/16009))
+- Add `org.opencontainers.image.version` labels to Docker containers [published by Matrix.org](https://hub.docker.com/r/textrp/briij-synapse). Contributed by Mo Balaa. ([\#15972](https://github.com/matrix-org/synapse/issues/15972), [\#16009](https://github.com/matrix-org/synapse/issues/16009))
 
 ### Improved Documentation
 

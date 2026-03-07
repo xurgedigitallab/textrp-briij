@@ -42,7 +42,7 @@ The configuration flag should link to the tracking issue for the experimental fe
 
 In the interest of having some documentation around experimental features, without
 polluting the stable documentation, all new experimental features should have a tracking issue with
-[the `T-ExperimentalFeature` label](https://github.com/element-hq/synapse/issues?q=sort%3Aupdated-desc+state%3Aopen+label%3A%22T-ExperimentalFeature%22),
+[the `T-ExperimentalFeature` label](https://github.com/textrp/briij-synapse/issues?q=sort%3Aupdated-desc+state%3Aopen+label%3A%22T-ExperimentalFeature%22),
 kept open as long as the experimental feature is present in Synapse.
 
 The configuration option for the feature should have a comment linking to the tracking issue,

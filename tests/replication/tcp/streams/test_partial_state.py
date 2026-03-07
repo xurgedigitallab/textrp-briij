@@ -20,7 +20,7 @@
 #
 from twisted.internet.defer import ensureDeferred
 
-from synapse.rest.client import room
+from textrp_briij.rest.client import room
 
 from tests.replication._base import BaseMultiWorkerStreamTestCase
 
@@ -47,7 +47,7 @@ class PartialStateStreamsTestCase(BaseMultiWorkerStreamTestCase):
             self.store.store_partial_state_room(room_id, {"serv1", "serv2"}, 0, "serv1")
         )
 
-        worker = self.make_worker_hs("synapse.app.generic_worker")
+        worker = self.make_worker_hs("textrp_briij.app.generic_worker")
 
         # On the worker, attempt to get the current hosts in the room
         d = ensureDeferred(

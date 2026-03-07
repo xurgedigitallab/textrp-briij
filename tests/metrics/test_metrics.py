@@ -30,7 +30,7 @@ from typing import NoReturn, Protocol
 
 from prometheus_client.core import Sample
 
-from synapse.metrics import (
+from textrp_briij.metrics import (
     REGISTRY,
     SERVER_NAME_LABEL,
     InFlightGauge,
@@ -38,7 +38,7 @@ from synapse.metrics import (
     all_later_gauges_to_clean_up_on_shutdown,
     generate_latest,
 )
-from synapse.util.caches.deferred_cache import DeferredCache
+from textrp_briij.util.caches.deferred_cache import DeferredCache
 
 from tests import unittest
 

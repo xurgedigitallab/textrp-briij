@@ -2,20 +2,20 @@ from unittest.mock import AsyncMock, patch
 
 from twisted.internet.testing import MemoryReactor
 
-import synapse.rest.admin
-import synapse.rest.client.login
-import synapse.rest.client.room
-from synapse.api.constants import AccountDataTypes, EventTypes, Membership
-from synapse.api.errors import Codes, LimitExceededError, SynapseError
-from synapse.crypto.event_signing import add_hashes_and_signatures
-from synapse.events import FrozenEventV3
-from synapse.federation.federation_base import (
+import textrp_briij.rest.admin
+import textrp_briij.rest.client.login
+import textrp_briij.rest.client.room
+from textrp_briij.api.constants import AccountDataTypes, EventTypes, Membership
+from textrp_briij.api.errors import Codes, LimitExceededError, SynapseError
+from textrp_briij.crypto.event_signing import add_hashes_and_signatures
+from textrp_briij.events import FrozenEventV3
+from textrp_briij.federation.federation_base import (
     event_from_pdu_json,
 )
-from synapse.federation.federation_client import SendJoinResult
-from synapse.server import HomeServer
-from synapse.types import UserID, create_requester
-from synapse.util.clock import Clock
+from textrp_briij.federation.federation_client import SendJoinResult
+from textrp_briij.server import HomeServer
+from textrp_briij.types import UserID, create_requester
+from textrp_briij.util.clock import Clock
 
 from tests.replication._base import BaseMultiWorkerStreamTestCase
 from tests.server import make_request
@@ -28,9 +28,9 @@ from tests.unittest import (
 
 class TestJoinsLimitedByPerRoomRateLimiter(FederatingHomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
-        synapse.rest.client.login.register_servlets,
-        synapse.rest.client.room.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
+        textrp_briij.rest.client.login.register_servlets,
+        textrp_briij.rest.client.room.register_servlets,
     ]
 
     def prepare(self, reactor: MemoryReactor, clock: Clock, hs: HomeServer) -> None:
@@ -187,11 +187,11 @@ class TestJoinsLimitedByPerRoomRateLimiter(FederatingHomeserverTestCase):
                 mock_send_join,
             ),
             patch(
-                "synapse.event_auth._is_membership_change_allowed",
+                "textrp_briij.event_auth._is_membership_change_allowed",
                 return_value=None,
             ),
             patch(
-                "synapse.handlers.federation_event.check_state_dependent_auth_rules",
+                "textrp_briij.handlers.federation_event.check_state_dependent_auth_rules",
                 return_value=None,
             ),
         ):
@@ -227,9 +227,9 @@ class TestJoinsLimitedByPerRoomRateLimiter(FederatingHomeserverTestCase):
 
 class TestReplicatedJoinsLimitedByPerRoomRateLimiter(BaseMultiWorkerStreamTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
-        synapse.rest.client.login.register_servlets,
-        synapse.rest.client.room.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
+        textrp_briij.rest.client.login.register_servlets,
+        textrp_briij.rest.client.room.register_servlets,
     ]
 
     def prepare(self, reactor: MemoryReactor, clock: Clock, hs: HomeServer) -> None:
@@ -258,7 +258,7 @@ class TestReplicatedJoinsLimitedByPerRoomRateLimiter(BaseMultiWorkerStreamTestCa
 
         # Spawn another worker and have bob join via it.
         worker_app = self.make_worker_hs(
-            "synapse.app.generic_worker", extra_config={"worker_name": "other worker"}
+            "textrp_briij.app.generic_worker", extra_config={"worker_name": "other worker"}
         )
         worker_site = self._hs_to_site[worker_app]
         channel = make_request(
@@ -302,9 +302,9 @@ class TestReplicatedJoinsLimitedByPerRoomRateLimiter(BaseMultiWorkerStreamTestCa
 
 class RoomMemberMasterHandlerTestCase(HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
-        synapse.rest.client.login.register_servlets,
-        synapse.rest.client.room.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
+        textrp_briij.rest.client.login.register_servlets,
+        textrp_briij.rest.client.room.register_servlets,
     ]
 
     def prepare(self, reactor: MemoryReactor, clock: Clock, hs: HomeServer) -> None:
@@ -462,9 +462,9 @@ class TestMSC4155InviteFiltering(FederatingHomeserverTestCase):
     """Tests for MSC4155-style invite filtering."""
 
     servlets = [
-        synapse.rest.admin.register_servlets,
-        synapse.rest.client.login.register_servlets,
-        synapse.rest.client.room.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
+        textrp_briij.rest.client.login.register_servlets,
+        textrp_briij.rest.client.room.register_servlets,
     ]
 
     def prepare(self, reactor: MemoryReactor, clock: Clock, hs: HomeServer) -> None:
@@ -626,9 +626,9 @@ class TestMSC4380InviteBlocking(FederatingHomeserverTestCase):
     """Tests for MSC4380-style invite filtering."""
 
     servlets = [
-        synapse.rest.admin.register_servlets,
-        synapse.rest.client.login.register_servlets,
-        synapse.rest.client.room.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
+        textrp_briij.rest.client.login.register_servlets,
+        textrp_briij.rest.client.room.register_servlets,
     ]
 
     def prepare(self, reactor: MemoryReactor, clock: Clock, hs: HomeServer) -> None:

@@ -24,19 +24,19 @@ from unittest.mock import AsyncMock, Mock
 from twisted.internet import defer
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import EduTypes, EventTypes
-from synapse.api.errors import NotFoundError
-from synapse.events import EventBase
-from synapse.federation.units import Transaction
-from synapse.handlers.device import DeviceWriterHandler
-from synapse.handlers.presence import UserPresenceState
-from synapse.handlers.push_rules import InvalidRuleException
-from synapse.module_api import ModuleApi
-from synapse.rest import admin
-from synapse.rest.client import login, notifications, presence, profile, room
-from synapse.server import HomeServer
-from synapse.types import JsonDict, UserID, create_requester
-from synapse.util.clock import Clock
+from textrp_briij.api.constants import EduTypes, EventTypes
+from textrp_briij.api.errors import NotFoundError
+from textrp_briij.events import EventBase
+from textrp_briij.federation.units import Transaction
+from textrp_briij.handlers.device import DeviceWriterHandler
+from textrp_briij.handlers.presence import UserPresenceState
+from textrp_briij.handlers.push_rules import InvalidRuleException
+from textrp_briij.module_api import ModuleApi
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, notifications, presence, profile, room
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict, UserID, create_requester
+from textrp_briij.util.clock import Clock
 
 from tests.events.test_presence_router import send_presence_update, sync_presence
 from tests.replication._base import BaseMultiWorkerStreamTestCase
@@ -881,7 +881,7 @@ def _test_sending_local_online_presence_to_local_user(
 
         # Create a worker process to make module_api calls against
         worker_hs = test_case.make_worker_hs(
-            "synapse.app.generic_worker", {"worker_name": "presence_writer"}
+            "textrp_briij.app.generic_worker", {"worker_name": "presence_writer"}
         )
 
     # Create a user who will send presence updates

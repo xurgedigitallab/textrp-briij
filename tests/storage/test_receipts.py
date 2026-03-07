@@ -23,10 +23,10 @@ from typing import Collection
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import ReceiptTypes
-from synapse.server import HomeServer
-from synapse.types import UserID, create_requester
-from synapse.util.clock import Clock
+from textrp_briij.api.constants import ReceiptTypes
+from textrp_briij.server import HomeServer
+from textrp_briij.types import UserID, create_requester
+from textrp_briij.util.clock import Clock
 
 from tests.test_utils.event_injection import create_event
 from tests.unittest import HomeserverTestCase

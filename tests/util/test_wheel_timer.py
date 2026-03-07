@@ -19,8 +19,8 @@
 #
 #
 
-from synapse.util.duration import Duration
-from synapse.util.wheel_timer import WheelTimer
+from textrp_briij.util.duration import Duration
+from textrp_briij.util.wheel_timer import WheelTimer
 
 from .. import unittest
 

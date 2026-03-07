@@ -21,7 +21,7 @@
 
 from twisted.trial import util
 
-from synapse.util.patch_inline_callbacks import do_patch
+from textrp_briij.util.patch_inline_callbacks import do_patch
 
 # attempt to do the patch before we load any synapse code
 do_patch()

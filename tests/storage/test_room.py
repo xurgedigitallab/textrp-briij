@@ -21,10 +21,10 @@
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.room_versions import RoomVersions
-from synapse.server import HomeServer
-from synapse.types import RoomAlias, RoomID, UserID
-from synapse.util.clock import Clock
+from textrp_briij.api.room_versions import RoomVersions
+from textrp_briij.server import HomeServer
+from textrp_briij.types import RoomAlias, RoomID, UserID
+from textrp_briij.util.clock import Clock
 
 from tests.unittest import HomeserverTestCase
 

@@ -24,10 +24,10 @@ import tempfile
 from pathlib import Path
 from unittest.mock import Mock
 
-from synapse.config import ConfigError
-from synapse.config.homeserver import HomeServerConfig
-from synapse.module_api import ModuleApi
-from synapse.types import JsonDict
+from textrp_briij.config import ConfigError
+from textrp_briij.config.homeserver import HomeServerConfig
+from textrp_briij.module_api import ModuleApi
+from textrp_briij.types import JsonDict
 
 from tests.server import get_clock, setup_test_homeserver
 from tests.unittest import TestCase, skip_unless

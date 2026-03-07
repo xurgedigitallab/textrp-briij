@@ -1,22 +1,20 @@
 # This compose file is compatible with Compose itself, it might need some
 # adjustments to run properly with stack.
 
-version: '3'
-
 services:
 
-  synapse:
+  textrp_briij:
     build:
       context: ../..
       dockerfile: docker/Dockerfile
-    image: docker.io/matrixdotorg/synapse:latest
-    # Since synapse does not retry to connect to the database, restart upon
+    image: textrp-briij:latest
+    # Since briij does not retry to connect to the database, restart upon
     # failure
     restart: unless-stopped
     # See the readme for a full documentation of the environment settings
     # NOTE: You must edit homeserver.yaml to use postgres, it defaults to sqlite
     environment:
-      - SYNAPSE_CONFIG_PATH=/data/homeserver.yaml
+      - BRIIJ_CONFIG_PATH=/data/homeserver.yaml
     volumes:
       # You may either store all the files in a local folder
       - ./files:/data
@@ -26,38 +24,39 @@ services:
       # - /path/to/large_hdd:/data/media
     depends_on:
       - db
-    # In order to expose Synapse, remove one of the following, you might for
+    # In order to expose Briij by TextRP, remove one of the following, you might for
     # instance expose the TLS port directly:
     ports:
+      - 8008:8008/tcp
       - 8448:8448/tcp
     # ... or use a reverse proxy, here is an example for traefik:
     labels:
       # The following lines are valid for Traefik version 1.x:
       - traefik.enable=true
-      - traefik.frontend.rule=Host:my.matrix.Host
+      - traefik.frontend.rule=Host:chat.briij.app
       - traefik.port=8008
       # Alternatively, for Traefik version 2.0:
       - traefik.enable=true
-      - traefik.http.routers.http-synapse.entryPoints=http
-      - traefik.http.routers.http-synapse.rule=Host(`my.matrix.host`)
+      - traefik.http.routers.http-textrp-briij.entryPoints=http
+      - traefik.http.routers.http-textrp-briij.rule=Host(`chat.briij.app`)
       - traefik.http.middlewares.https_redirect.redirectscheme.scheme=https
       - traefik.http.middlewares.https_redirect.redirectscheme.permanent=true
-      - traefik.http.routers.http-synapse.middlewares=https_redirect
-      - traefik.http.routers.https-synapse.entryPoints=https
-      - traefik.http.routers.https-synapse.rule=Host(`my.matrix.host`)
-      - traefik.http.routers.https-synapse.service=synapse
-      - traefik.http.routers.https-synapse.tls=true
-      - traefik.http.services.synapse.loadbalancer.server.port=8008
-      - traefik.http.routers.https-synapse.tls.certResolver=le-ssl
+      - traefik.http.routers.http-textrp-briij.middlewares=https_redirect
+      - traefik.http.routers.https-textrp-briij.entryPoints=https
+      - traefik.http.routers.https-textrp-briij.rule=Host(`chat.briij.app`)
+      - traefik.http.routers.https-textrp-briij.service=textrp_briij
+      - traefik.http.routers.https-textrp-briij.tls=true
+      - traefik.http.services.textrp_briij.loadbalancer.server.port=8008
+      - traefik.http.routers.https-textrp-briij.tls.certResolver=le-ssl
 
   db:
     image: docker.io/postgres:15-alpine
     # Change that password, of course!
     environment:
-      - POSTGRES_USER=synapse
+      - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=changeme
       # ensure the database gets created correctly
-      # https://element-hq.github.io/synapse/latest/postgres.html#set-up-database
+      # https://docs.briij.example/synapse/latest/postgres.html#set-up-database
       - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
     volumes:
       # You may store the database tables in a local folder..

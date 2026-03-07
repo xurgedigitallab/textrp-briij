@@ -19,8 +19,8 @@
 #
 #
 
-from synapse.metrics import REGISTRY, generate_latest
-from synapse.types import UserID, create_requester
+from textrp_briij.metrics import REGISTRY, generate_latest
+from textrp_briij.types import UserID, create_requester
 
 from tests.unittest import HomeserverTestCase
 

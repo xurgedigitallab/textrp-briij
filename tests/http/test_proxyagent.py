@@ -38,10 +38,10 @@ from twisted.internet.protocol import Factory, Protocol
 from twisted.protocols.tls import TLSMemoryBIOProtocol
 from twisted.web.http import HTTPChannel
 
-from synapse.config.server import ProxyConfig, parse_proxy_config
-from synapse.http.client import BlocklistingReactorWrapper
-from synapse.http.connectproxyclient import BasicProxyCredentials
-from synapse.http.proxyagent import ProxyAgent, parse_proxy
+from textrp_briij.config.server import ProxyConfig, parse_proxy_config
+from textrp_briij.http.client import BlocklistingReactorWrapper
+from textrp_briij.http.connectproxyclient import BasicProxyCredentials
+from textrp_briij.http.proxyagent import ProxyAgent, parse_proxy
 
 from tests.http import dummy_address, get_test_https_policy, wrap_server_factory_for_tls
 from tests.server import FakeTransport, ThreadedMemoryReactorClock

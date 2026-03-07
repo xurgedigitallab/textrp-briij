@@ -26,21 +26,21 @@ from parameterized import parameterized
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import EventTypes, Membership
-from synapse.api.errors import FederationError
-from synapse.api.room_versions import KNOWN_ROOM_VERSIONS, RoomVersions
-from synapse.config.server import DEFAULT_ROOM_VERSION
-from synapse.crypto.event_signing import add_hashes_and_signatures
-from synapse.events import EventBase, make_event_from_dict
-from synapse.federation.federation_base import event_from_pdu_json
-from synapse.http.types import QueryParams
-from synapse.logging.context import LoggingContext
-from synapse.rest import admin
-from synapse.rest.client import login, room
-from synapse.server import HomeServer
-from synapse.storage.controllers.state import server_acl_evaluator_from_event
-from synapse.types import JsonDict
-from synapse.util.clock import Clock
+from textrp_briij.api.constants import EventTypes, Membership
+from textrp_briij.api.errors import FederationError
+from textrp_briij.api.room_versions import KNOWN_ROOM_VERSIONS, RoomVersions
+from textrp_briij.config.server import DEFAULT_ROOM_VERSION
+from textrp_briij.crypto.event_signing import add_hashes_and_signatures
+from textrp_briij.events import EventBase, make_event_from_dict
+from textrp_briij.federation.federation_base import event_from_pdu_json
+from textrp_briij.http.types import QueryParams
+from textrp_briij.logging.context import LoggingContext
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, room
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.controllers.state import server_acl_evaluator_from_event
+from textrp_briij.types import JsonDict
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.unittest import override_config

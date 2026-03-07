@@ -26,13 +26,13 @@ from parameterized import parameterized
 from twisted.internet.testing import MemoryReactor
 from twisted.web.resource import Resource
 
-import synapse.rest.admin
-from synapse.api.errors import Codes
-from synapse.media._base import FileInfo
-from synapse.media.filepath import MediaFilePaths
-from synapse.rest.client import login, media, profile, room
-from synapse.server import HomeServer
-from synapse.util.clock import Clock
+import textrp_briij.rest.admin
+from textrp_briij.api.errors import Codes
+from textrp_briij.media._base import FileInfo
+from textrp_briij.media.filepath import MediaFilePaths
+from textrp_briij.rest.client import login, media, profile, room
+from textrp_briij.server import HomeServer
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.test_utils import SMALL_CMYK_JPEG, SMALL_PNG
@@ -44,8 +44,8 @@ INVALID_TIMESTAMP_IN_S = 1893456000  # 2030-01-01 in seconds
 
 class _AdminMediaTests(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
-        synapse.rest.admin.register_servlets_for_media_repo,
+        textrp_briij.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets_for_media_repo,
         login.register_servlets,
         media.register_servlets,
     ]
@@ -363,8 +363,8 @@ class DeleteMediaByIDTestCase(_AdminMediaTests):
 
 class DeleteMediaByDateSizeTestCase(_AdminMediaTests):
     servlets = [
-        synapse.rest.admin.register_servlets,
-        synapse.rest.admin.register_servlets_for_media_repo,
+        textrp_briij.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets_for_media_repo,
         login.register_servlets,
         profile.register_servlets,
         room.register_servlets,
@@ -1012,8 +1012,8 @@ class ProtectMediaByIDTestCase(_AdminMediaTests):
 
 class PurgeMediaCacheTestCase(_AdminMediaTests):
     servlets = [
-        synapse.rest.admin.register_servlets,
-        synapse.rest.admin.register_servlets_for_media_repo,
+        textrp_briij.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets_for_media_repo,
         login.register_servlets,
         profile.register_servlets,
         room.register_servlets,

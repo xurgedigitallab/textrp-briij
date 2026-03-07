@@ -26,19 +26,19 @@ from parameterized import parameterized
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import ReceiptTypes
-from synapse.api.room_versions import RoomVersions
-from synapse.events import EventBase, make_event_from_dict
-from synapse.events.snapshot import EventContext
-from synapse.server import HomeServer
-from synapse.storage.databases.main.event_push_actions import (
+from textrp_briij.api.constants import ReceiptTypes
+from textrp_briij.api.room_versions import RoomVersions
+from textrp_briij.events import EventBase, make_event_from_dict
+from textrp_briij.events.snapshot import EventContext
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.databases.main.event_push_actions import (
     NotifCounts,
     RoomNotifCounts,
 )
-from synapse.storage.databases.main.events_worker import EventsWorkerStore
-from synapse.storage.roommember import RoomsForUser
-from synapse.types import PersistedEventPosition
-from synapse.util.clock import Clock
+from textrp_briij.storage.databases.main.events_worker import EventsWorkerStore
+from textrp_briij.storage.roommember import RoomsForUser
+from textrp_briij.types import PersistedEventPosition
+from textrp_briij.util.clock import Clock
 
 from ._base import BaseWorkerStoreTestCase
 

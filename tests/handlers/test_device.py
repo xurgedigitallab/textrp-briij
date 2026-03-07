@@ -25,17 +25,17 @@ from unittest import mock
 from twisted.internet.defer import ensureDeferred
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import RoomEncryptionAlgorithms
-from synapse.api.errors import NotFoundError, SynapseError
-from synapse.appservice import ApplicationService
-from synapse.handlers.device import MAX_DEVICE_DISPLAY_NAME_LEN, DeviceWriterHandler
-from synapse.rest import admin
-from synapse.rest.client import devices, login, register
-from synapse.server import HomeServer
-from synapse.storage.databases.main.appservice import _make_exclusive_regex
-from synapse.types import JsonDict, UserID, create_requester
-from synapse.util.clock import Clock
-from synapse.util.task_scheduler import TaskScheduler
+from textrp_briij.api.constants import RoomEncryptionAlgorithms
+from textrp_briij.api.errors import NotFoundError, SynapseError
+from textrp_briij.appservice import ApplicationService
+from textrp_briij.handlers.device import MAX_DEVICE_DISPLAY_NAME_LEN, DeviceWriterHandler
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import devices, login, register
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.databases.main.appservice import _make_exclusive_regex
+from textrp_briij.types import JsonDict, UserID, create_requester
+from textrp_briij.util.clock import Clock
+from textrp_briij.util.task_scheduler import TaskScheduler
 
 from tests import unittest
 from tests.unittest import override_config

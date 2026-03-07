@@ -44,23 +44,23 @@ from twisted.web.http_headers import Headers
 from twisted.web.iweb import UNKNOWN_LENGTH, IResponse
 from twisted.web.resource import Resource
 
-from synapse.api.errors import HttpResponseException
-from synapse.api.ratelimiting import Ratelimiter
-from synapse.config._base import Config
-from synapse.config.oembed import OEmbedEndpointConfig
-from synapse.http.client import MultipartResponse
-from synapse.http.types import QueryParams
-from synapse.logging.context import make_deferred_yieldable
-from synapse.media._base import FileInfo, ThumbnailInfo
-from synapse.media.thumbnailer import ThumbnailProvider
-from synapse.media.url_previewer import IMAGE_CACHE_EXPIRY_MS
-from synapse.module_api import MediaUploadLimit
-from synapse.rest import admin
-from synapse.rest.client import login, media
-from synapse.server import HomeServer
-from synapse.types import JsonDict, UserID
-from synapse.util.clock import Clock
-from synapse.util.stringutils import parse_and_validate_mxc_uri
+from textrp_briij.api.errors import HttpResponseException
+from textrp_briij.api.ratelimiting import Ratelimiter
+from textrp_briij.config._base import Config
+from textrp_briij.config.oembed import OEmbedEndpointConfig
+from textrp_briij.http.client import MultipartResponse
+from textrp_briij.http.types import QueryParams
+from textrp_briij.logging.context import make_deferred_yieldable
+from textrp_briij.media._base import FileInfo, ThumbnailInfo
+from textrp_briij.media.thumbnailer import ThumbnailProvider
+from textrp_briij.media.url_previewer import IMAGE_CACHE_EXPIRY_MS
+from textrp_briij.module_api import MediaUploadLimit
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, media
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict, UserID
+from textrp_briij.util.clock import Clock
+from textrp_briij.util.stringutils import parse_and_validate_mxc_uri
 
 from tests import unittest
 from tests.media.test_media_storage import (
@@ -103,7 +103,7 @@ class MediaDomainBlockingTests(unittest.HomeserverTestCase):
         config["media_store_path"] = self.media_store_path
 
         provider_config = {
-            "module": "synapse.media.storage_provider.FileStorageProviderBackend",
+            "module": "textrp_briij.media.storage_provider.FileStorageProviderBackend",
             "store_local": True,
             "store_synchronous": False,
             "store_remote": True,
@@ -226,7 +226,7 @@ class URLPreviewTests(unittest.HomeserverTestCase):
         config["media_store_path"] = self.media_store_path
 
         provider_config = {
-            "module": "synapse.media.storage_provider.FileStorageProviderBackend",
+            "module": "textrp_briij.media.storage_provider.FileStorageProviderBackend",
             "store_local": True,
             "store_synchronous": False,
             "store_remote": True,
@@ -1592,7 +1592,7 @@ class MediaConfigTest(unittest.HomeserverTestCase):
         config["media_store_path"] = self.media_store_path
 
         provider_config = {
-            "module": "synapse.media.storage_provider.FileStorageProviderBackend",
+            "module": "textrp_briij.media.storage_provider.FileStorageProviderBackend",
             "store_local": True,
             "store_synchronous": False,
             "store_remote": True,
@@ -1639,7 +1639,7 @@ class MediaConfigModuleCallbackTestCase(unittest.HomeserverTestCase):
         config["media_store_path"] = self.media_store_path
 
         provider_config = {
-            "module": "synapse.media.storage_provider.FileStorageProviderBackend",
+            "module": "textrp_briij.media.storage_provider.FileStorageProviderBackend",
             "store_local": True,
             "store_synchronous": False,
             "store_remote": True,
@@ -1694,7 +1694,7 @@ class RemoteDownloadLimiterTestCase(unittest.HomeserverTestCase):
         config["media_store_path"] = self.media_store_path
 
         provider_config = {
-            "module": "synapse.media.storage_provider.FileStorageProviderBackend",
+            "module": "textrp_briij.media.storage_provider.FileStorageProviderBackend",
             "store_local": True,
             "store_synchronous": False,
             "store_remote": True,
@@ -1724,7 +1724,7 @@ class RemoteDownloadLimiterTestCase(unittest.HomeserverTestCase):
         return d
 
     @patch(
-        "synapse.http.matrixfederationclient.read_multipart_response",
+        "textrp_briij.http.matrixfederationclient.read_multipart_response",
         read_multipart_response_30MiB,
     )
     def test_download_ratelimit_default(self) -> None:
@@ -1808,7 +1808,7 @@ class RemoteDownloadLimiterTestCase(unittest.HomeserverTestCase):
         }
     )
     @patch(
-        "synapse.http.matrixfederationclient.read_multipart_response",
+        "textrp_briij.http.matrixfederationclient.read_multipart_response",
         read_multipart_response_50MiB,
     )
     def test_download_rate_limit_config(self) -> None:
@@ -1876,7 +1876,7 @@ class RemoteDownloadLimiterTestCase(unittest.HomeserverTestCase):
         }
     )
     @patch(
-        "synapse.http.matrixfederationclient.read_multipart_response",
+        "textrp_briij.http.matrixfederationclient.read_multipart_response",
         read_multipart_response_30MiB,
     )
     def test_download_ratelimit_unknown_length(self) -> None:
@@ -1920,7 +1920,7 @@ class RemoteDownloadLimiterTestCase(unittest.HomeserverTestCase):
 
     @override_config({"max_upload_size": "29M"})
     @patch(
-        "synapse.http.matrixfederationclient.read_multipart_response",
+        "textrp_briij.http.matrixfederationclient.read_multipart_response",
         read_multipart_response_30MiB,
     )
     def test_max_download_respected(self) -> None:
@@ -2084,7 +2084,7 @@ class DownloadAndThumbnailTestCase(unittest.HomeserverTestCase):
         config["max_image_pixels"] = 2000000
 
         provider_config = {
-            "module": "synapse.media.storage_provider.FileStorageProviderBackend",
+            "module": "textrp_briij.media.storage_provider.FileStorageProviderBackend",
             "store_local": True,
             "store_synchronous": False,
             "store_remote": True,
@@ -2557,7 +2557,7 @@ class AuthenticatedMediaTestCase(unittest.HomeserverTestCase):
         config["enable_authenticated_media"] = True
 
         provider_config = {
-            "module": "synapse.media.storage_provider.FileStorageProviderBackend",
+            "module": "textrp_briij.media.storage_provider.FileStorageProviderBackend",
             "store_local": True,
             "store_synchronous": False,
             "store_remote": True,
@@ -2869,7 +2869,7 @@ class MediaUploadLimits(unittest.HomeserverTestCase):
         config["media_store_path"] = self.media_store_path
 
         provider_config = {
-            "module": "synapse.media.storage_provider.FileStorageProviderBackend",
+            "module": "textrp_briij.media.storage_provider.FileStorageProviderBackend",
             "store_local": True,
             "store_synchronous": False,
             "store_remote": True,
@@ -2989,7 +2989,7 @@ class MediaUploadLimitsModuleOverrides(unittest.HomeserverTestCase):
         config["media_store_path"] = self.media_store_path
 
         provider_config = {
-            "module": "synapse.media.storage_provider.FileStorageProviderBackend",
+            "module": "textrp_briij.media.storage_provider.FileStorageProviderBackend",
             "store_local": True,
             "store_synchronous": False,
             "store_remote": True,

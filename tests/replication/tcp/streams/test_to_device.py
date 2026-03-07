@@ -20,12 +20,12 @@
 #
 import logging
 
-import synapse
-from synapse.replication.tcp.streams._base import (
+import textrp_briij
+from textrp_briij.replication.tcp.streams._base import (
     _STREAM_UPDATE_TARGET_ROW_COUNT,
     ToDeviceStream,
 )
-from synapse.types import JsonDict
+from textrp_briij.types import JsonDict
 
 from tests.replication._base import BaseStreamTestCase
 
@@ -34,8 +34,8 @@ logger = logging.getLogger(__name__)
 
 class ToDeviceStreamTestCase(BaseStreamTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
-        synapse.rest.client.login.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
+        textrp_briij.rest.client.login.register_servlets,
     ]
 
     def test_to_device_stream(self) -> None:

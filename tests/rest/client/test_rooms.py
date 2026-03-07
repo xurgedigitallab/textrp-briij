@@ -33,8 +33,8 @@ from parameterized import param, parameterized
 
 from twisted.internet.testing import MemoryReactor
 
-import synapse.rest.admin
-from synapse.api.constants import (
+import textrp_briij.rest.admin
+from textrp_briij.api.constants import (
     EduTypes,
     EventContentFields,
     EventTypes,
@@ -42,13 +42,13 @@ from synapse.api.constants import (
     PublicRoomsFilterFields,
     RoomTypes,
 )
-from synapse.api.errors import Codes, HttpResponseException
-from synapse.api.room_versions import RoomVersions
-from synapse.appservice import ApplicationService
-from synapse.events import EventBase, make_event_from_dict
-from synapse.events.snapshot import EventContext
-from synapse.rest import admin
-from synapse.rest.client import (
+from textrp_briij.api.errors import Codes, HttpResponseException
+from textrp_briij.api.room_versions import RoomVersions
+from textrp_briij.appservice import ApplicationService
+from textrp_briij.events import EventBase, make_event_from_dict
+from textrp_briij.events.snapshot import EventContext
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import (
     account,
     directory,
     knock,
@@ -58,10 +58,10 @@ from synapse.rest.client import (
     room,
     sync,
 )
-from synapse.server import HomeServer
-from synapse.types import JsonDict, RoomAlias, UserID, create_requester
-from synapse.util.clock import Clock
-from synapse.util.stringutils import random_string
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict, RoomAlias, UserID, create_requester
+from textrp_briij.util.clock import Clock
+from textrp_briij.util.stringutils import random_string
 
 from tests import unittest
 from tests.http.server._base import make_request_with_cancellation_test
@@ -1352,7 +1352,7 @@ class RoomJoinTestCase(RoomBase):
 
         # Register a dummy callback. Make it allow all room joins for now.
         return_value: Literal["NOT_SPAM"] | tuple[Codes, dict] | Codes = (
-            synapse.module_api.NOT_SPAM
+            textrp_briij.module_api.NOT_SPAM
         )
 
         async def user_may_join_room(
@@ -1492,7 +1492,7 @@ class RoomJoinTestCase(RoomBase):
 class RoomAppserviceTsParamTestCase(unittest.HomeserverTestCase):
     servlets = [
         room.register_servlets,
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         register.register_servlets,
     ]
 
@@ -1530,7 +1530,7 @@ class RoomAppserviceTsParamTestCase(unittest.HomeserverTestCase):
 
         mock_load_appservices = Mock(return_value=[self.appservice])
         with patch(
-            "synapse.storage.databases.main.appservice.load_appservices",
+            "textrp_briij.storage.databases.main.appservice.load_appservices",
             mock_load_appservices,
         ):
             hs = self.setup_test_homeserver(config=config)
@@ -1860,7 +1860,7 @@ class RoomMessagesTestCase(RoomBase):
 
             async def check_event_for_spam(
                 self,
-                event: synapse.events.EventBase,
+                event: textrp_briij.events.EventBase,
             ) -> str | Codes | tuple[Codes, JsonDict] | bool:
                 self.mock_content = event.content
                 return self.mock_return_value
@@ -2536,7 +2536,7 @@ class RoomDelayedEventTestCase(RoomBase):
 
 class RoomSearchTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         room.register_servlets,
         login.register_servlets,
     ]
@@ -2637,7 +2637,7 @@ class RoomSearchTestCase(unittest.HomeserverTestCase):
 
 class PublicRoomsRestrictedTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         room.register_servlets,
         login.register_servlets,
     ]
@@ -2665,7 +2665,7 @@ class PublicRoomsRestrictedTestCase(unittest.HomeserverTestCase):
 
 class PublicRoomsRoomTypeFilterTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         room.register_servlets,
         login.register_servlets,
     ]
@@ -2776,7 +2776,7 @@ class PublicRoomsTestRemoteSearchFallbackTestCase(unittest.HomeserverTestCase):
     """
 
     servlets = [
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         room.register_servlets,
         login.register_servlets,
     ]
@@ -2857,7 +2857,7 @@ class PublicRoomsTestRemoteSearchFallbackTestCase(unittest.HomeserverTestCase):
 
 class PerRoomProfilesForbiddenTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         room.register_servlets,
         login.register_servlets,
         profile.register_servlets,
@@ -2916,7 +2916,7 @@ class RoomMembershipReasonTestCase(unittest.HomeserverTestCase):
     """
 
     servlets = [
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         room.register_servlets,
         login.register_servlets,
     ]
@@ -3048,7 +3048,7 @@ class RoomForgottenTestCase(unittest.HomeserverTestCase):
     """
 
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         room.register_servlets,
         login.register_servlets,
     ]
@@ -3106,7 +3106,7 @@ class RoomForgottenTestCase(unittest.HomeserverTestCase):
 
 class LabelsTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         room.register_servlets,
         login.register_servlets,
         profile.register_servlets,
@@ -3487,7 +3487,7 @@ class RelationsTestCase(PaginationTestCase):
 
 class ContextTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         room.register_servlets,
         login.register_servlets,
         account.register_servlets,
@@ -3641,7 +3641,7 @@ class ContextTestCase(unittest.HomeserverTestCase):
 
 class RoomAliasListTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         directory.register_servlets,
         login.register_servlets,
         room.register_servlets,
@@ -3731,7 +3731,7 @@ class RoomAliasListTestCase(unittest.HomeserverTestCase):
 
 class RoomCanonicalAliasTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         directory.register_servlets,
         login.register_servlets,
         room.register_servlets,
@@ -3986,7 +3986,7 @@ class ThreepidInviteTestCase(unittest.HomeserverTestCase):
         # `spec` argument is needed for this function mock to have `__qualname__`, which
         # is needed for `Measure` metrics buried in SpamChecker.
         mock = AsyncMock(
-            return_value=synapse.module_api.NOT_SPAM,
+            return_value=textrp_briij.module_api.NOT_SPAM,
             spec=lambda *x: None,
         )
         self.hs.get_module_api_callbacks().spam_checker._user_may_send_3pid_invite_callbacks.append(
@@ -4506,7 +4506,7 @@ class RoomParticipantTestCase(unittest.HomeserverTestCase):
 
 class MSC4293RedactOnBanKickTestCase(unittest.FederatingHomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         room.register_servlets,
         login.register_servlets,
         admin.register_servlets,

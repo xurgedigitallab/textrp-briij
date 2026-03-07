@@ -17,8 +17,8 @@
 from http import HTTPStatus
 from urllib import parse as urlparse
 
-import synapse.rest.admin
-from synapse.rest.client import login, room, tags
+import textrp_briij.rest.admin
+from textrp_briij.rest.client import login, room, tags
 
 from tests import unittest
 
@@ -30,7 +30,7 @@ class RoomTaggingTestCase(unittest.HomeserverTestCase):
         room.register_servlets,
         tags.register_servlets,
         login.register_servlets,
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
     ]
 
     def test_put_tag_checks_room_membership(self) -> None:

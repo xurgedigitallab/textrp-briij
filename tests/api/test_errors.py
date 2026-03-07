@@ -21,7 +21,7 @@
 
 import json
 
-from synapse.api.errors import LimitExceededError
+from textrp_briij.api.errors import LimitExceededError
 
 from tests import unittest
 

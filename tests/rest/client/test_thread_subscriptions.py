@@ -15,12 +15,12 @@ from http import HTTPStatus
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.errors import Codes
-from synapse.rest import admin
-from synapse.rest.client import login, profile, room, thread_subscriptions
-from synapse.server import HomeServer
-from synapse.types import JsonDict
-from synapse.util.clock import Clock
+from textrp_briij.api.errors import Codes
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, profile, room, thread_subscriptions
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 

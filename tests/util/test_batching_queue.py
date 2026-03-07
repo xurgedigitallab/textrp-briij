@@ -23,8 +23,8 @@ from prometheus_client import Gauge
 
 from twisted.internet import defer
 
-from synapse.logging.context import make_deferred_yieldable
-from synapse.util.batching_queue import (
+from textrp_briij.logging.context import make_deferred_yieldable
+from textrp_briij.util.batching_queue import (
     BatchingQueue,
     number_in_flight,
     number_of_keys,

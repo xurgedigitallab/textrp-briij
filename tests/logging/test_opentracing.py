@@ -24,20 +24,20 @@ from typing import Awaitable, cast
 from twisted.internet import defer
 from twisted.internet.testing import MemoryReactorClock
 
-from synapse.logging.context import (
+from textrp_briij.logging.context import (
     LoggingContext,
     make_deferred_yieldable,
     run_in_background,
 )
-from synapse.logging.opentracing import (
+from textrp_briij.logging.opentracing import (
     start_active_span,
     start_active_span_follows_from,
     tag_args,
     trace_with_opname,
 )
-from synapse.metrics.background_process_metrics import run_as_background_process
-from synapse.util.clock import Clock
-from synapse.util.duration import Duration
+from textrp_briij.metrics.background_process_metrics import run_as_background_process
+from textrp_briij.util.clock import Clock
+from textrp_briij.util.duration import Duration
 
 from tests.server import get_clock
 
@@ -50,7 +50,7 @@ except ImportError:
 try:
     import opentracing
 
-    from synapse.logging.scopecontextmanager import LogContextScopeManager
+    from textrp_briij.logging.scopecontextmanager import LogContextScopeManager
 except ImportError:
     opentracing = None  # type: ignore
     LogContextScopeManager = None  # type: ignore

@@ -3,7 +3,10 @@
 
 # things to include
 !docker
+!textrp_briij
+!textrp_briij/**
 !synapse
+!synapse/**
 !rust
 !README.rst
 !pyproject.toml
@@ -13,6 +16,7 @@
 !build_rust.py
 
 rust/target
+textrp_briij/*.so
 synapse/*.so
 
 **/__pycache__

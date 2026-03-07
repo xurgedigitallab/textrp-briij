@@ -28,7 +28,7 @@ Anything that requires modifying the device list [#7721](https://github.com/matr
 
 ### Recommended configuration
 
-Put the below in a new file at /etc/matrix-synapse/conf.d/sbc.yaml to override the defaults in homeserver.yaml.
+Put the below in a new file at /etc/textrp-briij/conf.d/sbc.yaml to override the defaults in homeserver.yaml.
 
 ```
 # Disable presence tracking, which is currently fairly resource intensive
@@ -49,22 +49,22 @@ database:
   # Use postgres for the best performance
   name: psycopg2
   args:
-    user: matrix-synapse
+    user: textrp-briij
     # Generate a long, secure password using a password manager
     password: hunter2
-    database: matrix-synapse
+    database: textrp-briij
     host: localhost
 ```
 
 Currently the complexity is measured by [current_state_events / 500](https://github.com/matrix-org/synapse/blob/v1.20.1/synapse/storage/databases/main/events_worker.py#L986). You can find join times and your most complex rooms like this:
 
 ```
-admin@homeserver:~$ zgrep '/client/r0/join/' /var/log/matrix-synapse/homeserver.log* | awk '{print $18, $25}' | sort --human-numeric-sort
+admin@homeserver:~$ zgrep '/client/r0/join/' /var/log/textrp-briij/homeserver.log* | awk '{print $18, $25}' | sort --human-numeric-sort
 29.922sec/-0.002sec /_matrix/client/r0/join/%23debian-fasttrack%3Apoddery.com
 182.088sec/0.003sec /_matrix/client/r0/join/%23decentralizedweb-general%3Amatrix.org
 911.625sec/-570.847sec /_matrix/client/r0/join/%23synapse%3Amatrix.org
 
-admin@homeserver:~$ sudo --user postgres psql matrix-synapse --command 'select canonical_alias, joined_members, current_state_events from room_stats_state natural join room_stats_current where canonical_alias is not null order by current_state_events desc fetch first 5 rows only'
+admin@homeserver:~$ sudo --user postgres psql textrp-briij --command 'select canonical_alias, joined_members, current_state_events from room_stats_state natural join room_stats_current where canonical_alias is not null order by current_state_events desc fetch first 5 rows only'
         canonical_alias        | joined_members | current_state_events 
 -------------------------------+----------------+----------------------
  #_oftc_#debian:matrix.org             |  871   |  52355

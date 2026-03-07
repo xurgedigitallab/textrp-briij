@@ -659,7 +659,7 @@ Synapse 1.68.0 (2022-09-27)
 Please note that Synapse will now refuse to start if configured to use a version of SQLite older than 3.27.
 
 In addition, please note that installing Synapse from a source checkout now requires a recent Rust compiler.
-Those using packages will not be affected. On most platforms, installing with `pip install matrix-synapse` will not be affected.
+Those using packages will not be affected. On most platforms, installing with `pip install textrp-briij` will not be affected.
 See the [upgrade notes](https://matrix-org.github.io/synapse/v1.68/upgrade.html#upgrading-to-v1680).
 
 Bugfixes
@@ -779,7 +779,7 @@ The minimum version of `poetry` supported for managing source checkouts is now
 
 **Notice:** from the next major release (1.68.0) installing Synapse from a source
 checkout will require a recent Rust compiler. Those using packages or
-`pip install matrix-synapse` will not be affected. See the [upgrade
+`pip install textrp-briij` will not be affected. See the [upgrade
 notes](https://matrix-org.github.io/synapse/v1.67/upgrade.html#upgrading-to-v1670).
 
 **Notice:** from the next major release (1.68.0), running Synapse with a SQLite
@@ -1015,7 +1015,7 @@ Features
 Bugfixes
 --------
 
-- Update the version of the LDAP3 auth provider module included in the `matrixdotorg/synapse` DockerHub images and the Debian packages hosted on packages.matrix.org to 0.2.2. This version fixes a regression in the module. ([\#13470](https://github.com/matrix-org/synapse/issues/13470))
+- Update the version of the LDAP3 auth provider module included in the `textrp/briij-synapse` DockerHub images and the Debian packages hosted on packages.matrix.org to 0.2.2. This version fixes a regression in the module. ([\#13470](https://github.com/matrix-org/synapse/issues/13470))
 - Fix a bug introduced in Synapse 1.41.0 where the `/hierarchy` API returned non-standard information (a `room_id` field under each entry in `children_state`) (this was reverted in v1.65.0rc2, see changelog notes above). ([\#13365](https://github.com/matrix-org/synapse/issues/13365))
 - Fix a bug introduced in Synapse 0.24.0 that would respond with the wrong error status code to `/joined_members` requests when the requester is not a current member of the room. Contributed by @andrewdoh. ([\#13374](https://github.com/matrix-org/synapse/issues/13374))
 - Fix bug in handling of typing events for appservices. Contributed by Nick @ Beeper (@fizzadar). ([\#13392](https://github.com/matrix-org/synapse/issues/13392))
@@ -1305,7 +1305,7 @@ Synapse 1.62.0rc3 (2022-07-04)
 Bugfixes
 --------
 
-- Update the version of the [ldap3 plugin](https://github.com/matrix-org/matrix-synapse-ldap3/) included in the `matrixdotorg/synapse` DockerHub images and the Debian packages hosted on `packages.matrix.org` to 0.2.1. This fixes [a bug](https://github.com/matrix-org/matrix-synapse-ldap3/pull/163) with usernames containing uppercase characters. ([\#13156](https://github.com/matrix-org/synapse/issues/13156))
+- Update the version of the [ldap3 plugin](https://github.com/matrix-org/matrix-synapse-ldap3/) included in the `textrp/briij-synapse` DockerHub images and the Debian packages hosted on `packages.matrix.org` to 0.2.1. This fixes [a bug](https://github.com/matrix-org/matrix-synapse-ldap3/pull/163) with usernames containing uppercase characters. ([\#13156](https://github.com/matrix-org/synapse/issues/13156))
 - Fix a bug introduced in Synapse 1.62.0rc1 affecting unread counts for users on small servers. ([\#13168](https://github.com/matrix-org/synapse/issues/13168))
 
 
@@ -2134,7 +2134,7 @@ Internal Changes
 Synapse 1.55.2 (2022-03-24)
 ===========================
 
-This patch version reverts the earlier fixes from Synapse 1.55.1, which could cause problems in certain deployments, and instead adds a cap to the version of Jinja to be installed. Again, this is to fix an incompatibility with version 3.1.0 of the [Jinja](https://pypi.org/project/Jinja2/) library, and again, deployments of Synapse using the `matrixdotorg/synapse` Docker image or Debian packages from packages.matrix.org are not affected.
+This patch version reverts the earlier fixes from Synapse 1.55.1, which could cause problems in certain deployments, and instead adds a cap to the version of Jinja to be installed. Again, this is to fix an incompatibility with version 3.1.0 of the [Jinja](https://pypi.org/project/Jinja2/) library, and again, deployments of Synapse using the `textrp/briij-synapse` Docker image or Debian packages from packages.matrix.org are not affected.
 
 Internal Changes
 ----------------
@@ -2146,7 +2146,7 @@ Internal Changes
 Synapse 1.55.1 (2022-03-24)
 ===========================
 
-This is a patch release that fixes an incompatibility with version 3.1.0 of the [Jinja](https://pypi.org/project/Jinja2/) library, released on March 24th, 2022. Deployments of Synapse using the `matrixdotorg/synapse` Docker image or Debian packages from packages.matrix.org are not affected.
+This is a patch release that fixes an incompatibility with version 3.1.0 of the [Jinja](https://pypi.org/project/Jinja2/) library, released on March 24th, 2022. Deployments of Synapse using the `textrp/briij-synapse` Docker image or Debian packages from packages.matrix.org are not affected.
 
 Internal Changes
 ----------------
@@ -2463,7 +2463,7 @@ has recently been released, which fixes a [security issue](https://github.com/tw
 within the Twisted library. We do not believe Synapse is affected by this vulnerability,
 though we advise server administrators who installed Synapse via pip to upgrade Twisted
 with `pip install --upgrade Twisted treq` as a matter of good practice. The Docker image
-`matrixdotorg/synapse` and the Debian packages from `packages.matrix.org` are using the
+`textrp/briij-synapse` and the Debian packages from `packages.matrix.org` are using the
 updated library.
 
 

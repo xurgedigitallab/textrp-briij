@@ -23,18 +23,18 @@ from http import HTTPStatus
 from io import BytesIO
 from unittest.mock import Mock
 
-from synapse.api.errors import Codes, SynapseError
-from synapse.http.servlet import (
+from textrp_briij.api.errors import Codes, SynapseError
+from textrp_briij.http.servlet import (
     RestServlet,
     parse_json_object_from_request,
     parse_json_value_from_request,
 )
-from synapse.http.site import SynapseRequest
-from synapse.rest.client._base import client_patterns
-from synapse.server import HomeServer
-from synapse.types import JsonDict
-from synapse.util.cancellation import cancellable
-from synapse.util.duration import Duration
+from textrp_briij.http.site import SynapseRequest
+from textrp_briij.rest.client._base import client_patterns
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict
+from textrp_briij.util.cancellation import cancellable
+from textrp_briij.util.duration import Duration
 
 from tests import unittest
 from tests.http.server._base import disconnect_and_assert

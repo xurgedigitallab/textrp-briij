@@ -24,12 +24,12 @@ from unittest import mock
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.app.phone_stats_home import phone_stats_home
-from synapse.rest import admin
-from synapse.rest.client import login, sync
-from synapse.server import HomeServer
-from synapse.types import JsonDict
-from synapse.util.clock import Clock
+from textrp_briij.app.phone_stats_home import phone_stats_home
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, sync
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict
+from textrp_briij.util.clock import Clock
 
 from tests.unittest import HomeserverTestCase
 

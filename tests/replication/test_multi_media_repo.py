@@ -27,10 +27,10 @@ from twisted.internet.testing import MemoryReactor
 from twisted.web.http import HTTPChannel
 from twisted.web.server import Request
 
-from synapse.rest import admin
-from synapse.rest.client import login, media
-from synapse.server import HomeServer
-from synapse.util.clock import Clock
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, media
+from textrp_briij.server import HomeServer
+from textrp_briij.util.clock import Clock
 
 from tests.http import (
     TestServerTLSConnectionFactory,
@@ -152,7 +152,7 @@ class MediaRepoShardTestCase(BaseMultiWorkerStreamTestCase):
     @override_config({"enable_authenticated_media": False})
     def test_basic(self) -> None:
         """Test basic fetching of remote media from a single worker."""
-        hs1 = self.make_worker_hs("synapse.app.generic_worker")
+        hs1 = self.make_worker_hs("textrp_briij.app.generic_worker")
 
         channel, request = self._get_media_req(hs1, "example.com:443", "ABC123")
 
@@ -171,8 +171,8 @@ class MediaRepoShardTestCase(BaseMultiWorkerStreamTestCase):
         """Test that fetching remote media from two different processes at the
         same time works.
         """
-        hs1 = self.make_worker_hs("synapse.app.generic_worker")
-        hs2 = self.make_worker_hs("synapse.app.generic_worker")
+        hs1 = self.make_worker_hs("textrp_briij.app.generic_worker")
+        hs2 = self.make_worker_hs("textrp_briij.app.generic_worker")
 
         start_count = self._count_remote_media()
 
@@ -217,8 +217,8 @@ class MediaRepoShardTestCase(BaseMultiWorkerStreamTestCase):
         retrieved, but the important thing is that the race condition is still
         handled correctly.
         """
-        hs1 = self.make_worker_hs("synapse.app.generic_worker")
-        hs2 = self.make_worker_hs("synapse.app.generic_worker")
+        hs1 = self.make_worker_hs("textrp_briij.app.generic_worker")
+        hs2 = self.make_worker_hs("textrp_briij.app.generic_worker")
 
         start_count = self._count_remote_media()
 
@@ -260,8 +260,8 @@ class MediaRepoShardTestCase(BaseMultiWorkerStreamTestCase):
 
         This checks that races generating thumbnails are handled correctly.
         """
-        hs1 = self.make_worker_hs("synapse.app.generic_worker")
-        hs2 = self.make_worker_hs("synapse.app.generic_worker")
+        hs1 = self.make_worker_hs("textrp_briij.app.generic_worker")
+        hs2 = self.make_worker_hs("textrp_briij.app.generic_worker")
 
         start_count = self._count_remote_thumbnails()
 
@@ -413,7 +413,7 @@ class AuthenticatedMediaRepoShardTestCase(BaseMultiWorkerStreamTestCase):
 
     def test_basic(self) -> None:
         """Test basic fetching of remote media from a single worker."""
-        hs1 = self.make_worker_hs("synapse.app.generic_worker")
+        hs1 = self.make_worker_hs("textrp_briij.app.generic_worker")
 
         channel, request = self._get_media_req(hs1, "example.com:443", "ABC123")
 
@@ -434,8 +434,8 @@ class AuthenticatedMediaRepoShardTestCase(BaseMultiWorkerStreamTestCase):
         """Test that fetching remote media from two different processes at the
         same time works.
         """
-        hs1 = self.make_worker_hs("synapse.app.generic_worker")
-        hs2 = self.make_worker_hs("synapse.app.generic_worker")
+        hs1 = self.make_worker_hs("textrp_briij.app.generic_worker")
+        hs2 = self.make_worker_hs("textrp_briij.app.generic_worker")
 
         start_count = self._count_remote_media()
 
@@ -482,8 +482,8 @@ class AuthenticatedMediaRepoShardTestCase(BaseMultiWorkerStreamTestCase):
         When enable_local_media_storage is False, files should only be stored in
         the storage providers and not in the local filesystem.
         """
-        hs1 = self.make_worker_hs("synapse.app.generic_worker")
-        hs2 = self.make_worker_hs("synapse.app.generic_worker")
+        hs1 = self.make_worker_hs("textrp_briij.app.generic_worker")
+        hs2 = self.make_worker_hs("textrp_briij.app.generic_worker")
 
         start_count = self._count_remote_media()
 
@@ -528,8 +528,8 @@ class AuthenticatedMediaRepoShardTestCase(BaseMultiWorkerStreamTestCase):
 
         This checks that races generating thumbnails are handled correctly.
         """
-        hs1 = self.make_worker_hs("synapse.app.generic_worker")
-        hs2 = self.make_worker_hs("synapse.app.generic_worker")
+        hs1 = self.make_worker_hs("textrp_briij.app.generic_worker")
+        hs2 = self.make_worker_hs("textrp_briij.app.generic_worker")
 
         start_count = self._count_remote_thumbnails()
 

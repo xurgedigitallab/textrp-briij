@@ -21,7 +21,7 @@
 # type: ignore
 
 
-from synapse.replication.tcp.streams._base import ReceiptsStream
+from textrp_briij.replication.tcp.streams._base import ReceiptsStream
 
 from tests.replication._base import BaseStreamTestCase
 

@@ -21,13 +21,13 @@
 from twisted.internet.defer import ensureDeferred
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.errors import NotFoundError
-from synapse.appservice import ApplicationService
-from synapse.rest import admin, devices, sync
-from synapse.rest.client import keys, login, register
-from synapse.server import HomeServer
-from synapse.types import JsonDict, UserID, create_requester
-from synapse.util.clock import Clock
+from textrp_briij.api.errors import NotFoundError
+from textrp_briij.appservice import ApplicationService
+from textrp_briij.rest import admin, devices, sync
+from textrp_briij.rest.client import keys, login, register
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict, UserID, create_requester
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 

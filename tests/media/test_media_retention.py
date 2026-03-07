@@ -26,12 +26,12 @@ from matrix_common.types.mxc_uri import MXCUri
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.rest import admin
-from synapse.rest.client import login, register, room
-from synapse.server import HomeServer
-from synapse.types import UserID
-from synapse.util.clock import Clock
-from synapse.util.stringutils import (
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, register, room
+from textrp_briij.server import HomeServer
+from textrp_briij.types import UserID
+from textrp_briij.util.clock import Clock
+from textrp_briij.util.stringutils import (
     random_string,
 )
 

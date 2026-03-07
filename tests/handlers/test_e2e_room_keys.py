@@ -24,9 +24,9 @@ import copy
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.errors import SynapseError
-from synapse.server import HomeServer
-from synapse.util.clock import Clock
+from textrp_briij.api.errors import SynapseError
+from textrp_briij.server import HomeServer
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 

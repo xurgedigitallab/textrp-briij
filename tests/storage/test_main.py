@@ -20,7 +20,7 @@
 #
 
 
-from synapse.types import UserID
+from textrp_briij.types import UserID
 
 from tests import unittest
 

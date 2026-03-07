@@ -24,14 +24,14 @@ from canonicaljson import json
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import EventTypes, Membership
-from synapse.api.room_versions import RoomVersion, RoomVersions
-from synapse.events import EventBase
-from synapse.events.builder import EventBuilder
-from synapse.server import HomeServer
-from synapse.synapse_rust.events import EventInternalMetadata
-from synapse.types import JsonDict, RoomID, UserID
-from synapse.util.clock import Clock
+from textrp_briij.api.constants import EventTypes, Membership
+from textrp_briij.api.room_versions import RoomVersion, RoomVersions
+from textrp_briij.events import EventBase
+from textrp_briij.events.builder import EventBuilder
+from textrp_briij.server import HomeServer
+from textrp_briij.synapse_rust.events import EventInternalMetadata
+from textrp_briij.types import JsonDict, RoomID, UserID
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.utils import create_room

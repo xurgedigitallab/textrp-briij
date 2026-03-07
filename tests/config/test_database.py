@@ -20,8 +20,8 @@
 
 import yaml
 
-from synapse.config._base import RootConfig
-from synapse.config.database import DatabaseConfig
+from textrp_briij.config._base import RootConfig
+from textrp_briij.config.database import DatabaseConfig
 
 from tests import unittest
 

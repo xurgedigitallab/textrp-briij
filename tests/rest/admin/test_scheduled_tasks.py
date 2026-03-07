@@ -17,19 +17,19 @@ from typing import Mapping
 
 from twisted.internet.testing import MemoryReactor
 
-import synapse.rest.admin
-from synapse.api.errors import Codes
-from synapse.rest.client import login
-from synapse.server import HomeServer
-from synapse.types import JsonMapping, ScheduledTask, TaskStatus
-from synapse.util.clock import Clock
+import textrp_briij.rest.admin
+from textrp_briij.api.errors import Codes
+from textrp_briij.rest.client import login
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonMapping, ScheduledTask, TaskStatus
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 
 
 class ScheduledTasksAdminApiTestCase(unittest.HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
     ]
 

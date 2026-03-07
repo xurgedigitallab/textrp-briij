@@ -17,11 +17,11 @@ from typing import cast
 
 from twisted.test.proto_helpers import MemoryReactor
 
-import synapse.rest.admin
-from synapse.rest.client import login, room, sync, thread_subscriptions
-from synapse.server import HomeServer
-from synapse.types import JsonDict
-from synapse.util.clock import Clock
+import textrp_briij.rest.admin
+from textrp_briij.rest.client import login, room, sync, thread_subscriptions
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict
+from textrp_briij.util.clock import Clock
 
 from tests.rest.client.sliding_sync.test_sliding_sync import SlidingSyncBase
 
@@ -40,7 +40,7 @@ class SlidingSyncThreadSubscriptionsExtensionTestCase(SlidingSyncBase):
     maxDiff = None
 
     servlets = [
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
         room.register_servlets,
         sync.register_servlets,

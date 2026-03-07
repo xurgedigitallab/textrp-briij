@@ -29,14 +29,14 @@ from parameterized import parameterized
 from twisted.internet.defer import Deferred
 from twisted.internet.testing import MemoryReactor
 
-import synapse.rest.admin
-from synapse.api.errors import Codes, SynapseError
-from synapse.logging.context import make_deferred_yieldable
-from synapse.push.emailpusher import EmailPusher
-from synapse.rest.client import login, room
-from synapse.rest.synapse.client.unsubscribe import UnsubscribeResource
-from synapse.server import HomeServer
-from synapse.util.clock import Clock
+import textrp_briij.rest.admin
+from textrp_briij.api.errors import Codes, SynapseError
+from textrp_briij.logging.context import make_deferred_yieldable
+from textrp_briij.push.emailpusher import EmailPusher
+from textrp_briij.rest.client import login, room
+from textrp_briij.rest.briij.client.unsubscribe import UnsubscribeResource
+from textrp_briij.server import HomeServer
+from textrp_briij.util.clock import Clock
 
 from tests.server import FakeSite, make_request
 from tests.unittest import HomeserverTestCase
@@ -52,7 +52,7 @@ class _User:
 
 class EmailPusherTests(HomeserverTestCase):
     servlets = [
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         room.register_servlets,
         login.register_servlets,
     ]
@@ -61,7 +61,9 @@ class EmailPusherTests(HomeserverTestCase):
     def make_homeserver(self, reactor: MemoryReactor, clock: Clock) -> HomeServer:
         config = self.default_config()
         templates = (
-            importlib_resources.files("synapse").joinpath("res").joinpath("templates")
+            importlib_resources.files("textrp_briij")
+            .joinpath("res")
+            .joinpath("templates")
         )
         config["email"] = {
             "enable_notifs": True,
@@ -87,7 +89,7 @@ class EmailPusherTests(HomeserverTestCase):
         self.email_attempts: list[tuple[Deferred, Sequence, dict]] = []
 
         def sendmail(*args: Any, **kwargs: Any) -> Deferred:
-            # This mocks out synapse.reactor.send_email._sendmail.
+            # This mocks out textrp_briij.reactor.send_email._sendmail.
             d: Deferred = Deferred()
             self.email_attempts.append((d, args, kwargs))
             return make_deferred_yieldable(d)
@@ -515,7 +517,7 @@ class EmailPusherTests(HomeserverTestCase):
         Assert that synapse sent off exactly one email notification.
 
         Returns:
-            args and kwargs passed to synapse.reactor.send_email._sendmail for
+            args and kwargs passed to textrp_briij.reactor.send_email._sendmail for
             that notification.
         """
         # Get the stream ordering before it gets sent

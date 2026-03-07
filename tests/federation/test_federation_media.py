@@ -24,15 +24,15 @@ import tempfile
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.media.filepath import MediaFilePaths
-from synapse.media.media_storage import MediaStorage
-from synapse.media.storage_provider import (
+from textrp_briij.media.filepath import MediaFilePaths
+from textrp_briij.media.media_storage import MediaStorage
+from textrp_briij.media.storage_provider import (
     FileStorageProviderBackend,
     StorageProviderWrapper,
 )
-from synapse.server import HomeServer
-from synapse.types import UserID
-from synapse.util.clock import Clock
+from textrp_briij.server import HomeServer
+from textrp_briij.types import UserID
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.media.test_media_storage import small_png

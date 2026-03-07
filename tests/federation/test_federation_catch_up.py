@@ -4,20 +4,20 @@ from unittest.mock import AsyncMock, Mock
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import EventTypes
-from synapse.events import EventBase
-from synapse.federation.sender import (
+from textrp_briij.api.constants import EventTypes
+from textrp_briij.events import EventBase
+from textrp_briij.federation.sender import (
     FederationSender,
     PerDestinationQueue,
     TransactionManager,
 )
-from synapse.federation.units import Edu, Transaction
-from synapse.rest import admin
-from synapse.rest.client import login, room
-from synapse.server import HomeServer
-from synapse.types import JsonDict
-from synapse.util.clock import Clock
-from synapse.util.retryutils import NotRetryingDestination
+from textrp_briij.federation.units import Edu, Transaction
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, room
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict
+from textrp_briij.util.clock import Clock
+from textrp_briij.util.retryutils import NotRetryingDestination
 
 from tests.test_utils import event_injection
 from tests.unittest import FederatingHomeserverTestCase

@@ -39,27 +39,27 @@ from twisted.web.http_headers import Headers
 from twisted.web.iweb import UNKNOWN_LENGTH, IResponse
 from twisted.web.resource import Resource
 
-from synapse.api.errors import Codes, HttpResponseException
-from synapse.api.ratelimiting import Ratelimiter
-from synapse.events import EventBase
-from synapse.http.client import ByteWriteable
-from synapse.http.types import QueryParams
-from synapse.logging.context import make_deferred_yieldable
-from synapse.media._base import FileInfo, ThumbnailInfo
-from synapse.media.filepath import MediaFilePaths
-from synapse.media.media_storage import MediaStorage, ReadableFileWrapper
-from synapse.media.storage_provider import (
+from textrp_briij.api.errors import Codes, HttpResponseException
+from textrp_briij.api.ratelimiting import Ratelimiter
+from textrp_briij.events import EventBase
+from textrp_briij.http.client import ByteWriteable
+from textrp_briij.http.types import QueryParams
+from textrp_briij.logging.context import make_deferred_yieldable
+from textrp_briij.media._base import FileInfo, ThumbnailInfo
+from textrp_briij.media.filepath import MediaFilePaths
+from textrp_briij.media.media_storage import MediaStorage, ReadableFileWrapper
+from textrp_briij.media.storage_provider import (
     FileStorageProviderBackend,
     StorageProviderWrapper,
 )
-from synapse.media.thumbnailer import ThumbnailProvider
-from synapse.module_api import ModuleApi
-from synapse.module_api.callbacks.spamchecker_callbacks import load_legacy_spam_checkers
-from synapse.rest import admin
-from synapse.rest.client import login, media
-from synapse.server import HomeServer
-from synapse.types import JsonDict, RoomAlias
-from synapse.util.clock import Clock
+from textrp_briij.media.thumbnailer import ThumbnailProvider
+from textrp_briij.module_api import ModuleApi
+from textrp_briij.module_api.callbacks.spamchecker_callbacks import load_legacy_spam_checkers
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, media
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict, RoomAlias
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.server import FakeChannel
@@ -365,7 +365,7 @@ class MediaRepoTests(unittest.HomeserverTestCase):
         config["max_image_pixels"] = 2000000
 
         provider_config = {
-            "module": "synapse.media.storage_provider.FileStorageProviderBackend",
+            "module": "textrp_briij.media.storage_provider.FileStorageProviderBackend",
             "store_local": True,
             "store_synchronous": False,
             "store_remote": True,
@@ -1025,7 +1025,7 @@ class RemoteDownloadLimiterTestCase(unittest.HomeserverTestCase):
         config["media_store_path"] = self.media_store_path
 
         provider_config = {
-            "module": "synapse.media.storage_provider.FileStorageProviderBackend",
+            "module": "textrp_briij.media.storage_provider.FileStorageProviderBackend",
             "store_local": True,
             "store_synchronous": False,
             "store_remote": True,
@@ -1063,7 +1063,7 @@ class RemoteDownloadLimiterTestCase(unittest.HomeserverTestCase):
         }
     )
     @patch(
-        "synapse.http.matrixfederationclient.read_body_with_max_size",
+        "textrp_briij.http.matrixfederationclient.read_body_with_max_size",
         read_body_with_max_size_30MiB,
     )
     def test_download_ratelimit_default(self) -> None:
@@ -1141,7 +1141,7 @@ class RemoteDownloadLimiterTestCase(unittest.HomeserverTestCase):
         }
     )
     @patch(
-        "synapse.http.matrixfederationclient.read_body_with_max_size",
+        "textrp_briij.http.matrixfederationclient.read_body_with_max_size",
         read_body_with_max_size_50MiB,
     )
     def test_download_rate_limit_config(self) -> None:
@@ -1204,7 +1204,7 @@ class RemoteDownloadLimiterTestCase(unittest.HomeserverTestCase):
         }
     )
     @patch(
-        "synapse.http.matrixfederationclient.read_body_with_max_size",
+        "textrp_briij.http.matrixfederationclient.read_body_with_max_size",
         read_body_with_max_size_30MiB,
     )
     def test_download_ratelimit_unknown_length(self) -> None:
@@ -1244,7 +1244,7 @@ class RemoteDownloadLimiterTestCase(unittest.HomeserverTestCase):
 
     @override_config({"max_upload_size": "29M", "enable_authenticated_media": False})
     @patch(
-        "synapse.http.matrixfederationclient.read_body_with_max_size",
+        "textrp_briij.http.matrixfederationclient.read_body_with_max_size",
         read_body_with_max_size_30MiB,
     )
     def test_max_download_respected(self) -> None:
@@ -1340,7 +1340,7 @@ class MediaHashesTestCase(unittest.HomeserverTestCase):
     )
     # mock actually reading file body
     @patch(
-        "synapse.http.matrixfederationclient.read_body_with_max_size",
+        "textrp_briij.http.matrixfederationclient.read_body_with_max_size",
         read_body,
     )
     def test_ensure_correct_sha256_federated(self) -> None:

@@ -19,7 +19,7 @@
 #
 
 
-from synapse.util.events import get_plain_text_topic_from_event_content
+from textrp_briij.util.events import get_plain_text_topic_from_event_content
 
 from tests import unittest
 

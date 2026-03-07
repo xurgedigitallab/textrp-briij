@@ -23,15 +23,15 @@ from http import HTTPStatus
 
 from twisted.web.resource import Resource
 
-from synapse.api.errors import Codes
-from synapse.federation.transport.server import BaseFederationServlet
-from synapse.federation.transport.server._base import Authenticator, _parse_auth_header
-from synapse.http.server import JsonResource
-from synapse.server import HomeServer
-from synapse.types import JsonDict
-from synapse.util.cancellation import cancellable
-from synapse.util.duration import Duration
-from synapse.util.ratelimitutils import FederationRateLimiter
+from textrp_briij.api.errors import Codes
+from textrp_briij.federation.transport.server import BaseFederationServlet
+from textrp_briij.federation.transport.server._base import Authenticator, _parse_auth_header
+from textrp_briij.http.server import JsonResource
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict
+from textrp_briij.util.cancellation import cancellable
+from textrp_briij.util.duration import Duration
+from textrp_briij.util.ratelimitutils import FederationRateLimiter
 
 from tests import unittest
 from tests.http.server._base import disconnect_and_assert

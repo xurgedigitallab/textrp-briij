@@ -21,7 +21,7 @@
 
 from unittest.mock import Mock, patch
 
-from synapse.util.distributor import Distributor
+from textrp_briij.util.distributor import Distributor
 
 from . import unittest
 
@@ -49,7 +49,7 @@ class DistributorTestCase(unittest.HomeserverTestCase):
 
         observers[0].side_effect = Exception("Awoogah!")
 
-        with patch("synapse.util.distributor.logger", spec=["warning"]) as mock_logger:
+        with patch("textrp_briij.util.distributor.logger", spec=["warning"]) as mock_logger:
             self.dist.fire("alarm", "Go")
 
             observers[0].assert_called_once_with("Go")

@@ -18,8 +18,8 @@
 #
 #
 
-from synapse.federation.send_queue import EduRow
-from synapse.replication.tcp.streams.federation import FederationStream
+from textrp_briij.federation.send_queue import EduRow
+from textrp_briij.replication.tcp.streams.federation import FederationStream
 
 from tests.replication._base import BaseStreamTestCase
 

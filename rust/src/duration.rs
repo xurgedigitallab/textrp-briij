@@ -18,17 +18,17 @@ use pyo3::{
     Bound, BoundObject, IntoPyObject, Py, PyAny, PyErr, PyResult, Python,
 };
 
-/// A reference to the `synapse.util.duration` module.
+/// A reference to the `textrp_briij.util.duration` module.
 static DURATION: OnceCell<Py<PyAny>> = OnceCell::new();
 
-/// Access to the `synapse.util.duration` module.
+/// Access to the `textrp_briij.util.duration` module.
 fn duration_module(py: Python<'_>) -> PyResult<&Bound<'_, PyAny>> {
     Ok(DURATION
-        .get_or_try_init(|| py.import("synapse.util.duration").map(Into::into))?
+        .get_or_try_init(|| py.import("textrp_briij.util.duration").map(Into::into))?
         .bind(py))
 }
 
-/// Mirrors the `synapse.util.duration.Duration` Python class.
+/// Mirrors the `textrp_briij.util.duration.Duration` Python class.
 pub struct SynapseDuration {
     microseconds: u64,
 }

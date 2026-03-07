@@ -30,18 +30,18 @@ from signedjson.key import (
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import EventTypes, Membership
-from synapse.api.room_versions import RoomVersion
-from synapse.crypto.event_signing import add_hashes_and_signatures
-from synapse.events import EventBase, make_event_from_dict
-from synapse.handlers.typing import TypingWriterHandler
-from synapse.http.federation.matrix_federation_agent import MatrixFederationAgent
-from synapse.rest.admin import register_servlets_for_client_rest_resource
-from synapse.rest.client import login, room
-from synapse.server import HomeServer
-from synapse.storage.keys import FetchKeyResult
-from synapse.types import JsonDict, UserID, create_requester
-from synapse.util.clock import Clock
+from textrp_briij.api.constants import EventTypes, Membership
+from textrp_briij.api.room_versions import RoomVersion
+from textrp_briij.crypto.event_signing import add_hashes_and_signatures
+from textrp_briij.events import EventBase, make_event_from_dict
+from textrp_briij.handlers.typing import TypingWriterHandler
+from textrp_briij.http.federation.matrix_federation_agent import MatrixFederationAgent
+from textrp_briij.rest.admin import register_servlets_for_client_rest_resource
+from textrp_briij.rest.client import login, room
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.keys import FetchKeyResult
+from textrp_briij.types import JsonDict, UserID, create_requester
+from textrp_briij.util.clock import Clock
 
 from tests.replication._base import BaseMultiWorkerStreamTestCase
 from tests.server import get_clock
@@ -89,7 +89,7 @@ class FederationSenderTestCase(BaseMultiWorkerStreamTestCase):
         mock_client.put_json = AsyncMock(return_value={})
         mock_client.agent = self.matrix_federation_agent
         self.make_worker_hs(
-            "synapse.app.generic_worker",
+            "textrp_briij.app.generic_worker",
             {
                 "worker_name": "federation_sender1",
                 "federation_sender_instances": ["federation_sender1"],
@@ -120,7 +120,7 @@ class FederationSenderTestCase(BaseMultiWorkerStreamTestCase):
         mock_client1.put_json = AsyncMock(return_value={})
         mock_client1.agent = self.matrix_federation_agent
         self.make_worker_hs(
-            "synapse.app.generic_worker",
+            "textrp_briij.app.generic_worker",
             {
                 "worker_name": "federation_sender1",
                 "federation_sender_instances": [
@@ -135,7 +135,7 @@ class FederationSenderTestCase(BaseMultiWorkerStreamTestCase):
         mock_client2.put_json = AsyncMock(return_value={})
         mock_client2.agent = self.matrix_federation_agent
         self.make_worker_hs(
-            "synapse.app.generic_worker",
+            "textrp_briij.app.generic_worker",
             {
                 "worker_name": "federation_sender2",
                 "federation_sender_instances": [
@@ -189,7 +189,7 @@ class FederationSenderTestCase(BaseMultiWorkerStreamTestCase):
         mock_client1.put_json = AsyncMock(return_value={})
         mock_client1.agent = self.matrix_federation_agent
         self.make_worker_hs(
-            "synapse.app.generic_worker",
+            "textrp_briij.app.generic_worker",
             {
                 "worker_name": "federation_sender1",
                 "federation_sender_instances": [
@@ -204,7 +204,7 @@ class FederationSenderTestCase(BaseMultiWorkerStreamTestCase):
         mock_client2.put_json = AsyncMock(return_value={})
         mock_client2.agent = self.matrix_federation_agent
         self.make_worker_hs(
-            "synapse.app.generic_worker",
+            "textrp_briij.app.generic_worker",
             {
                 "worker_name": "federation_sender2",
                 "federation_sender_instances": [

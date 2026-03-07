@@ -22,13 +22,13 @@ from unittest.mock import Mock
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import EventTypes
-from synapse.rest import admin
-from synapse.rest.client import login, room
-from synapse.server import HomeServer
-from synapse.types import JsonDict, create_requester
-from synapse.util.clock import Clock
-from synapse.visibility import filter_and_transform_events_for_client
+from textrp_briij.api.constants import EventTypes
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, room
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict, create_requester
+from textrp_briij.util.clock import Clock
+from textrp_briij.visibility import filter_and_transform_events_for_client
 
 from tests import unittest
 from tests.unittest import override_config
@@ -130,7 +130,7 @@ class RetentionTestCase(unittest.HomeserverTestCase):
 
     @override_config({"retention": {"purge_jobs": [{"interval": "5d"}]}})
     def test_visibility(self) -> None:
-        """Tests that synapse.visibility.filter_events_for_client correctly filters out
+        """Tests that textrp_briij.visibility.filter_events_for_client correctly filters out
         outdated events, even if the purge job hasn't got to them yet.
 
         We do this by setting a very long time between purge jobs.

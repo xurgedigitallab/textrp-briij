@@ -20,7 +20,7 @@
 #
 import yaml
 
-from synapse.storage.background_updates import BackgroundUpdater
+from textrp_briij.storage.background_updates import BackgroundUpdater
 
 from tests.unittest import HomeserverTestCase, override_config
 

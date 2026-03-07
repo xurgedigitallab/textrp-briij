@@ -1,0 +1,26 @@
+[Unit]
+Description=Briij by TextRP %i
+AssertPathExists=/etc/textrp-briij/workers/%i.yaml
+
+# This service should be restarted when the Briij by TextRP target is restarted.
+PartOf=textrp-briij.target
+ReloadPropagatedFrom=textrp-briij.target
+
+# if this is started at the same time as the main, let the main process start
+# first, to initialise the database schema.
+After=textrp-briij.service
+
+[Service]
+Type=notify
+NotifyAccess=main
+User=textrp-briij
+WorkingDirectory=/var/lib/textrp-briij
+EnvironmentFile=-/etc/default/textrp-briij
+ExecStart=/opt/venvs/textrp-briij/bin/python -m textrp_briij.app.generic_worker --config-path=/etc/textrp-briij/homeserver.yaml --config-path=/etc/textrp-briij/conf.d/ --config-path=/etc/textrp-briij/workers/%i.yaml
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+RestartSec=3
+SyslogIdentifier=textrp-briij-%i
+
+[Install]
+WantedBy=textrp-briij.target

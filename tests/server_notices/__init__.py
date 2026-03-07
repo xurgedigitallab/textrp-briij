@@ -15,12 +15,12 @@
 
 from twisted.test.proto_helpers import MemoryReactor
 
-import synapse.rest.admin
-from synapse.rest.client import login, room, sync
-from synapse.server import HomeServer
-from synapse.types import JsonDict
-from synapse.util.clock import Clock
-from synapse.util.duration import Duration
+import textrp_briij.rest.admin
+from textrp_briij.rest.client import login, room, sync
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict
+from textrp_briij.util.clock import Clock
+from textrp_briij.util.duration import Duration
 
 from tests import unittest
 from tests.unittest import override_config
@@ -38,7 +38,7 @@ DEFAULT_SERVER_NOTICES_CONFIG = {
 class ServerNoticesTests(unittest.HomeserverTestCase):
     servlets = [
         sync.register_servlets,
-        synapse.rest.admin.register_servlets,
+        textrp_briij.rest.admin.register_servlets,
         login.register_servlets,
         room.register_servlets,
     ]

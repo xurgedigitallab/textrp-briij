@@ -181,7 +181,7 @@ Bugfixes
 Improved Documentation
 ----------------------
 
-- Suggest users of the Debian packages add configuration to `/etc/matrix-synapse/conf.d/` to prevent, upon upgrade, being asked to choose between their configuration and the maintainer's. ([\#11281](https://github.com/matrix-org/synapse/issues/11281))
+- Suggest users of the Debian packages add configuration to `/etc/textrp-briij/conf.d/` to prevent, upon upgrade, being asked to choose between their configuration and the maintainer's. ([\#11281](https://github.com/matrix-org/synapse/issues/11281))
 - Fix typos in the documentation for the `username_available` admin API. Contributed by Stanislav Motylkov. ([\#11286](https://github.com/matrix-org/synapse/issues/11286))
 - Add Single Sign-On, SAML and CAS pages to the documentation. ([\#11298](https://github.com/matrix-org/synapse/issues/11298))
 - Change the word 'Home server' as one word 'homeserver' in documentation. ([\#11320](https://github.com/matrix-org/synapse/issues/11320))
@@ -1462,7 +1462,7 @@ Bugfixes
 Synapse 1.35.0 (2021-06-01)
 ===========================
 
-Note that [the tag](https://github.com/matrix-org/synapse/releases/tag/v1.35.0rc3) and [docker images](https://hub.docker.com/layers/matrixdotorg/synapse/v1.35.0rc3/images/sha256-34ccc87bd99a17e2cbc0902e678b5937d16bdc1991ead097eee6096481ecf2c4?context=explore) for `v1.35.0rc3` were incorrectly built. If you are experiencing issues with either, it is recommended to upgrade to the equivalent tag or docker image for the `v1.35.0` release.
+Note that [the tag](https://github.com/matrix-org/synapse/releases/tag/v1.35.0rc3) and [docker images](https://hub.docker.com/layers/textrp/briij-synapse/v1.35.0rc3/images/sha256-34ccc87bd99a17e2cbc0902e678b5937d16bdc1991ead097eee6096481ecf2c4?context=explore) for `v1.35.0rc3` were incorrectly built. If you are experiencing issues with either, it is recommended to upgrade to the equivalent tag or docker image for the `v1.35.0` release.
 
 Deprecations and Removals
 -------------------------

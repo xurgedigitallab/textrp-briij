@@ -18,8 +18,8 @@
 # [This file includes modifications made by New Vector Limited]
 #
 #
-from synapse.config.homeserver import HomeServerConfig
-from synapse.config.ratelimiting import RatelimitSettings
+from textrp_briij.config.homeserver import HomeServerConfig
+from textrp_briij.config.ratelimiting import RatelimitSettings
 
 from tests.unittest import TestCase
 from tests.utils import default_config

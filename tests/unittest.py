@@ -56,28 +56,28 @@ from twisted.trial import unittest
 from twisted.web.resource import Resource
 from twisted.web.server import Request
 
-from synapse import events
-from synapse.api.constants import EventTypes
-from synapse.api.room_versions import KNOWN_ROOM_VERSIONS, RoomVersion
-from synapse.config._base import Config, RootConfig
-from synapse.config.homeserver import HomeServerConfig
-from synapse.config.server import DEFAULT_ROOM_VERSION
-from synapse.crypto.event_signing import add_hashes_and_signatures
-from synapse.federation.transport.server import TransportLayerServer
-from synapse.http.server import JsonResource, OptionsResource
-from synapse.http.site import SynapseRequest, SynapseSite
-from synapse.logging.context import (
+from textrp_briij import events
+from textrp_briij.api.constants import EventTypes
+from textrp_briij.api.room_versions import KNOWN_ROOM_VERSIONS, RoomVersion
+from textrp_briij.config._base import Config, RootConfig
+from textrp_briij.config.homeserver import HomeServerConfig
+from textrp_briij.config.server import DEFAULT_ROOM_VERSION
+from textrp_briij.crypto.event_signing import add_hashes_and_signatures
+from textrp_briij.federation.transport.server import TransportLayerServer
+from textrp_briij.http.server import JsonResource, OptionsResource
+from textrp_briij.http.site import SynapseRequest, SynapseSite
+from textrp_briij.logging.context import (
     SENTINEL_CONTEXT,
     LoggingContext,
     current_context,
     set_current_context,
 )
-from synapse.rest import RegisterServletsFunc
-from synapse.server import HomeServer
-from synapse.storage.keys import FetchKeyResult
-from synapse.types import ISynapseReactor, JsonDict, Requester, UserID, create_requester
-from synapse.util.clock import Clock
-from synapse.util.httpresourcetree import create_resource_tree
+from textrp_briij.rest import RegisterServletsFunc
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.keys import FetchKeyResult
+from textrp_briij.types import IBriijReactor, JsonDict, Requester, UserID, create_requester
+from textrp_briij.util.clock import Clock
+from textrp_briij.util.httpresourcetree import create_resource_tree
 
 from tests.server import (
     CustomHeaderType,
@@ -345,7 +345,7 @@ def logcontext_clean(target: TV) -> TV:
         # But also fail the test
         raise AssertionError("logcontext error: %s" % (msg))
 
-    patcher = patch("synapse.logging.context.logcontext_error", new=logcontext_error)
+    patcher = patch("textrp_briij.logging.context.logcontext_error", new=logcontext_error)
     return patcher(target)  # type: ignore[call-overload]
 
 
@@ -412,7 +412,7 @@ class HomeserverTestCase(TestCase):
         # create the root resource, and a site to wrap it.
         self.resource = self.create_test_resource()
         self.site = SynapseSite(
-            logger_name="synapse.access.http.fake",
+            logger_name="textrp_briij.access.http.fake",
             site_tag=self.hs.config.server.server_name,
             config=self.hs.config.server.listeners[0],
             resource=self.resource,
@@ -637,7 +637,7 @@ class HomeserverTestCase(TestCase):
         self,
         server_name: str | None = None,
         config: JsonDict | None = None,
-        reactor: Optional[ISynapseReactor] = None,
+        reactor: Optional[IBriijReactor] = None,
         clock: Clock | None = None,
         **extra_homeserver_attributes: Any,
     ) -> HomeServer:
@@ -650,7 +650,7 @@ class HomeserverTestCase(TestCase):
             See tests.utils.setup_test_homeserver.
 
         Returns:
-            synapse.server.HomeServer
+            textrp_briij.server.HomeServer
         """
         if config is None:
             config = self.default_config()

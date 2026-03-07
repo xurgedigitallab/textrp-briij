@@ -18,10 +18,10 @@ from unittest.mock import patch
 
 from signedjson.key import encode_verify_key_base64, get_verify_key
 
-from synapse.crypto import keyring
-from synapse.crypto.event_signing import add_hashes_and_signatures
-from synapse.events import make_event_from_dict
-from synapse.federation.federation_base import InvalidEventSignatureError
+from textrp_briij.crypto import keyring
+from textrp_briij.crypto.event_signing import add_hashes_and_signatures
+from textrp_briij.events import make_event_from_dict
+from textrp_briij.federation.federation_base import InvalidEventSignatureError
 
 from tests import unittest
 

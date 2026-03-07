@@ -31,15 +31,15 @@ from signedjson.key import (
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import EventTypes, Membership, PresenceState
-from synapse.api.presence import UserDevicePresenceState, UserPresenceState
-from synapse.api.room_versions import (
+from textrp_briij.api.constants import EventTypes, Membership, PresenceState
+from textrp_briij.api.presence import UserDevicePresenceState, UserPresenceState
+from textrp_briij.api.room_versions import (
     RoomVersion,
 )
-from synapse.crypto.event_signing import add_hashes_and_signatures
-from synapse.events import EventBase, make_event_from_dict
-from synapse.federation.sender import FederationSender
-from synapse.handlers.presence import (
+from textrp_briij.crypto.event_signing import add_hashes_and_signatures
+from textrp_briij.events import EventBase, make_event_from_dict
+from textrp_briij.federation.sender import FederationSender
+from textrp_briij.handlers.presence import (
     BUSY_ONLINE_TIMEOUT,
     EXTERNAL_PROCESS_EXPIRY,
     FEDERATION_PING_INTERVAL,
@@ -51,13 +51,13 @@ from synapse.handlers.presence import (
     handle_timeout,
     handle_update,
 )
-from synapse.rest import admin
-from synapse.rest.client import login, room, sync
-from synapse.server import HomeServer
-from synapse.storage.database import LoggingDatabaseConnection
-from synapse.storage.keys import FetchKeyResult
-from synapse.types import JsonDict, UserID, get_domain_from_id
-from synapse.util.clock import Clock
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, room, sync
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.database import LoggingDatabaseConnection
+from textrp_briij.storage.keys import FetchKeyResult
+from textrp_briij.types import JsonDict, UserID, get_domain_from_id
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.replication._base import BaseMultiWorkerStreamTestCase
@@ -944,7 +944,7 @@ class PresenceHandlerTestCase(BaseMultiWorkerStreamTestCase):
         # This is used to test that presence changes get replicated from workers
         # to the main process correctly.
         worker_to_sync_against = self.make_worker_hs(
-            "synapse.app.generic_worker", {"worker_name": "synchrotron"}
+            "textrp_briij.app.generic_worker", {"worker_name": "synchrotron"}
         )
         worker_presence_handler = worker_to_sync_against.get_presence_handler()
 
@@ -1259,7 +1259,7 @@ class PresenceHandlerTestCase(BaseMultiWorkerStreamTestCase):
             # This is used to test that presence changes get replicated from workers
             # to the main process correctly.
             worker_to_sync_against = self.make_worker_hs(
-                "synapse.app.generic_worker", {"worker_name": "synchrotron"}
+                "textrp_briij.app.generic_worker", {"worker_name": "synchrotron"}
             )
             worker_presence_handler = worker_to_sync_against.get_presence_handler()
 
@@ -1496,7 +1496,7 @@ class PresenceHandlerTestCase(BaseMultiWorkerStreamTestCase):
             # This is used to test that presence changes get replicated from workers
             # to the main process correctly.
             worker_to_sync_against = self.make_worker_hs(
-                "synapse.app.generic_worker", {"worker_name": "synchrotron"}
+                "textrp_briij.app.generic_worker", {"worker_name": "synchrotron"}
             )
             worker_presence_handler = worker_to_sync_against.get_presence_handler()
 
@@ -1613,7 +1613,7 @@ class PresenceHandlerTestCase(BaseMultiWorkerStreamTestCase):
             # This is used to test that presence changes get replicated from workers
             # to the main process correctly.
             worker_to_sync_against = self.make_worker_hs(
-                "synapse.app.generic_worker", {"worker_name": "synchrotron"}
+                "textrp_briij.app.generic_worker", {"worker_name": "synchrotron"}
             )
 
         # Set presence to BUSY

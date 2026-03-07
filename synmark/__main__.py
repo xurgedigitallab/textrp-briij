@@ -30,7 +30,7 @@ from twisted.internet.defer import Deferred, ensureDeferred
 from twisted.logger import globalLogBeginner, textFileLogObserver
 from twisted.python.failure import Failure
 
-from synapse.types import ISynapseReactor
+from textrp_briij.types import IBriijReactor
 from synmark import make_reactor
 from synmark.suites import SUITES
 
@@ -40,7 +40,7 @@ T = TypeVar("T")
 
 
 def make_test(
-    main: Callable[[ISynapseReactor, int], Coroutine[Any, Any, float]],
+    main: Callable[[IBriijReactor, int], Coroutine[Any, Any, float]],
 ) -> Callable[[int], float]:
     """
     Take a benchmark function and wrap it in a reactor start and stop.

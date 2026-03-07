@@ -26,9 +26,9 @@ from parameterized import parameterized
 
 from twisted.internet import defer
 
-from synapse.util.caches.response_cache import ResponseCache, ResponseCacheContext
-from synapse.util.cancellation import cancellable
-from synapse.util.duration import Duration
+from textrp_briij.util.caches.response_cache import ResponseCache, ResponseCacheContext
+from textrp_briij.util.cancellation import cancellable
+from textrp_briij.util.duration import Duration
 
 from tests.server import get_clock
 from tests.unittest import TestCase

@@ -18,7 +18,7 @@
 # [This file includes modifications made by New Vector Limited]
 #
 #
-from synapse.config.__main__ import main
+from textrp_briij.config.__main__ import main
 
 from tests.config.utils import ConfigFileTestCase
 

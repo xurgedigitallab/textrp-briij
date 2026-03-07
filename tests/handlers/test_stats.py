@@ -22,11 +22,11 @@ from typing import Any, cast
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.rest import admin
-from synapse.rest.client import login, room
-from synapse.server import HomeServer
-from synapse.storage.databases.main import stats
-from synapse.util.clock import Clock
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, room
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.databases.main import stats
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 

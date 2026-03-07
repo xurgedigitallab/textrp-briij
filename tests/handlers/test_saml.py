@@ -26,11 +26,11 @@ import attr
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.errors import RedirectException
-from synapse.module_api import ModuleApi
-from synapse.server import HomeServer
-from synapse.types import JsonDict
-from synapse.util.clock import Clock
+from textrp_briij.api.errors import RedirectException
+from textrp_briij.module_api import ModuleApi
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict
+from textrp_briij.util.clock import Clock
 
 from tests.unittest import HomeserverTestCase, override_config
 

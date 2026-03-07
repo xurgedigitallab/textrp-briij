@@ -16,12 +16,12 @@ from typing import Literal
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import EventContentFields, EventTypes
-from synapse.config.server import DEFAULT_ROOM_VERSION
-from synapse.rest import admin, login, room, room_upgrade_rest_servlet
-from synapse.server import HomeServer
-from synapse.types import Codes, JsonDict
-from synapse.util.clock import Clock
+from textrp_briij.api.constants import EventContentFields, EventTypes
+from textrp_briij.config.server import DEFAULT_ROOM_VERSION
+from textrp_briij.rest import admin, login, room, room_upgrade_rest_servlet
+from textrp_briij.server import HomeServer
+from textrp_briij.types import Codes, JsonDict
+from textrp_briij.util.clock import Clock
 
 from tests.server import FakeChannel
 from tests.unittest import HomeserverTestCase

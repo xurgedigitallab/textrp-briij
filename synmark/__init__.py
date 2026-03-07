@@ -22,7 +22,7 @@
 import sys
 from typing import cast
 
-from synapse.types import ISynapseReactor
+from textrp_briij.types import IBriijReactor
 
 try:
     from twisted.internet.epollreactor import EPollReactor as Reactor
@@ -33,7 +33,7 @@ except ImportError:
 from twisted.internet.main import installReactor
 
 
-def make_reactor() -> ISynapseReactor:
+def make_reactor() -> IBriijReactor:
     """
     Instantiate and install a Twisted reactor suitable for testing (i.e. not the
     default global one).
@@ -44,4 +44,4 @@ def make_reactor() -> ISynapseReactor:
         del sys.modules["twisted.internet.reactor"]
     installReactor(reactor)
 
-    return cast(ISynapseReactor, reactor)
+    return cast(IBriijReactor, reactor)

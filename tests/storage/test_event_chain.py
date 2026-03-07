@@ -26,18 +26,18 @@ from parameterized import parameterized
 from twisted.internet.testing import MemoryReactor
 from twisted.trial import unittest
 
-from synapse.api.constants import EventTypes
-from synapse.api.room_versions import RoomVersions
-from synapse.events import EventBase
-from synapse.events.snapshot import EventContext
-from synapse.rest import admin
-from synapse.rest.client import login, room
-from synapse.server import HomeServer
-from synapse.storage.database import LoggingTransaction
-from synapse.storage.databases.main.events import _LinkMap
-from synapse.storage.types import Cursor
-from synapse.types import create_requester
-from synapse.util.clock import Clock
+from textrp_briij.api.constants import EventTypes
+from textrp_briij.api.room_versions import RoomVersions
+from textrp_briij.events import EventBase
+from textrp_briij.events.snapshot import EventContext
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, room
+from textrp_briij.server import HomeServer
+from textrp_briij.storage.database import LoggingTransaction
+from textrp_briij.storage.databases.main.events import _LinkMap
+from textrp_briij.storage.types import Cursor
+from textrp_briij.types import create_requester
+from textrp_briij.util.clock import Clock
 
 from tests.unittest import HomeserverTestCase
 

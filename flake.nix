@@ -111,10 +111,10 @@
                   # Native dependencies for running Complement.
                   olm
 
-                  # For building the Synapse documentation website.
+                  # For building the Briij by TextRP documentation website.
                   mdbook
 
-                  # For releasing Synapse
+                  # For releasing Briij by TextRP
                   debian-devscripts # (`dch` for manipulating the Debian changelog)
                   libnotify # (the release script uses `notify-send` to tell you when CI jobs are done)
                 ];
@@ -125,9 +125,9 @@
                 # Automatically activate the poetry virtualenv upon entering the shell.
                 languages.python.poetry.activate.enable = true;
                 # Install all extra Python dependencies; this is needed to run the unit
-                # tests and utilise all Synapse features.
+                # tests and utilise all Briij by TextRP features.
                 languages.python.poetry.install.arguments = ["--extras all"];
-                # Install the 'matrix-synapse' package from the local checkout.
+                # Install the 'textrp-briij' package from the local checkout.
                 languages.python.poetry.install.installRootPackage = true;
 
                 # This is a work-around for NixOS systems. NixOS is special in
@@ -140,33 +140,33 @@
                 env.POETRY_INSTALLER_NO_BINARY = "ruff";
 
                 # Install dependencies for the additional programming languages
-                # involved with Synapse development.
+                # involved with Briij by TextRP development.
                 #
                 # * Golang is needed to run the Complement test suite.
                 # * Perl is needed to run the SyTest test suite.
-                # * Rust is used for developing and running Synapse.
+                # * Rust is used for developing and running Briij by TextRP.
                 #   It is installed manually with `packages` above.
                 languages.go.enable = true;
                 languages.perl.enable = true;
 
-                # Postgres is needed to run Synapse with postgres support and
+                # Postgres is needed to run Briij by TextRP with postgres support and
                 # to run certain unit tests that require postgres.
                 services.postgres.enable = true;
 
                 # On the first invocation of `devenv up`, create a database for
-                # Synapse to store data in.
+                # Briij by TextRP to store data in.
                 services.postgres.initdbArgs = ["--locale=C" "--encoding=UTF8"];
                 services.postgres.initialDatabases = [
-                  { name = "synapse"; }
+                  { name = "textrp_briij"; }
                 ];
-                # Create a postgres user called 'synapse_user' which has ownership
-                # over the 'synapse' database.
+                # Create a postgres user called 'textrp_briij_user' which has ownership
+                # over the 'textrp_briij' database.
                 services.postgres.initialScript = ''
-                  CREATE USER synapse_user;
-                  ALTER DATABASE synapse OWNER TO synapse_user;
+                  CREATE USER textrp_briij_user;
+                  ALTER DATABASE textrp_briij OWNER TO textrp_briij_user;
                 '';
 
-                # Redis is needed in order to run Synapse in worker mode.
+                # Redis is needed in order to run Briij by TextRP in worker mode.
                 services.redis.enable = true;
 
                 # Configure and start Synapse. Before starting Synapse, this shell code:

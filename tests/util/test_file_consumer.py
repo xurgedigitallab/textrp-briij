@@ -28,12 +28,12 @@ from zope.interface import implementer
 from twisted.internet import defer, reactor as _reactor
 from twisted.internet.interfaces import IPullProducer
 
-from synapse.types import ISynapseReactor
-from synapse.util.file_consumer import BackgroundFileConsumer
+from textrp_briij.types import IBriijReactor
+from textrp_briij.util.file_consumer import BackgroundFileConsumer
 
 from tests import unittest
 
-reactor = cast(ISynapseReactor, _reactor)
+reactor = cast(IBriijReactor, _reactor)
 
 
 class FileConsumerTests(unittest.TestCase):

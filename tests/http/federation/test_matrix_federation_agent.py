@@ -44,24 +44,24 @@ from twisted.web.http import HTTPChannel, Request
 from twisted.web.http_headers import Headers
 from twisted.web.iweb import IPolicyForHTTPS, IResponse
 
-from synapse.config.homeserver import HomeServerConfig
-from synapse.config.server import parse_proxy_config
-from synapse.crypto.context_factory import FederationPolicyForHTTPS
-from synapse.http.federation.matrix_federation_agent import MatrixFederationAgent
-from synapse.http.federation.srv_resolver import Server, SrvResolver
-from synapse.http.federation.well_known_resolver import (
+from textrp_briij.config.homeserver import HomeServerConfig
+from textrp_briij.config.server import parse_proxy_config
+from textrp_briij.crypto.context_factory import FederationPolicyForHTTPS
+from textrp_briij.http.federation.matrix_federation_agent import MatrixFederationAgent
+from textrp_briij.http.federation.srv_resolver import Server, SrvResolver
+from textrp_briij.http.federation.well_known_resolver import (
     WELL_KNOWN_MAX_SIZE,
     WellKnownResolver,
     _cache_period_from_headers,
 )
-from synapse.logging.context import (
+from textrp_briij.logging.context import (
     SENTINEL_CONTEXT,
     LoggingContext,
     LoggingContextOrSentinel,
     current_context,
 )
-from synapse.types import ISynapseReactor
-from synapse.util.caches.ttlcache import TTLCache
+from textrp_briij.types import IBriijReactor
+from textrp_briij.util.caches.ttlcache import TTLCache
 
 from tests import unittest
 from tests.http import dummy_address, get_test_ca_cert_file, wrap_server_factory_for_tls
@@ -280,7 +280,7 @@ class MatrixFederationAgentTests(unittest.TestCase):
         """
         return MatrixFederationAgent(
             server_name="OUR_STUB_HOMESERVER_NAME",
-            reactor=cast(ISynapseReactor, self.reactor),
+            reactor=cast(IBriijReactor, self.reactor),
             clock=self.clock,
             tls_client_options_factory=self.tls_factory,
             user_agent=b"test-agent",  # Note that this is unused since _well_known_resolver is provided.
@@ -1035,7 +1035,7 @@ class MatrixFederationAgentTests(unittest.TestCase):
             _srv_resolver=self.mock_resolver,
             _well_known_resolver=WellKnownResolver(
                 server_name="OUR_STUB_HOMESERVER_NAME",
-                reactor=cast(ISynapseReactor, self.reactor),
+                reactor=cast(IBriijReactor, self.reactor),
                 clock=self.clock,
                 agent=Agent(self.reactor, contextFactory=tls_factory),
                 user_agent=b"test-agent",

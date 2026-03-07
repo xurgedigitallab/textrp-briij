@@ -22,10 +22,10 @@ from urllib.parse import quote
 
 from twisted.internet.testing import MemoryReactor
 
-import synapse.rest.admin
-from synapse.rest.client import login, mutual_rooms, room
-from synapse.server import HomeServer
-from synapse.util.clock import Clock
+import textrp_briij.rest.admin
+from textrp_briij.rest.client import login, mutual_rooms, room
+from textrp_briij.server import HomeServer
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.server import FakeChannel
@@ -38,7 +38,7 @@ class UserMutualRoomsTest(unittest.HomeserverTestCase):
 
     servlets = [
         login.register_servlets,
-        synapse.rest.admin.register_servlets_for_client_rest_resource,
+        textrp_briij.rest.admin.register_servlets_for_client_rest_resource,
         room.register_servlets,
         mutual_rooms.register_servlets,
     ]

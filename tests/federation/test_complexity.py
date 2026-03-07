@@ -21,10 +21,10 @@
 
 from unittest.mock import AsyncMock
 
-from synapse.api.errors import Codes, SynapseError
-from synapse.rest import admin
-from synapse.rest.client import login, room
-from synapse.types import JsonDict, UserID, create_requester
+from textrp_briij.api.errors import Codes, SynapseError
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, room
+from textrp_briij.types import JsonDict, UserID, create_requester
 
 from tests import unittest
 

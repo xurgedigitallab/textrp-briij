@@ -1,8 +1,8 @@
 from unittest import TestCase as StdlibTestCase
 from unittest.mock import Mock
 
-from synapse.logging.context import ContextResourceUsage, LoggingContext
-from synapse.metrics.background_process_metrics import _BackgroundProcess
+from textrp_briij.logging.context import ContextResourceUsage, LoggingContext
+from textrp_briij.metrics.background_process_metrics import _BackgroundProcess
 
 
 class TestBackgroundProcessMetrics(StdlibTestCase):

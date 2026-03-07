@@ -20,7 +20,7 @@
 #
 import logging
 
-from synapse.rest.client import register
+from textrp_briij.rest.client import register
 
 from tests.replication._base import BaseMultiWorkerStreamTestCase
 from tests.server import make_request
@@ -35,12 +35,12 @@ class ClientReaderTestCase(BaseMultiWorkerStreamTestCase):
 
     def _get_worker_hs_config(self) -> dict:
         config = self.default_config()
-        config["worker_app"] = "synapse.app.generic_worker"
+        config["worker_app"] = "textrp_briij.app.generic_worker"
         return config
 
     def test_register_single_worker(self) -> None:
         """Test that registration works when using a single generic worker."""
-        worker_hs = self.make_worker_hs("synapse.app.generic_worker")
+        worker_hs = self.make_worker_hs("textrp_briij.app.generic_worker")
         site = self._hs_to_site[worker_hs]
 
         channel_1 = make_request(
@@ -70,8 +70,8 @@ class ClientReaderTestCase(BaseMultiWorkerStreamTestCase):
 
     def test_register_multi_worker(self) -> None:
         """Test that registration works when using multiple generic workers."""
-        worker_hs_1 = self.make_worker_hs("synapse.app.generic_worker")
-        worker_hs_2 = self.make_worker_hs("synapse.app.generic_worker")
+        worker_hs_1 = self.make_worker_hs("textrp_briij.app.generic_worker")
+        worker_hs_2 = self.make_worker_hs("textrp_briij.app.generic_worker")
 
         site_1 = self._hs_to_site[worker_hs_1]
         channel_1 = make_request(

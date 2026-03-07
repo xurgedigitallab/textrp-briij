@@ -21,10 +21,10 @@ from typing import Any
 
 from twisted.web.server import Request
 
-from synapse.http.additional_resource import AdditionalResource
-from synapse.http.server import respond_with_json
-from synapse.http.site import SynapseRequest
-from synapse.types import JsonDict
+from textrp_briij.http.additional_resource import AdditionalResource
+from textrp_briij.http.server import respond_with_json
+from textrp_briij.http.site import SynapseRequest
+from textrp_briij.types import JsonDict
 
 from tests.server import FakeSite, make_request
 from tests.unittest import HomeserverTestCase

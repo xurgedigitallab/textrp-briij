@@ -38,17 +38,17 @@ from twisted.internet.testing import MemoryReactorClock
 from twisted.python.failure import Failure
 from twisted.web.server import Site
 
-from synapse.http.server import (
+from textrp_briij.http.server import (
     HTTP_STATUS_REQUEST_CANCELLED,
     respond_with_html_bytes,
     respond_with_json,
 )
-from synapse.http.site import SynapseRequest
-from synapse.logging.context import (
+from textrp_briij.http.site import SynapseRequest
+from textrp_briij.logging.context import (
     LoggingContext,
     make_deferred_yieldable,
 )
-from synapse.types import JsonDict
+from textrp_briij.types import JsonDict
 
 from tests.server import FakeChannel, make_request
 from tests.unittest import logcontext_clean
@@ -100,7 +100,7 @@ def disconnect_and_assert(
         respond_method = respond_with_json
 
     with mock.patch(
-        f"synapse.http.server.{respond_method.__name__}", wraps=respond_method
+        f"textrp_briij.http.server.{respond_method.__name__}", wraps=respond_method
     ) as respond_mock:
         # Disconnect the request.
         request.connectionLost(reason=ConnectionDone())
@@ -213,7 +213,7 @@ def make_request_with_cancellation_test(
 
         try:
             with mock.patch(
-                "synapse.http.server.respond_with_json", wraps=respond_with_json
+                "textrp_briij.http.server.respond_with_json", wraps=respond_with_json
             ) as respond_mock:
                 with deferred_patch.patch():
                     # Start the request.

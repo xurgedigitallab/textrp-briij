@@ -22,23 +22,23 @@ from unittest import mock
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.errors import AuthError, StoreError
-from synapse.api.room_versions import RoomVersion
-from synapse.event_auth import (
+from textrp_briij.api.errors import AuthError, StoreError
+from textrp_briij.api.room_versions import RoomVersion
+from textrp_briij.event_auth import (
     check_state_dependent_auth_rules,
     check_state_independent_auth_rules,
 )
-from synapse.events import make_event_from_dict
-from synapse.events.snapshot import EventContext
-from synapse.federation.transport.client import StateRequestResponse
-from synapse.logging.context import LoggingContext
-from synapse.rest import admin
-from synapse.rest.client import login, room
-from synapse.server import HomeServer
-from synapse.state import StateResolutionStore
-from synapse.state.v2 import _mainline_sort, _reverse_topological_power_sort
-from synapse.types import JsonDict
-from synapse.util.clock import Clock
+from textrp_briij.events import make_event_from_dict
+from textrp_briij.events.snapshot import EventContext
+from textrp_briij.federation.transport.client import StateRequestResponse
+from textrp_briij.logging.context import LoggingContext
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, room
+from textrp_briij.server import HomeServer
+from textrp_briij.state import StateResolutionStore
+from textrp_briij.state.v2 import _mainline_sort, _reverse_topological_power_sort
+from textrp_briij.types import JsonDict
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 from tests.test_utils import event_injection

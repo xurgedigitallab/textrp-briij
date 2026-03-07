@@ -19,10 +19,10 @@
 #
 #
 
-from synapse.config._base import RootConfig
-from synapse.config.cache import CacheConfig, add_resizable_cache
-from synapse.types import JsonDict
-from synapse.util.caches.lrucache import LruCache
+from textrp_briij.config._base import RootConfig
+from textrp_briij.config.cache import CacheConfig, add_resizable_cache
+from textrp_briij.types import JsonDict
+from textrp_briij.util.caches.lrucache import LruCache
 
 from tests.server import get_clock
 from tests.unittest import TestCase

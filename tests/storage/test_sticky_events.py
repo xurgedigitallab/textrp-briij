@@ -14,20 +14,20 @@ import sqlite3
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import (
+from textrp_briij.api.constants import (
     EventContentFields,
     EventTypes,
     Membership,
     StickyEvent,
     StickyEventField,
 )
-from synapse.api.room_versions import RoomVersions
-from synapse.rest import admin
-from synapse.rest.client import login, register, room
-from synapse.server import HomeServer
-from synapse.types import JsonDict, create_requester
-from synapse.util.clock import Clock
-from synapse.util.duration import Duration
+from textrp_briij.api.room_versions import RoomVersions
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, register, room
+from textrp_briij.server import HomeServer
+from textrp_briij.types import JsonDict, create_requester
+from textrp_briij.util.clock import Clock
+from textrp_briij.util.duration import Duration
 
 from tests import unittest
 from tests.utils import USE_POSTGRES_FOR_TESTS

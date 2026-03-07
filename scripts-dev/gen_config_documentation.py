@@ -49,17 +49,17 @@ for a user avatar.
 
 The configuration file can be validated with the following command:
 ```bash
-python -m synapse.config read <config key to print> -c <path to config>
+python -m textrp_briij.config read <config key to print> -c <path to config>
 ```
 
 To validate the entire file, omit `read <config key to print>`:
 ```bash
-python -m synapse.config -c <path to config>
+python -m textrp_briij.config -c <path to config>
 ```
 
 To see how to set other options, check the help reference:
 ```bash
-python -m synapse.config --help
+python -m textrp_briij.config --help
 ```
 
 ### YAML

@@ -26,23 +26,23 @@ from parameterized import parameterized, parameterized_class
 from twisted.internet import defer
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import AccountDataTypes, EventTypes, JoinRules
-from synapse.api.errors import Codes, ResourceLimitError
-from synapse.api.filtering import FilterCollection, Filtering
-from synapse.api.room_versions import RoomVersion, RoomVersions
-from synapse.events import EventBase
-from synapse.events.snapshot import EventContext
-from synapse.federation.federation_base import event_from_pdu_json
-from synapse.handlers.sync import (
+from textrp_briij.api.constants import AccountDataTypes, EventTypes, JoinRules
+from textrp_briij.api.errors import Codes, ResourceLimitError
+from textrp_briij.api.filtering import FilterCollection, Filtering
+from textrp_briij.api.room_versions import RoomVersion, RoomVersions
+from textrp_briij.events import EventBase
+from textrp_briij.events.snapshot import EventContext
+from textrp_briij.federation.federation_base import event_from_pdu_json
+from textrp_briij.handlers.sync import (
     SyncConfig,
     SyncRequestKey,
     SyncResult,
     TimelineBatch,
 )
-from synapse.rest import admin
-from synapse.rest.client import knock, login, room
-from synapse.server import HomeServer
-from synapse.types import (
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import knock, login, room
+from textrp_briij.server import HomeServer
+from textrp_briij.types import (
     JsonDict,
     MultiWriterStreamToken,
     RoomStreamToken,
@@ -50,7 +50,7 @@ from synapse.types import (
     UserID,
     create_requester,
 )
-from synapse.util.clock import Clock
+from textrp_briij.util.clock import Clock
 
 import tests.unittest
 import tests.utils

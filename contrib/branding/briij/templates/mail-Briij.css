@@ -1,0 +1,7 @@
+.header {
+    border-bottom: 4px solid #cbd5f5 !important;
+}
+
+.notif_link a, .footer a {
+    color: #4b5bd6 !important;
+}

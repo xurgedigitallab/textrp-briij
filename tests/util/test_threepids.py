@@ -19,7 +19,7 @@
 #
 #
 
-from synapse.util.threepids import canonicalise_email
+from textrp_briij.util.threepids import canonicalise_email
 
 from tests.unittest import HomeserverTestCase
 

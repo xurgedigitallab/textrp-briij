@@ -21,13 +21,13 @@ from http import HTTPStatus
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.appservice import ApplicationService
-from synapse.rest import admin
-from synapse.rest.client import directory, login, room
-from synapse.server import HomeServer
-from synapse.types import RoomAlias, UserID
-from synapse.util.clock import Clock
-from synapse.util.stringutils import random_string
+from textrp_briij.appservice import ApplicationService
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import directory, login, room
+from textrp_briij.server import HomeServer
+from textrp_briij.types import RoomAlias, UserID
+from textrp_briij.util.clock import Clock
+from textrp_briij.util.stringutils import random_string
 
 from tests import unittest
 from tests.unittest import override_config

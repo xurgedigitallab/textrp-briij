@@ -22,16 +22,16 @@ import logging
 
 from twisted.internet.testing import MemoryReactor
 
-from synapse.api.constants import EventTypes
-from synapse.api.errors import SynapseError
-from synapse.events import EventBase
-from synapse.events.snapshot import EventContext, UnpersistedEventContextBase
-from synapse.rest import admin
-from synapse.rest.client import login, room
-from synapse.server import HomeServer
-from synapse.types import create_requester
-from synapse.util.clock import Clock
-from synapse.util.stringutils import random_string
+from textrp_briij.api.constants import EventTypes
+from textrp_briij.api.errors import SynapseError
+from textrp_briij.events import EventBase
+from textrp_briij.events.snapshot import EventContext, UnpersistedEventContextBase
+from textrp_briij.rest import admin
+from textrp_briij.rest.client import login, room
+from textrp_briij.server import HomeServer
+from textrp_briij.types import create_requester
+from textrp_briij.util.clock import Clock
+from textrp_briij.util.stringutils import random_string
 
 from tests import unittest
 from tests.test_utils.event_injection import create_event

@@ -24,7 +24,7 @@ The following issues are fixed in v1.23.1 and v1.24.0.
 To upgrade Synapse along with the cryptography package:
 
 * Administrators using the [`matrix.org` Docker
-  image](https://hub.docker.com/r/matrixdotorg/synapse/) or the [Debian/Ubuntu
+  image](https://hub.docker.com/r/textrp/briij-synapse/) or the [Debian/Ubuntu
   packages from
   `matrix.org`](https://matrix-org.github.io/synapse/latest/setup/installation.html#matrixorg-packages)
   should ensure that they have version 1.24.0 or 1.23.1 installed: these images include
@@ -70,7 +70,7 @@ The following issues are fixed in v1.23.1 and v1.24.0.
 To upgrade Synapse along with the cryptography package:
 
 * Administrators using the [`matrix.org` Docker
-  image](https://hub.docker.com/r/matrixdotorg/synapse/) or the [Debian/Ubuntu
+  image](https://hub.docker.com/r/textrp/briij-synapse/) or the [Debian/Ubuntu
   packages from
   `matrix.org`](https://matrix-org.github.io/synapse/latest/setup/installation.html#matrixorg-packages)
   should ensure that they have version 1.24.0 or 1.23.1 installed: these images include
@@ -1653,7 +1653,7 @@ they have the latest versions of the Twisted library to ensure that their
 installation remains secure.
 
 * Administrators using the [`matrix.org` Docker
-  image](https://hub.docker.com/r/matrixdotorg/synapse/) or the [Debian/Ubuntu
+  image](https://hub.docker.com/r/textrp/briij-synapse/) or the [Debian/Ubuntu
   packages from
   `matrix.org`](https://matrix-org.github.io/synapse/latest/setup/installation.html#matrixorg-packages)
   should ensure that they have version 1.12.0 installed: these images include

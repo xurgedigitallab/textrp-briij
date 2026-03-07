@@ -20,7 +20,7 @@
 #
 
 
-from synapse.util.caches.treecache import TreeCache, iterate_tree_cache_entry
+from textrp_briij.util.caches.treecache import TreeCache, iterate_tree_cache_entry
 
 from .. import unittest
 

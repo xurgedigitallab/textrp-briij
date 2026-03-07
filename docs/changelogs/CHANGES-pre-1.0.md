@@ -69,7 +69,7 @@ Synapse 0.99.4rc1 (2019-05-13)
 Features
 --------
 
-- Add systemd-python to the optional dependencies to enable logging to the systemd journal. Install with `pip install matrix-synapse[systemd]`. ([\#4339](https://github.com/matrix-org/synapse/issues/4339))
+- Add systemd-python to the optional dependencies to enable logging to the systemd journal. Install with `pip install textrp-briij[systemd]`. ([\#4339](https://github.com/matrix-org/synapse/issues/4339))
 - Add a default .m.rule.tombstone push rule. ([\#4867](https://github.com/matrix-org/synapse/issues/4867))
 - Add ability for password provider modules to bind email addresses to users upon registration. ([\#4947](https://github.com/matrix-org/synapse/issues/4947))
 - Implementation of [MSC1711](https://github.com/matrix-org/matrix-doc/pull/1711) including config options for requiring valid TLS certificates for federation traffic, the ability to disable TLS validation for specific domains, and the ability to specify your own list of CA certificates. ([\#4967](https://github.com/matrix-org/synapse/issues/4967))
@@ -78,7 +78,7 @@ Features
 - Add a delete group admin API. ([\#5002](https://github.com/matrix-org/synapse/issues/5002))
 - Add config option to block users from looking up 3PIDs. ([\#5010](https://github.com/matrix-org/synapse/issues/5010))
 - Add context to phonehome stats. ([\#5020](https://github.com/matrix-org/synapse/issues/5020))
-- Configure the example systemd units to have a log identifier of `matrix-synapse`
+- Configure the example systemd units to have a log identifier of `textrp-briij`
   instead of the executable name, `python`.
   Contributed by Christoph Müller. ([\#5023](https://github.com/matrix-org/synapse/issues/5023))
 - Add time-based account expiration. ([\#5027](https://github.com/matrix-org/synapse/issues/5027), [\#5047](https://github.com/matrix-org/synapse/issues/5047), [\#5073](https://github.com/matrix-org/synapse/issues/5073), [\#5116](https://github.com/matrix-org/synapse/issues/5116))
@@ -395,7 +395,7 @@ Features
 - Support exposing server capabilities in CS API (MSC1753, MSC1804) ([\#4472](https://github.com/matrix-org/synapse/issues/4472), [81b7e7eed](https://github.com/matrix-org/synapse/commit/81b7e7eed323f55d6550e7a270a9dc2c4c7b0fe0)))
 - Add support for room version 3 ([\#4483](https://github.com/matrix-org/synapse/issues/4483), [\#4499](https://github.com/matrix-org/synapse/issues/4499), [\#4515](https://github.com/matrix-org/synapse/issues/4515), [\#4523](https://github.com/matrix-org/synapse/issues/4523), [\#4535](https://github.com/matrix-org/synapse/issues/4535))
 - Synapse will now reload TLS certificates from disk upon SIGHUP. ([\#4495](https://github.com/matrix-org/synapse/issues/4495), [\#4524](https://github.com/matrix-org/synapse/issues/4524))
-- The matrixdotorg/synapse Docker images now use Python 3 by default. ([\#4558](https://github.com/matrix-org/synapse/issues/4558))
+- The textrp/briij-synapse Docker images now use Python 3 by default. ([\#4558](https://github.com/matrix-org/synapse/issues/4558))
 
 Bugfixes
 --------
@@ -487,7 +487,7 @@ Features
 - Support for serving .well-known files ([\#4262](https://github.com/matrix-org/synapse/issues/4262))
 - Rework SAML2 authentication ([\#4265](https://github.com/matrix-org/synapse/issues/4265), [\#4267](https://github.com/matrix-org/synapse/issues/4267))
 - SAML2 authentication: Initialise user display name from SAML2 data ([\#4272](https://github.com/matrix-org/synapse/issues/4272))
-- Synapse can now have its conditional/extra dependencies installed by pip. This functionality can be used by using `pip install matrix-synapse[feature]`, where feature is a comma separated list with the possible values `email.enable_notifs`, `matrix-synapse-ldap3`, `postgres`, `resources.consent`, `saml2`, `url_preview`, and `test`. If you want to install all optional dependencies, you can use "all" instead. ([\#4298](https://github.com/matrix-org/synapse/issues/4298), [\#4325](https://github.com/matrix-org/synapse/issues/4325), [\#4327](https://github.com/matrix-org/synapse/issues/4327))
+- Synapse can now have its conditional/extra dependencies installed by pip. This functionality can be used by using `pip install textrp-briij[feature]`, where feature is a comma separated list with the possible values `email.enable_notifs`, `matrix-synapse-ldap3`, `postgres`, `resources.consent`, `saml2`, `url_preview`, and `test`. If you want to install all optional dependencies, you can use "all" instead. ([\#4298](https://github.com/matrix-org/synapse/issues/4298), [\#4325](https://github.com/matrix-org/synapse/issues/4325), [\#4327](https://github.com/matrix-org/synapse/issues/4327))
 - Add routes for reading account data. ([\#4303](https://github.com/matrix-org/synapse/issues/4303))
 - Add opt-in support for v2 rooms ([\#4307](https://github.com/matrix-org/synapse/issues/4307))
 - Add a script to generate a clean config file ([\#4315](https://github.com/matrix-org/synapse/issues/4315))
@@ -855,7 +855,7 @@ Internal Changes
 - Clarifications in FederationHandler ([\#3967](https://github.com/matrix-org/synapse/issues/3967))
 - Further reduce the docker image size ([\#3972](https://github.com/matrix-org/synapse/issues/3972))
 - Build py3 docker images for docker hub too ([\#3976](https://github.com/matrix-org/synapse/issues/3976))
-- Updated the installation instructions to point to the matrix-synapse package on PyPI. ([\#3985](https://github.com/matrix-org/synapse/issues/3985))
+- Updated the installation instructions to point to the textrp-briij package on PyPI. ([\#3985](https://github.com/matrix-org/synapse/issues/3985))
 - Disable USE_FROZEN_DICTS for unittests by default. ([\#3987](https://github.com/matrix-org/synapse/issues/3987))
 - Remove unused Jenkins and development related files from the repo. ([\#3988](https://github.com/matrix-org/synapse/issues/3988))
 - Improve stacktraces in certain exceptions in the logs ([\#3989](https://github.com/matrix-org/synapse/issues/3989))
@@ -994,7 +994,7 @@ Bugfixes
 Internal Changes
 ----------------
 
-- Removed the link to the unmaintained matrix-synapse-auto-deploy project from the readme. ([\#3378](https://github.com/matrix-org/synapse/issues/3378))
+- Removed the link to the unmaintained textrp-briij-auto-deploy project from the readme. ([\#3378](https://github.com/matrix-org/synapse/issues/3378))
 - Refactor state module to support multiple room versions ([\#3673](https://github.com/matrix-org/synapse/issues/3673))
 - The synapse.storage module has been ported to Python 3. ([\#3725](https://github.com/matrix-org/synapse/issues/3725))
 - Split the state_group_cache into member and non-member state events (and so speed up LL /sync) ([\#3726](https://github.com/matrix-org/synapse/issues/3726))
