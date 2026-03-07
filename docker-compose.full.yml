@@ -12,6 +12,7 @@ services:
       POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
     volumes:
       - synapse-postgres:/var/lib/postgresql/data
+      - ./init-databases.sql:/docker-entrypoint-initdb.d/init-databases.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U synapse"]
       interval: 5s
@@ -54,62 +55,109 @@ services:
       retries: 3
       start_period: 30s
 
-  # --- Backend: XRPL Proxy API (placeholder) ---
+  # --- Backend: XRPL Proxy API (AdonisJS) ---
 
   textrpv2-api:
     build:
       context: ./textrpv2-api
     restart: unless-stopped
     environment:
-      PORT: "3001"
+      NODE_ENV: development
+      PORT: "8080"
+      HOST: "0.0.0.0"
+      LOG_LEVEL: info
+      APP_KEY: efe658c0be5c5297bb9ea69f57d952701f7d303aa19613c29f2feb2add0fcdcf
+      APP_URL: http://localhost:8080/v2
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USER: synapse
+      DB_PASSWORD: change_me
+      DB_DATABASE: textrp_v2
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      REDIS_PASSWORD: ""
+      JWT_SECRET: LxNh8zaINTAEdU1+GCIabj6gBvICmkZvdwYs4a9KAnM=
+      JWT_EXPIRES_IN: 15m
+      REFRESH_TOKEN_EXPIRES_IN: 7d
+      IDP_JWT_SECRET: LxNh8zaINTAEdU1+GCIabj6gBvICmkZvdwYs4a9KAnM=
+      IDENTITY_PROVIDER_URL: http://textrp-connect:3000
+      IDP_CLIENT_ID: placeholder_client_id
+      IDP_CLIENT_SECRET: placeholder_client_secret
+      CLIENT_REDIRECT_URL: http://localhost:3002/auth/callback
       XRPL_NETWORK: testnet
-      BRIJ_HOMESERVER_URL: http://briij:8008
-      XRPL_TESTNET: "1"
-      DHALI_PAY_API_KEY: placeholder
+      XRPL_WEBSOCKET_URL: wss://s.altnet.rippletest.net:51233
     depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
       briij:
         condition: service_healthy
     ports:
-      - "3001:3001"
+      - "8080:8080"
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:3001/health || exit 1"]
+      test: ["CMD-SHELL", "curl -fSs http://localhost:8080/v2/health || exit 1"]
       interval: 10s
       timeout: 5s
-      retries: 3
+      retries: 5
+      start_period: 15s
 
-  # --- IdP: OIDC Provider for Xaman SSO (placeholder) ---
+  # --- IdP: OIDC Provider / Xaman SSO (Next.js) ---
 
   textrp-connect:
     build:
       context: ./textrp-connect
+      dockerfile: dockerfile
     restart: unless-stopped
     environment:
-      PORT: "8080"
-      XAMAN_CLIENT_ID: placeholder_client_id
-      XAMAN_CLIENT_SECRET: placeholder_client_secret
-    ports:
-      - "8080:8080"
-    healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/health || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-
-  # --- Frontend: React/TS client (placeholder) ---
-
-  textrp-mobile-chat:
-    build:
-      context: ./textrp-mobile-chat
-    restart: unless-stopped
-    environment:
-      MATRIX_HOMESERVER_URL: http://localhost:8008
-      OIDC_ISSUER: http://localhost:8080
-      API_BASE: http://localhost:3001
+      NODE_ENV: production
+      XUMM_KEY: ${XUMM_KEY:-placeholder}
+      XUMM_KEY_SECRET: ${XUMM_KEY_SECRET:-placeholder}
+      ENC_KEY: LxNh8zaINTAEdU1+GCIabj6gBvICmkZvdwYs4a9KAnM=
+      JWT_ISSUER: xrpl-wallet-connect
+      JWT_AUDIENCE: textrp-synapse
+      MATRIX_SERVER_NAME: "localhost:8008"
+      MATRIX_JWT_SECRET: LxNh8zaINTAEdU1+GCIabj6gBvICmkZvdwYs4a9KAnM=
+      MATRIX_JWT_ALGORITHM: HS256
+      MATRIX_JWT_ISSUER: xrpl-identity-server
+      MATRIX_JWT_AUDIENCE: matrix
+      MATRIX_HOMESERVER_URL: http://briij:8008
+      SYNAPSE_BASE_URL: http://briij:8008
+      WALLETCONNECT_PROJECT_ID: ${WALLETCONNECT_PROJECT_ID:-ec2949b75462c008b21e0af5e2e1b83a}
+      TEXTRP_BACKEND_URL: http://textrpv2-api:8080
+    volumes:
+      - connect-data:/app/.data
     depends_on:
       briij:
         condition: service_healthy
     ports:
       - "3000:3000"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # --- Frontend: React/TS Matrix Client (Next.js) ---
+
+  textrp-mobile-chat:
+    build:
+      context: ./textrp-mobile-chat
+      args:
+        NEXT_PUBLIC_TEXTRP_BACKEND_URL: http://localhost:8080
+        NEXT_PUBLIC_MATRIX_HOMESERVER_URL: http://localhost:8008
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_TEXTRP_BACKEND_URL: http://localhost:8080
+      NEXT_PUBLIC_MATRIX_HOMESERVER_URL: http://localhost:8008
+      NEXT_PUBLIC_WALLET_API_URL: http://localhost:3000/wallet-api
+    depends_on:
+      briij:
+        condition: service_healthy
+    ports:
+      - "3002:3000"
 
 volumes:
   synapse-postgres:
+  connect-data:

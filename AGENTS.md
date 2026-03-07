@@ -33,22 +33,25 @@ This is the **Element Synapse** Matrix homeserver (Python 3 + Rust). See `CONTRI
 
 ### Docker Compose full stack
 
-A `docker-compose.full.yml` at the repo root runs the complete TextRP dev stack:
+A `docker-compose.full.yml` at the repo root runs the complete TextRP dev stack. Clone the companion repos as siblings inside `/workspace` using a `GITHUB_PAT` secret with read access.
 
-| Service | Container | Port | Notes |
+| Service | Container | Port | Technology |
 |---|---|---|---|
-| Synapse (briij) | `workspace-briij-1` | 8008 | Built from `docker/Dockerfile`, uses Postgres + Redis |
-| PostgreSQL | `workspace-postgres-1` | 5432 (internal) | `synapse` database, password `change_me` |
-| Redis | `workspace-redis-1` | 6379 (internal) | For replication/caching |
-| XRPL API | `workspace-textrpv2-api-1` | 3001 | Placeholder - replace with real `textrpv2-api` repo |
-| OIDC Provider | `workspace-textrp-connect-1` | 8080 | Placeholder - replace with real `textrp-connect` repo |
-| Frontend | `workspace-textrp-mobile-chat-1` | 3000 | Placeholder - replace with real `textrp-mobile-chat` repo |
+| Synapse (briij) | `workspace-briij-1` | 8008 | Python/Rust homeserver |
+| textrpv2-api | `workspace-textrpv2-api-1` | 8080 | AdonisJS 6 (XRPL proxy) |
+| textrp-connect | `workspace-textrp-connect-1` | 3000 | Next.js 14 (OIDC/Xaman SSO) |
+| textrp-mobile-chat | `workspace-textrp-mobile-chat-1` | 3002 | Next.js 16 (Matrix client) |
+| PostgreSQL | `workspace-postgres-1` | 5432 (internal) | Two databases: `synapse` + `textrp_v2` |
+| Redis | `workspace-redis-1` | 6379 (internal) | Shared by Synapse + API |
 
 Start: `docker compose -f docker-compose.full.yml up --build -d`
 Stop: `docker compose -f docker-compose.full.yml down`
 Logs: `docker compose -f docker-compose.full.yml logs -f briij`
 
+- After first start, run API migrations: `docker exec workspace-textrpv2-api-1 node --import=tsx ace.js migration:run`
+- Register a Synapse user: `docker exec workspace-briij-1 register_new_matrix_user http://localhost:8008 -c /data/homeserver.yaml -u USER -p PASS -a`
 - The Synapse config is at `data/homeserver.yaml` (Postgres-backed, Redis-enabled).
-- Register a user: `docker exec workspace-briij-1 register_new_matrix_user http://localhost:8008 -c /data/homeserver.yaml -u USER -p PASS -a`
-- The three companion repos (`textrpv2-api`, `textrp-connect`, `textrp-mobile-chat`) do not yet exist in the GitHub org. The compose file uses Node.js placeholder stubs. Replace the `build` contexts when the real repos are created.
-- Docker must be installed separately (not included in the update script). Start the daemon with `sudo dockerd` if needed in cloud environments.
+- A shared `ENC_KEY` must match between textrp-connect and textrpv2-api's `JWT_SECRET` / `IDP_JWT_SECRET`. See `DEV-SETUP.md` in textrpv2-api for the full auth wiring guide.
+- XRPL WebSocket (`wss://s.altnet.rippletest.net:51233`) may not be reachable in some cloud environments; the API reports `xrpl: down` in health but database/redis are functional.
+- Docker must be installed separately (not in the update script). Start the daemon with `sudo dockerd` if needed.
+- For Xaman SSO to work end-to-end, set real `XUMM_KEY`/`XUMM_KEY_SECRET` from https://apps.xumm.dev/ in the `.env` file.
