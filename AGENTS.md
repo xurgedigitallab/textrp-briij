@@ -40,7 +40,10 @@ cd /workspace
 git clone https://x-access-token:${GITHUB_PAT}@github.com/xurgedigitallab/textrpv2-api.git && git -C textrpv2-api checkout development
 git clone https://x-access-token:${GITHUB_PAT}@github.com/xurgedigitallab/textrp-connect.git && git -C textrp-connect checkout development
 git clone https://x-access-token:${GITHUB_PAT}@github.com/xurgedigitallab/textrp-mobile-chat.git && git -C textrp-mobile-chat checkout development
+git clone https://github.com/xurgedigitallab/briij-js-sdk.git  # public, default branch: develop
 ```
+
+The `briij-js-sdk` (`@textrp/briij-js-sdk`, forked from `matrix-js-sdk`) lives at `/workspace/briij-js-sdk` on the `develop` branch. It uses **pnpm** (`pnpm-lock.yaml`). Install with `cd briij-js-sdk && pnpm install`. This SDK is developed in parallel with the briij homeserver -- changes to Synapse APIs or custom Matrix events should be reflected here.
 
 | Service | Container | Port | Technology |
 |---|---|---|---|

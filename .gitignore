@@ -80,9 +80,10 @@ book/
 # Don't include users' poetry configs
 /poetry.toml
 
-# TextRP dev stack (placeholder services and runtime data)
+# TextRP dev stack (companion repos and runtime data)
 /textrpv2-api/
 /textrp-connect/
 /textrp-mobile-chat/
+/briij-js-sdk/
 /data/
 /.env
