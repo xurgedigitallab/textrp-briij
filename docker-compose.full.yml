@@ -60,14 +60,15 @@ services:
   textrpv2-api:
     build:
       context: ./textrpv2-api
+      dockerfile: Dockerfile.dev
     restart: unless-stopped
     environment:
       NODE_ENV: development
       PORT: "8080"
       HOST: "0.0.0.0"
-      LOG_LEVEL: info
+      LOG_LEVEL: debug
       APP_KEY: efe658c0be5c5297bb9ea69f57d952701f7d303aa19613c29f2feb2add0fcdcf
-      APP_URL: http://localhost:8080/v2
+      APP_URL: http://api:8080/v2
       DB_HOST: postgres
       DB_PORT: "5432"
       DB_USER: synapse
@@ -81,11 +82,12 @@ services:
       REFRESH_TOKEN_EXPIRES_IN: 7d
       IDP_JWT_SECRET: LxNh8zaINTAEdU1+GCIabj6gBvICmkZvdwYs4a9KAnM=
       IDENTITY_PROVIDER_URL: http://textrp-connect:3000
-      IDP_CLIENT_ID: placeholder_client_id
-      IDP_CLIENT_SECRET: placeholder_client_secret
-      CLIENT_REDIRECT_URL: http://localhost:3002/auth/callback
+      IDP_CLIENT_ID: ${IDP_CLIENT_ID:-placeholder_client_id}
+      IDP_CLIENT_SECRET: ${IDP_CLIENT_SECRET:-placeholder_client_secret}
+      CLIENT_REDIRECT_URL: http://localhost:8080/v2/sso/callback
       XRPL_NETWORK: testnet
       XRPL_WEBSOCKET_URL: wss://s.altnet.rippletest.net:51233
+      CHOKIDAR_USEPOLLING: "1"
     depends_on:
       postgres:
         condition: service_healthy
@@ -145,18 +147,19 @@ services:
     build:
       context: ./textrp-mobile-chat
       args:
-        NEXT_PUBLIC_TEXTRP_BACKEND_URL: http://localhost:8080
-        NEXT_PUBLIC_MATRIX_HOMESERVER_URL: http://localhost:8008
+        NEXT_PUBLIC_TEXTRP_BACKEND_URL: http://textrpv2-api:8080
+        NEXT_PUBLIC_MATRIX_HOMESERVER_URL: http://briij:8008
+        NEXT_PUBLIC_WALLET_API_URL: http://textrp-connect:3000
     restart: unless-stopped
     environment:
-      NEXT_PUBLIC_TEXTRP_BACKEND_URL: http://localhost:8080
-      NEXT_PUBLIC_MATRIX_HOMESERVER_URL: http://localhost:8008
-      NEXT_PUBLIC_WALLET_API_URL: http://localhost:3000/wallet-api
+      NEXT_PUBLIC_TEXTRP_BACKEND_URL: http://textrpv2-api:8080
+      NEXT_PUBLIC_MATRIX_HOMESERVER_URL: http://briij:8008
+      NEXT_PUBLIC_WALLET_API_URL: http://textrp-connect:3000
     depends_on:
       briij:
         condition: service_healthy
     ports:
-      - "3002:3000"
+      - "3002:3001"
 
 volumes:
   synapse-postgres:

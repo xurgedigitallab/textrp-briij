@@ -33,14 +33,21 @@ This is the **Element Synapse** Matrix homeserver (Python 3 + Rust). See `CONTRI
 
 ### Docker Compose full stack
 
-A `docker-compose.full.yml` at the repo root runs the complete TextRP dev stack. Clone the companion repos as siblings inside `/workspace` using a `GITHUB_PAT` secret with read access.
+A `docker-compose.full.yml` at the repo root runs the complete TextRP dev stack. The three companion repos are private; clone them using a `GITHUB_PAT` secret with read access to the `xurgedigitallab` org. **All companion repos must be on the `development` branch.**
+
+```sh
+cd /workspace
+git clone https://x-access-token:${GITHUB_PAT}@github.com/xurgedigitallab/textrpv2-api.git && git -C textrpv2-api checkout development
+git clone https://x-access-token:${GITHUB_PAT}@github.com/xurgedigitallab/textrp-connect.git && git -C textrp-connect checkout development
+git clone https://x-access-token:${GITHUB_PAT}@github.com/xurgedigitallab/textrp-mobile-chat.git && git -C textrp-mobile-chat checkout development
+```
 
 | Service | Container | Port | Technology |
 |---|---|---|---|
 | Synapse (briij) | `workspace-briij-1` | 8008 | Python/Rust homeserver |
-| textrpv2-api | `workspace-textrpv2-api-1` | 8080 | AdonisJS 6 (XRPL proxy) |
-| textrp-connect | `workspace-textrp-connect-1` | 3000 | Next.js 14 (OIDC/Xaman SSO) |
-| textrp-mobile-chat | `workspace-textrp-mobile-chat-1` | 3002 | Next.js 16 (Matrix client) |
+| textrpv2-api | `workspace-textrpv2-api-1` | 8080 | AdonisJS 6 / `Dockerfile.dev` |
+| textrp-connect | `workspace-textrp-connect-1` | 3000 | Next.js 14 / `dockerfile` |
+| textrp-mobile-chat | `workspace-textrp-mobile-chat-1` | 3002 | Next.js 16 / `Dockerfile` (internal port 3001) |
 | PostgreSQL | `workspace-postgres-1` | 5432 (internal) | Two databases: `synapse` + `textrp_v2` |
 | Redis | `workspace-redis-1` | 6379 (internal) | Shared by Synapse + API |
 
@@ -48,10 +55,27 @@ Start: `docker compose -f docker-compose.full.yml up --build -d`
 Stop: `docker compose -f docker-compose.full.yml down`
 Logs: `docker compose -f docker-compose.full.yml logs -f briij`
 
-- After first start, run API migrations: `docker exec workspace-textrpv2-api-1 node --import=tsx ace.js migration:run`
-- Register a Synapse user: `docker exec workspace-briij-1 register_new_matrix_user http://localhost:8008 -c /data/homeserver.yaml -u USER -p PASS -a`
+#### Required secrets (Cursor Cloud Secrets panel)
+
+| Secret | Purpose |
+|---|---|
+| `GITHUB_PAT` | Fine-grained PAT with read access to the 3 private repos |
+| `XUMM_KEY` | Xaman API key from https://apps.xumm.dev/ |
+| `XUMM_KEY_SECRET` | Xaman API secret |
+| `IDP_CLIENT_ID` | OAuth client ID created in textrp-connect Dev Console |
+| `IDP_CLIENT_SECRET` | OAuth client secret from Dev Console |
+
+#### Post-startup steps
+
+1. Run API migrations: `docker exec workspace-textrpv2-api-1 node --import=tsx ace.js migration:run`
+2. Register a Synapse user: `docker exec workspace-briij-1 register_new_matrix_user http://localhost:8008 -c /data/homeserver.yaml -u USER -p PASS -a`
+3. For full SSO: log into textrp-connect at `http://localhost:3000`, create an OAuth client in the Dev Console with redirect `http://localhost:8080/v2/sso/callback`, then set the resulting `IDP_CLIENT_ID`/`IDP_CLIENT_SECRET`.
+
+#### Key caveats (Docker stack)
+
 - The Synapse config is at `data/homeserver.yaml` (Postgres-backed, Redis-enabled).
 - A shared `ENC_KEY` must match between textrp-connect and textrpv2-api's `JWT_SECRET` / `IDP_JWT_SECRET`. See `DEV-SETUP.md` in textrpv2-api for the full auth wiring guide.
-- XRPL WebSocket (`wss://s.altnet.rippletest.net:51233`) may not be reachable in some cloud environments; the API reports `xrpl: down` in health but database/redis are functional.
-- Docker must be installed separately (not in the update script). Start the daemon with `sudo dockerd` if needed.
-- For Xaman SSO to work end-to-end, set real `XUMM_KEY`/`XUMM_KEY_SECRET` from https://apps.xumm.dev/ in the `.env` file.
+- `NEXT_PUBLIC_*` env vars in textrp-mobile-chat are baked at Docker build time (Next.js). The compose file passes them as build args; changes require `docker compose build textrp-mobile-chat`.
+- The mobile-chat Next.js server rewrites `/wallet-api/*` to textrp-connect. The build arg `NEXT_PUBLIC_WALLET_API_URL` must use the Docker service name (`http://textrp-connect:3000`), not `localhost`.
+- XRPL WebSocket may not be reachable in cloud environments; the API reports `xrpl: down` but database/redis are functional.
+- Docker must be installed separately (not in the update script). Start the daemon with `sudo dockerd` if needed in cloud environments.
