@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import re
 import time
 from typing import Any
@@ -10,12 +11,21 @@ from xrpl.asyncio.clients import AsyncJsonRpcClient as XrplAsyncJsonRpcClient
 from xrpl.core.keypairs import derive_classic_address, is_valid_message
 from xrpl.models.requests import AccountInfo
 
+from textrp_briij.api.errors import Codes
 from textrp_briij.module_api import ModuleApi
 from textrp_briij.types import JsonDict
 
 AsyncJsonRpcClient = getattr(
     xrpl_clients, "AsyncJsonRpcClient", XrplAsyncJsonRpcClient
 )
+logger = logging.getLogger(__name__)
+
+
+class WalletAuthError(Exception):
+    def __init__(self, errcode: Codes, message: str) -> None:
+        super().__init__(message)
+        self.errcode = errcode
+        self.message = message
 
 
 class WalletProvider:
@@ -24,6 +34,8 @@ class WalletProvider:
     SUPPORTED_NETWORKS = ("xrpl", "xahau")
     TABLE_NAME = "briij_wallet_links"
     CHALLENGE_MAX_AGE_MS = 60_000
+    RATE_LIMIT_WINDOW_MS = 60_000
+    RATE_LIMIT_ATTEMPTS = 10
 
     def __init__(self, config: JsonDict, api: ModuleApi):
         self.api = api
@@ -45,6 +57,8 @@ class WalletProvider:
             for network in self.allowed_networks
         }
         self._used_challenge_nonces: dict[str, int] = {}
+        # In-memory rate limiter stub; replace with shared storage in production.
+        self._wallet_rate_limits: dict[str, tuple[int, int]] = {}
         self._register_callbacks()
 
     def _register_callbacks(self) -> None:
@@ -223,9 +237,6 @@ class WalletProvider:
         for key in expired:
             del self._used_challenge_nonces[key]
 
-        if now_ms - timestamp_ms > self.CHALLENGE_MAX_AGE_MS or timestamp_ms > now_ms:
-            return False
-
         nonce_key = f"{network}:{wallet_address}:{nonce}"
         if nonce_key in self._used_challenge_nonces:
             return False
@@ -233,56 +244,99 @@ class WalletProvider:
         self._used_challenge_nonces[nonce_key] = now_ms + self.CHALLENGE_MAX_AGE_MS
         return True
 
+    def _enforce_nonce_timestamp(
+        self, challenge_dict: JsonDict, wallet_address: str, network: str
+    ) -> None:
+        nonce = challenge_dict.get("nonce")
+        if not isinstance(nonce, str) or not nonce:
+            raise WalletAuthError(Codes.MISSING_PARAM, "Missing or invalid nonce")
+
+        timestamp_ms = self._parse_timestamp_ms(challenge_dict.get("timestamp"))
+        if timestamp_ms is None:
+            raise WalletAuthError(Codes.MISSING_PARAM, "Missing or invalid timestamp")
+
+        now_ms = int(time.time() * 1000)
+        if timestamp_ms > now_ms:
+            raise WalletAuthError(Codes.INVALID_PARAM, "Timestamp is in the future")
+        if now_ms - timestamp_ms > self.CHALLENGE_MAX_AGE_MS:
+            raise WalletAuthError(Codes.FORBIDDEN, "Challenge has expired")
+
+        if not self._consume_nonce(network, wallet_address, nonce, timestamp_ms):
+            raise WalletAuthError(Codes.FORBIDDEN, "Nonce has already been used")
+
+        message = challenge_dict.get("message")
+        if isinstance(message, str):
+            if nonce not in message or str(timestamp_ms) not in message:
+                raise WalletAuthError(
+                    Codes.INVALID_PARAM,
+                    "Challenge message must include nonce and timestamp",
+                )
+
+    def _check_rate_limit(self, wallet_address: str, network: str) -> None:
+        key = f"{network}:{wallet_address.lower()}"
+        now_ms = int(time.time() * 1000)
+        window_start_ms, attempts = self._wallet_rate_limits.get(key, (now_ms, 0))
+
+        if now_ms - window_start_ms > self.RATE_LIMIT_WINDOW_MS:
+            window_start_ms = now_ms
+            attempts = 0
+
+        attempts += 1
+        self._wallet_rate_limits[key] = (window_start_ms, attempts)
+
+        if attempts > self.RATE_LIMIT_ATTEMPTS:
+            raise WalletAuthError(
+                Codes.LIMIT_EXCEEDED,
+                "Too many authentication attempts for this wallet",
+            )
+
+    def _clear_rate_limit(self, wallet_address: str, network: str) -> None:
+        key = f"{network}:{wallet_address.lower()}"
+        self._wallet_rate_limits.pop(key, None)
+
     async def _verify_xrpl_signature(
         self, wallet_address: str, signature: str, challenge: Any, network: str
     ) -> bool:
         if network not in self.clients_by_network:
-            return False
+            raise WalletAuthError(Codes.INVALID_PARAM, "Unsupported network")
 
         challenge_dict = self._parse_challenge(challenge)
         if challenge_dict is None:
-            return False
-
-        nonce = challenge_dict.get("nonce")
-        timestamp_ms = self._parse_timestamp_ms(challenge_dict.get("timestamp"))
-        if not isinstance(nonce, str) or timestamp_ms is None:
-            return False
-
-        if not self._consume_nonce(network, wallet_address, nonce, timestamp_ms):
-            return False
+            raise WalletAuthError(Codes.INVALID_PARAM, "Invalid challenge payload")
+        self._enforce_nonce_timestamp(challenge_dict, wallet_address, network)
 
         public_key = challenge_dict.get("public_key")
         if not isinstance(public_key, str):
-            return False
+            raise WalletAuthError(Codes.MISSING_PARAM, "Missing public_key")
 
         algorithm = challenge_dict.get("algorithm")
         if isinstance(algorithm, str):
             algo_lc = algorithm.lower()
             if algo_lc == "ed25519" and not public_key.upper().startswith("ED"):
-                return False
+                raise WalletAuthError(Codes.INVALID_PARAM, "Algorithm/public_key mismatch")
             if algo_lc == "secp256k1" and public_key.upper().startswith("ED"):
-                return False
+                raise WalletAuthError(Codes.INVALID_PARAM, "Algorithm/public_key mismatch")
 
         try:
             derived_address = derive_classic_address(public_key)
         except Exception:
-            return False
+            raise WalletAuthError(Codes.INVALID_PARAM, "Invalid public_key")
 
         if derived_address != wallet_address:
-            return False
+            raise WalletAuthError(Codes.FORBIDDEN, "Wallet address does not match key")
 
         message = challenge_dict.get("message")
         if not isinstance(message, str):
-            return False
+            raise WalletAuthError(Codes.MISSING_PARAM, "Missing message in challenge")
 
         signature_bytes = self._decode_signature(signature)
         if signature_bytes is None:
-            return False
+            raise WalletAuthError(Codes.INVALID_SIGNATURE, "Invalid signature format")
 
         if not is_valid_message(
             message.encode("utf-8"), signature_bytes, public_key.upper()
         ):
-            return False
+            raise WalletAuthError(Codes.INVALID_SIGNATURE, "Signature verification failed")
 
         client = self.clients_by_network[network]
         try:
@@ -290,80 +344,93 @@ class WalletProvider:
                 AccountInfo(account=wallet_address, ledger_index="validated", strict=True)
             )
         except Exception:
-            return False
+            raise WalletAuthError(Codes.UNKNOWN, "Unable to reach XRPL RPC")
 
-        return bool(account_info_response.is_successful())
+        if not account_info_response.is_successful():
+            raise WalletAuthError(Codes.FORBIDDEN, "Wallet account not found on ledger")
+
+        return True
 
     async def check_auth(
         self, username: str, login_type: str, login_dict: JsonDict
     ) -> Any:
-        if login_type != self.LOGIN_TYPE:
-            return None
-
-        wallet_address = login_dict.get("wallet_address")
-        signature = login_dict.get("signature")
-        challenge = login_dict.get("challenge")
-        requested_network = login_dict.get("network", self.default_network)
-
-        if not isinstance(wallet_address, str) or not wallet_address:
-            return None
-        if not isinstance(signature, str) or not signature:
-            return None
-        if challenge is None:
-            return None
-        if not isinstance(requested_network, str):
-            return None
-
-        network = requested_network.lower()
-        if network not in self.allowed_networks:
-            return None
-
-        is_verified = await self._verify_xrpl_signature(
-            wallet_address=wallet_address,
-            signature=signature,
-            challenge=challenge,
-            network=network,
-        )
-        if not is_verified:
-            return None
-
-        existing_user_id = await self._get_user_by_wallet(wallet_address, network)
-        if existing_user_id is not None:
-            await self._store_wallet_mapping(existing_user_id, wallet_address, network)
-            return (existing_user_id, None)
-
-        preferred_localpart = self._extract_localpart_from_username(username)
-        wallet_fallback = f"wallet_{wallet_address[-12:].lower()}"
-
-        candidate_localparts: list[str] = []
-        if preferred_localpart:
-            candidate_localparts.append(preferred_localpart)
-        candidate_localparts.append(wallet_fallback)
-
-        chosen_localpart: str | None = None
-        for base_candidate in candidate_localparts:
-            if await self._is_localpart_available(base_candidate):
-                chosen_localpart = base_candidate
-                break
-            for suffix in range(2, 100):
-                suffixed_candidate = f"{base_candidate}_{suffix}"
-                if await self._is_localpart_available(suffixed_candidate):
-                    chosen_localpart = suffixed_candidate
-                    break
-            if chosen_localpart is not None:
-                break
-
-        if chosen_localpart is None:
-            return None
-
         try:
-            user_id = await self.api.register_user(localpart=chosen_localpart)
-        except Exception:
-            qualified_id = self.api.get_qualified_user_id(chosen_localpart)
-            existing_registered_id = await self.api.check_user_exists(qualified_id)
-            if existing_registered_id is None:
+            if login_type != self.LOGIN_TYPE:
                 return None
-            user_id = existing_registered_id
 
-        await self._store_wallet_mapping(user_id, wallet_address, network)
-        return (user_id, None)
+            wallet_address = login_dict.get("wallet_address")
+            signature = login_dict.get("signature")
+            challenge = login_dict.get("challenge")
+            requested_network = login_dict.get("network", self.default_network)
+
+            if not isinstance(wallet_address, str) or not wallet_address:
+                raise WalletAuthError(Codes.MISSING_PARAM, "Missing wallet_address")
+            if not isinstance(signature, str) or not signature:
+                raise WalletAuthError(Codes.MISSING_PARAM, "Missing signature")
+            if challenge is None:
+                raise WalletAuthError(Codes.MISSING_PARAM, "Missing challenge")
+            if not isinstance(requested_network, str):
+                raise WalletAuthError(Codes.INVALID_PARAM, "Invalid network")
+
+            network = requested_network.lower()
+            if network not in self.allowed_networks:
+                raise WalletAuthError(Codes.INVALID_PARAM, "Unsupported network")
+
+            self._check_rate_limit(wallet_address, network)
+
+            await self._verify_xrpl_signature(
+                wallet_address=wallet_address,
+                signature=signature,
+                challenge=challenge,
+                network=network,
+            )
+
+            existing_user_id = await self._get_user_by_wallet(wallet_address, network)
+            if existing_user_id is not None:
+                await self._store_wallet_mapping(existing_user_id, wallet_address, network)
+                self._clear_rate_limit(wallet_address, network)
+                return (existing_user_id, None)
+
+            preferred_localpart = self._extract_localpart_from_username(username)
+            wallet_fallback = f"wallet_{wallet_address[-12:].lower()}"
+
+            candidate_localparts: list[str] = []
+            if preferred_localpart:
+                candidate_localparts.append(preferred_localpart)
+            candidate_localparts.append(wallet_fallback)
+
+            chosen_localpart: str | None = None
+            for base_candidate in candidate_localparts:
+                if await self._is_localpart_available(base_candidate):
+                    chosen_localpart = base_candidate
+                    break
+                for suffix in range(2, 100):
+                    suffixed_candidate = f"{base_candidate}_{suffix}"
+                    if await self._is_localpart_available(suffixed_candidate):
+                        chosen_localpart = suffixed_candidate
+                        break
+                if chosen_localpart is not None:
+                    break
+
+            if chosen_localpart is None:
+                raise WalletAuthError(Codes.INVALID_USERNAME, "Unable to allocate user ID")
+
+            try:
+                user_id = await self.api.register_user(localpart=chosen_localpart)
+            except Exception:
+                qualified_id = self.api.get_qualified_user_id(chosen_localpart)
+                existing_registered_id = await self.api.check_user_exists(qualified_id)
+                if existing_registered_id is None:
+                    raise WalletAuthError(Codes.UNKNOWN, "Failed to create user")
+                user_id = existing_registered_id
+
+            await self._store_wallet_mapping(user_id, wallet_address, network)
+            self._clear_rate_limit(wallet_address, network)
+            return (user_id, None)
+
+        except WalletAuthError as e:
+            logger.info("Wallet auth rejected [%s]: %s", e.errcode.value, e.message)
+            return None
+        except Exception:
+            logger.exception("Wallet auth rejected [%s]", Codes.UNKNOWN.value)
+            return None
