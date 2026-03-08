@@ -1,3 +1,12 @@
+#
+# This file is licensed under the Affero General Public License (AGPL) version 3.
+#
+# Copyright (C) 2026 xurgedigitallab / TextRP-Briij contributors
+#
+# See the GNU Affero General Public License for more details:
+# <https://www.gnu.org/licenses/agpl-3.0.html>.
+#
+
 # This is a direct lift from
 # https://github.com/twisted/twisted/blob/release-21.2.0-10091/src/twisted/internet/_resolver.py.
 # We copy it here as we need to instantiate `GAIResolver` manually, but it is a

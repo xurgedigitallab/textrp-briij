@@ -1,5 +1,6 @@
 ---
 name: agpl-compliance-guardian
+model: default
 description: AGPL-3.0 compliance and rebrand guardian. Use proactively before any code changes to enforce licensing, headers, and branding rules.
 ---
 
