@@ -10,6 +10,7 @@ implementation, maintained by TextRP and based on Element Synapse.
 `Matrix <https://github.com/matrix-org>`__ is the open standard for secure and
 interoperable real-time communications. You can directly run and manage the
 source code in this repository, available under the AGPL-3.0-or-later license.
+Public source repository: https://github.com/xurgedigitallab/textrp-briij
 
 Upstream Element support does not apply to this fork. See Briij by TextRP support
 channels below.
@@ -93,6 +94,9 @@ Copyright and Licensing
 This software is licensed under the terms of the GNU Affero General Public
 License (as published by the Free Software Foundation, either version 3 of the
 License, or (at your option) any later version).
+
+Third-party dependency notices are included in `licenses/`, including
+`licenses/xrpl-py.LICENSE` for xrpl-py (ISC).
 
 Unless required by applicable law or agreed to in writing, software distributed
 under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
