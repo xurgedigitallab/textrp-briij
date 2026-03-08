@@ -23,6 +23,7 @@ from typing import TYPE_CHECKING, Mapping
 
 from twisted.web.resource import Resource
 
+from textrp_briij.rest.briij.info import BriijInfoResource
 from textrp_briij.rest.briij.client.federation_whitelist import FederationWhitelistResource
 from textrp_briij.rest.briij.client.new_user_consent import NewUserConsentResource
 from textrp_briij.rest.briij.client.pick_idp import PickIdpResource
@@ -46,6 +47,8 @@ def build_briij_client_resource_tree(hs: "HomeServer") -> Mapping[str, Resource]
          map from path to Resource.
     """
     resources = {
+        # AGPL-3.0 §13 compliance: source repository disclosure.
+        "/_briij/info": BriijInfoResource(hs),
         # SSO bits. These are always loaded, whether or not SSO login is actually
         # enabled (they just won't work very well if it's not)
         "/_briij/client/pick_idp": PickIdpResource(hs),
