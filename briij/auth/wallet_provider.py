@@ -45,8 +45,10 @@ class WalletProvider:
             for network in self.allowed_networks
         }
         self._used_challenge_nonces: dict[str, int] = {}
+        self._register_callbacks()
 
-        api.register_password_auth_provider_callbacks(
+    def _register_callbacks(self) -> None:
+        self.api.register_password_auth_provider_callbacks(
             auth_checkers={(self.LOGIN_TYPE, self.LOGIN_FIELDS): self.check_auth}
         )
 
