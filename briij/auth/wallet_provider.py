@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+import json
 import time
 from typing import Any
 
 import xrpl.clients as xrpl_clients
 from xrpl.asyncio.clients import AsyncJsonRpcClient as XrplAsyncJsonRpcClient
+from xrpl.core.keypairs import derive_classic_address, is_valid_message
+from xrpl.models.requests import AccountInfo
 
 from textrp_briij.module_api import ModuleApi
 from textrp_briij.types import JsonDict
@@ -19,6 +22,7 @@ class WalletProvider:
     LOGIN_FIELDS = ("wallet_address", "signature", "challenge", "network")
     SUPPORTED_NETWORKS = ("xrpl", "xahau")
     TABLE_NAME = "briij_wallet_links"
+    CHALLENGE_MAX_AGE_MS = 60_000
 
     def __init__(self, config: JsonDict, api: ModuleApi):
         self.api = api
@@ -39,6 +43,7 @@ class WalletProvider:
             network: AsyncJsonRpcClient(self.jsonrpc_urls_by_network[network][0])
             for network in self.allowed_networks
         }
+        self._used_challenge_nonces: dict[str, int] = {}
 
         api.register_password_auth_provider_callbacks(
             auth_checkers={(self.LOGIN_TYPE, self.LOGIN_FIELDS): self.check_auth}
@@ -159,6 +164,123 @@ class WalletProvider:
             self.api.get_qualified_user_id(localpart)
         )
         return existing_user_id is None
+
+    def _parse_challenge(self, challenge: Any) -> JsonDict | None:
+        if isinstance(challenge, dict):
+            return dict(challenge)
+        if isinstance(challenge, str):
+            try:
+                parsed = json.loads(challenge)
+            except json.JSONDecodeError:
+                return None
+            if isinstance(parsed, dict):
+                return dict(parsed)
+        return None
+
+    def _decode_signature(self, signature: str) -> bytes | None:
+        try:
+            return bytes.fromhex(signature)
+        except ValueError:
+            return None
+
+    def _parse_timestamp_ms(self, timestamp: Any) -> int | None:
+        if isinstance(timestamp, str):
+            if not timestamp.isdigit():
+                return None
+            parsed = int(timestamp)
+        elif isinstance(timestamp, int):
+            parsed = timestamp
+        elif isinstance(timestamp, float):
+            parsed = int(timestamp)
+        else:
+            return None
+
+        if parsed < 10_000_000_000:
+            return parsed * 1000
+        return parsed
+
+    def _consume_nonce(
+        self, network: str, wallet_address: str, nonce: str, timestamp_ms: int
+    ) -> bool:
+        now_ms = int(time.time() * 1000)
+        expired = [
+            key
+            for key, expires_at in self._used_challenge_nonces.items()
+            if expires_at <= now_ms
+        ]
+        for key in expired:
+            del self._used_challenge_nonces[key]
+
+        if now_ms - timestamp_ms > self.CHALLENGE_MAX_AGE_MS or timestamp_ms > now_ms:
+            return False
+
+        nonce_key = f"{network}:{wallet_address}:{nonce}"
+        if nonce_key in self._used_challenge_nonces:
+            return False
+
+        self._used_challenge_nonces[nonce_key] = now_ms + self.CHALLENGE_MAX_AGE_MS
+        return True
+
+    async def _verify_xrpl_signature(
+        self, wallet_address: str, signature: str, challenge: Any, network: str
+    ) -> bool:
+        if network not in self.clients_by_network:
+            return False
+
+        challenge_dict = self._parse_challenge(challenge)
+        if challenge_dict is None:
+            return False
+
+        nonce = challenge_dict.get("nonce")
+        timestamp_ms = self._parse_timestamp_ms(challenge_dict.get("timestamp"))
+        if not isinstance(nonce, str) or timestamp_ms is None:
+            return False
+
+        if not self._consume_nonce(network, wallet_address, nonce, timestamp_ms):
+            return False
+
+        public_key = challenge_dict.get("public_key")
+        if not isinstance(public_key, str):
+            return False
+
+        algorithm = challenge_dict.get("algorithm")
+        if isinstance(algorithm, str):
+            algo_lc = algorithm.lower()
+            if algo_lc == "ed25519" and not public_key.upper().startswith("ED"):
+                return False
+            if algo_lc == "secp256k1" and public_key.upper().startswith("ED"):
+                return False
+
+        try:
+            derived_address = derive_classic_address(public_key)
+        except Exception:
+            return False
+
+        if derived_address != wallet_address:
+            return False
+
+        message = challenge_dict.get("message")
+        if not isinstance(message, str):
+            return False
+
+        signature_bytes = self._decode_signature(signature)
+        if signature_bytes is None:
+            return False
+
+        if not is_valid_message(
+            message.encode("utf-8"), signature_bytes, public_key.upper()
+        ):
+            return False
+
+        client = self.clients_by_network[network]
+        try:
+            account_info_response = await client.request(
+                AccountInfo(account=wallet_address, ledger_index="validated", strict=True)
+            )
+        except Exception:
+            return False
+
+        return bool(account_info_response.is_successful())
 
     async def check_auth(
         self, username: str, login_type: str, login_dict: JsonDict
