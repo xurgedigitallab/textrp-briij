@@ -43,7 +43,15 @@ git clone https://x-access-token:${GITHUB_PAT}@github.com/xurgedigitallab/textrp
 git clone https://github.com/xurgedigitallab/briij-js-sdk.git  # public, default branch: develop
 ```
 
-The `briij-js-sdk` (`@textrp/briij-js-sdk`, forked from `matrix-js-sdk`) lives at `/workspace/briij-js-sdk` on the `develop` branch. It uses **pnpm** (`pnpm-lock.yaml`). Install with `cd briij-js-sdk && pnpm install`. This SDK is developed in parallel with the briij homeserver -- changes to Synapse APIs or custom Matrix events should be reflected here.
+The `briij-js-sdk` (`@textrp/briij-js-sdk v41.0.1`, forked from `matrix-js-sdk`) lives at `/workspace/briij-js-sdk` on the `develop` branch. It requires **Node >= 22** and **pnpm** (`pnpm-lock.yaml`).
+
+- Install: `cd briij-js-sdk && pnpm install`
+- TypeScript check: `pnpm lint:types` (runs `tsc --noEmit`)
+- Lint: `pnpm lint:js`
+- Build: `pnpm build` (Babel compile + type declarations)
+- Tests: `pnpm test` (vitest -- all 136 spec files are currently empty stubs in the fork)
+- pnpm may warn about ignored build scripts (`esbuild`, `unrs-resolver`, `es5-ext`). For TypeScript checks and builds these aren't needed; for running vitest they are. To approve: add `"pnpm": {"onlyBuiltDependencies": ["es5-ext","esbuild","unrs-resolver"]}` to `package.json`.
+- This SDK is developed in parallel with the briij homeserver -- changes to Synapse APIs or custom Matrix events should be reflected here.
 
 | Service | Container | Port | Technology |
 |---|---|---|---|
