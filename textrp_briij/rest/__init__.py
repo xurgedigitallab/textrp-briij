@@ -65,6 +65,7 @@ from textrp_briij.rest.client import (
     tags,
     thirdparty,
     thread_subscriptions,
+    trust,
     tokenrefresh,
     user_directory,
     versions,
@@ -126,6 +127,7 @@ CLIENT_SERVLET_FUNCTIONS: tuple[RegisterServletsFunc, ...] = (
     rendezvous.register_servlets,
     auth_metadata.register_servlets,
     thread_subscriptions.register_servlets,
+    trust.register_servlets,
 )
 
 SERVLET_GROUPS: dict[str, Iterable[RegisterServletsFunc]] = {
