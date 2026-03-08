@@ -10,7 +10,7 @@ from __future__ import annotations
 import os
 from typing import TYPE_CHECKING
 
-from xrpl.clients import JsonRpcClient
+from xrpl.asyncio.clients import AsyncJsonRpcClient
 
 if TYPE_CHECKING:
     from textrp_briij.server import HomeServer
@@ -33,7 +33,7 @@ class XrplIdentityHandler:
             "XRPL_JSON_RPC_URL",
             _XRPL_JSON_RPC_BY_NETWORK[self._network],
         ).strip()
-        self._client = JsonRpcClient(self._json_rpc_url)
+        self._client = AsyncJsonRpcClient(self._json_rpc_url)
 
     @property
     def network(self) -> str:
@@ -43,5 +43,5 @@ class XrplIdentityHandler:
     def json_rpc_url(self) -> str:
         return self._json_rpc_url
 
-    async def get_client(self) -> JsonRpcClient:
+    async def get_client(self) -> AsyncJsonRpcClient:
         return self._client

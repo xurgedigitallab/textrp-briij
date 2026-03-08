@@ -1,6 +1,7 @@
 from textrp_briij.handlers.xrpl_identity import XrplIdentityHandler
+from textrp_briij.handlers.verification import BaseHandler, VerificationHandler
 
-__all__ = ["XrplIdentityHandler"]
+__all__ = ["BaseHandler", "VerificationHandler", "XrplIdentityHandler"]
 #
 # This file is licensed under the Affero General Public License (AGPL) version 3.
 #

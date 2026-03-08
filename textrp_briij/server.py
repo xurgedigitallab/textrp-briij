@@ -137,6 +137,7 @@ from textrp_briij.handlers.sync import SyncHandler
 from textrp_briij.handlers.thread_subscriptions import ThreadSubscriptionsHandler
 from textrp_briij.handlers.typing import FollowerTypingHandler, TypingWriterHandler
 from textrp_briij.handlers.user_directory import UserDirectoryHandler
+from textrp_briij.handlers.verification import VerificationHandler
 from textrp_briij.handlers.worker_lock import WorkerLocksHandler
 from textrp_briij.handlers.xrpl_identity import XrplIdentityHandler
 from textrp_briij.http.client import (
@@ -1157,6 +1158,10 @@ class HomeServer(metaclass=abc.ABCMeta):
     @cache_in_self
     def get_account_data_handler(self) -> AccountDataHandler:
         return AccountDataHandler(self)
+
+    @cache_in_self
+    def get_verification_handler(self) -> VerificationHandler:
+        return VerificationHandler(self)
 
     @cache_in_self
     def get_xrpl_identity_handler(self) -> XrplIdentityHandler:
