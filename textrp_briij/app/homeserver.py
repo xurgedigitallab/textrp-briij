@@ -268,6 +268,9 @@ class BriijHomeServer(HomeServer):
         return resources
 
     def start_listening(self) -> None:
+        # Ensure internal verification callbacks are registered before events start flowing.
+        self.get_verification_handler()
+
         if self.config.redis.redis_enabled:
             # If redis is enabled we connect via the replication command handler
             # in the same way as the workers (since we're effectively a client
