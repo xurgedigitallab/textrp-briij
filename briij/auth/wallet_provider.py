@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 import time
 from typing import Any
 
@@ -199,6 +200,15 @@ class WalletProvider:
             return parsed * 1000
         return parsed
 
+    def _extract_localpart_from_username(self, username: str) -> str:
+        if username.startswith("@") and ":" in username:
+            localpart = username[1:].split(":", 1)[0]
+        else:
+            localpart = username
+
+        sanitized = re.sub(r"[^a-z0-9._=-]", "_", localpart.lower()).strip("_")
+        return sanitized
+
     def _consume_nonce(
         self, network: str, wallet_address: str, nonce: str, timestamp_ms: int
     ) -> bool:
@@ -285,4 +295,73 @@ class WalletProvider:
     async def check_auth(
         self, username: str, login_type: str, login_dict: JsonDict
     ) -> Any:
-        raise NotImplementedError
+        if login_type != self.LOGIN_TYPE:
+            return None
+
+        wallet_address = login_dict.get("wallet_address")
+        signature = login_dict.get("signature")
+        challenge = login_dict.get("challenge")
+        requested_network = login_dict.get("network", self.default_network)
+
+        if not isinstance(wallet_address, str) or not wallet_address:
+            return None
+        if not isinstance(signature, str) or not signature:
+            return None
+        if challenge is None:
+            return None
+        if not isinstance(requested_network, str):
+            return None
+
+        network = requested_network.lower()
+        if network not in self.allowed_networks:
+            return None
+
+        is_verified = await self._verify_xrpl_signature(
+            wallet_address=wallet_address,
+            signature=signature,
+            challenge=challenge,
+            network=network,
+        )
+        if not is_verified:
+            return None
+
+        existing_user_id = await self._get_user_by_wallet(wallet_address, network)
+        if existing_user_id is not None:
+            await self._store_wallet_mapping(existing_user_id, wallet_address, network)
+            return (existing_user_id, None)
+
+        preferred_localpart = self._extract_localpart_from_username(username)
+        wallet_fallback = f"wallet_{wallet_address[-12:].lower()}"
+
+        candidate_localparts: list[str] = []
+        if preferred_localpart:
+            candidate_localparts.append(preferred_localpart)
+        candidate_localparts.append(wallet_fallback)
+
+        chosen_localpart: str | None = None
+        for base_candidate in candidate_localparts:
+            if await self._is_localpart_available(base_candidate):
+                chosen_localpart = base_candidate
+                break
+            for suffix in range(2, 100):
+                suffixed_candidate = f"{base_candidate}_{suffix}"
+                if await self._is_localpart_available(suffixed_candidate):
+                    chosen_localpart = suffixed_candidate
+                    break
+            if chosen_localpart is not None:
+                break
+
+        if chosen_localpart is None:
+            return None
+
+        try:
+            user_id = await self.api.register_user(localpart=chosen_localpart)
+        except Exception:
+            qualified_id = self.api.get_qualified_user_id(chosen_localpart)
+            existing_registered_id = await self.api.check_user_exists(qualified_id)
+            if existing_registered_id is None:
+                return None
+            user_id = existing_registered_id
+
+        await self._store_wallet_mapping(user_id, wallet_address, network)
+        return (user_id, None)
