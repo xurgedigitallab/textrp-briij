@@ -33,6 +33,7 @@ below for more useful documentation links.
 - `Briij by TextRP configuration for federation <https://docs.briij.example/synapse/latest/federate.html>`_
 - `Using a reverse proxy with Briij by TextRP <https://docs.briij.example/synapse/latest/reverse_proxy.html>`_
 - `Upgrading Briij by TextRP <https://docs.briij.example/synapse/develop/upgrade.html>`_
+- `NFT-based verification trust design <docs/verification-on-chain.md>`_
 
 
 Troubleshooting and support

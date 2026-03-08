@@ -8,12 +8,14 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import logging
 from typing import TYPE_CHECKING, Any
+from urllib.parse import unquote
+from urllib.request import urlopen
 
-from xrpl.models.requests import AccountObjects, Tx
-from xrpl.models.requests.account_objects import AccountObjectType
-from xrpl.models.transactions import CredentialAccept, CredentialCreate
+from xrpl.models.requests import AccountNFTs, Tx
+from xrpl.models.transactions import NFTokenModify
 
 from textrp_briij.api.constants import EventTypes, Membership
 from textrp_briij.api.errors import Codes, SynapseError
@@ -31,10 +33,7 @@ VERIFIED_EVENT = "m.user.verified"
 CHAT_PAY_EVENT = "m.chat.pay"
 XRPL_IDENTITY_ACCOUNT_DATA_EVENT = "io.textrp.xrpl.identity_nft"
 TRUST_CACHE_NAME = "xrpl_trust"
-
-# XLS-70 credential type must be exactly b'textrp_verify'.
-CREDENTIAL_TYPE_BYTES = b"textrp_verify"
-CREDENTIAL_TYPE_HEX = CREDENTIAL_TYPE_BYTES.hex().upper()
+URI_METADATA_CACHE_NAME = "xrpl_uri_metadata"
 
 
 class BaseHandler:
@@ -120,28 +119,24 @@ class VerificationHandler(BaseHandler):
 
     async def _handle_verify_request(self, event: EventBase) -> None:
         content = dict(event.content)
-        tx_hash = str(content.get("tx_hash", "")).strip()
         issuer_xrpl_address = str(content.get("issuer_xrpl_address", "")).strip()
         target_xrpl_address = str(content.get("target_xrpl_address", "")).strip()
-        if not tx_hash or not issuer_xrpl_address or not target_xrpl_address:
+        if not issuer_xrpl_address or not target_xrpl_address:
             return
 
-        tx_json = await self._validate_credential_create(
-            tx_hash=tx_hash,
-            expected_account=issuer_xrpl_address,
-            expected_subject=target_xrpl_address,
-        )
+        # Ensure both parties have identity NFTs on-ledger before recording request state.
+        await self._fetch_identity_nft(issuer_xrpl_address)
+        await self._fetch_identity_nft(target_xrpl_address)
 
         verified_content: JsonDict = {
             "status": "requested",
-            "credential_type": "textrp_verify",
-            "credential_type_bytes": CREDENTIAL_TYPE_BYTES.decode("ascii"),
-            "tx_hash": tx_hash,
+            "trust_model": "nft_metadata",
+            "tx_hash": str(content.get("tx_hash", "")).strip(),
             "requester_user_id": event.sender,
             "issuer_xrpl_address": issuer_xrpl_address,
             "target_xrpl_address": target_xrpl_address,
             "validated": True,
-            "transaction_type": tx_json.get("TransactionType"),
+            "transaction_type": "NFTokenModify",
         }
 
         await self._persist_verified_account_data(event.sender, verified_content)
@@ -159,20 +154,21 @@ class VerificationHandler(BaseHandler):
         if not tx_hash or not issuer_xrpl_address or not accepter_xrpl_address:
             return
 
-        tx_json = await self._validate_credential_accept(
+        tx_json, nft_token_id, uri = await self._validate_nft_modify_accept(
             tx_hash=tx_hash,
-            expected_account=accepter_xrpl_address,
-            expected_issuer=issuer_xrpl_address,
+            expected_account=issuer_xrpl_address,
+            expected_verifier=accepter_xrpl_address,
         )
 
         verified_content: JsonDict = {
             "status": "verified",
-            "credential_type": "textrp_verify",
-            "credential_type_bytes": CREDENTIAL_TYPE_BYTES.decode("ascii"),
+            "trust_model": "nft_metadata",
             "tx_hash": tx_hash,
             "user_id": event.sender,
             "issuer_xrpl_address": issuer_xrpl_address,
             "accepter_xrpl_address": accepter_xrpl_address,
+            "nft_token_id": nft_token_id,
+            "ipfs_uri": uri,
             "validated": True,
             "transaction_type": tx_json.get("TransactionType"),
         }
@@ -190,7 +186,7 @@ class VerificationHandler(BaseHandler):
         if isinstance(cached, bool):
             return cached
 
-        direct = await self._has_direct_credential(payer_xrpl, payee_xrpl)
+        direct = await self._has_direct_trust(payer_xrpl, payee_xrpl)
 
         trusted = direct
         if not trusted:
@@ -208,43 +204,30 @@ class VerificationHandler(BaseHandler):
         )
         return trusted
 
-    async def _validate_credential_create(
+    async def _validate_nft_modify_accept(
         self,
         tx_hash: str,
         expected_account: str,
-        expected_subject: str,
-    ) -> JsonDict:
+        expected_verifier: str,
+    ) -> tuple[JsonDict, str, str]:
         tx_json = await self._fetch_validated_tx(tx_hash)
-        tx = CredentialCreate.from_xrpl(tx_json)
-        if str(tx.credential_type).upper() != CREDENTIAL_TYPE_HEX:
-            raise ValueError("Invalid CredentialType for verification request")
+        tx = NFTokenModify.from_xrpl(tx_json)
 
         if tx.account != expected_account:
-            raise ValueError("CredentialCreate account does not match issuer")
+            raise ValueError("NFTokenModify account does not match issuer")
 
-        if tx.subject != expected_subject:
-            raise ValueError("CredentialCreate subject does not match target")
+        nft_token_id = str(tx.nftoken_id or "").strip()
+        if not nft_token_id:
+            raise ValueError("Missing NFTokenID on NFTokenModify")
 
-        return tx_json
+        identity_nft = await self._fetch_identity_nft(expected_account, nft_token_id)
+        encoded_uri = str(tx.uri or identity_nft.get("URI") or "").strip()
+        uri = decode_xrpl_uri(encoded_uri)
+        verifiers = await self._load_verifiers_from_uri(uri)
+        if expected_verifier.lower() not in verifiers:
+            raise ValueError("Verifier not present in NFT metadata")
 
-    async def _validate_credential_accept(
-        self,
-        tx_hash: str,
-        expected_account: str,
-        expected_issuer: str,
-    ) -> JsonDict:
-        tx_json = await self._fetch_validated_tx(tx_hash)
-        tx = CredentialAccept.from_xrpl(tx_json)
-        if str(tx.credential_type).upper() != CREDENTIAL_TYPE_HEX:
-            raise ValueError("Invalid CredentialType for verification acceptance")
-
-        if tx.account != expected_account:
-            raise ValueError("CredentialAccept account does not match accepter")
-
-        if tx.issuer != expected_issuer:
-            raise ValueError("CredentialAccept issuer does not match expected issuer")
-
-        return tx_json
+        return tx_json, nft_token_id, uri
 
     async def _fetch_validated_tx(self, tx_hash: str) -> JsonDict:
         xrpl_client = await self._xrpl_identity_handler.get_client()
@@ -283,73 +266,114 @@ class VerificationHandler(BaseHandler):
         payer_xrpl: str,
         payee_xrpl: str,
     ) -> tuple[bool, bool]:
-        payer_to_payee = await self._has_directional_credential(
+        payer_to_payee = await self._has_directional_trust(
             payer_xrpl,
             payee_xrpl,
         )
-        payee_to_payer = await self._has_directional_credential(
+        payee_to_payer = await self._has_directional_trust(
             payee_xrpl,
             payer_xrpl,
         )
         return payer_to_payee, payee_to_payer
 
-    async def _has_direct_credential(
+    async def _has_direct_trust(
         self,
         payer_xrpl: str,
         payee_xrpl: str,
     ) -> bool:
-        objects = await self._fetch_account_credentials(payer_xrpl)
-        payee_lower = payee_xrpl.lower()
-        for obj in objects:
-            if not isinstance(obj, dict):
-                continue
-            issuer = str(obj.get("Issuer", "")).strip().lower()
-            subject = str(obj.get("Subject", "")).strip().lower()
-            if payee_lower in {issuer, subject}:
-                return True
-        return False
+        return await self._has_directional_trust(payer_xrpl, payee_xrpl)
 
-    async def _has_directional_credential(
+    async def _has_directional_trust(
         self,
         issuer_xrpl: str,
         subject_xrpl: str,
     ) -> bool:
-        objects = await self._fetch_account_credentials(issuer_xrpl)
-        issuer_lower = issuer_xrpl.lower()
+        identity_nft = await self._fetch_identity_nft(issuer_xrpl)
+        uri = decode_xrpl_uri(str(identity_nft.get("URI", "")).strip())
+        verifiers = await self._load_verifiers_from_uri(uri)
         subject_lower = subject_xrpl.lower()
-        for obj in objects:
-            if not isinstance(obj, dict):
-                continue
-            if (
-                str(obj.get("Issuer", "")).strip().lower() == issuer_lower
-                and str(obj.get("Subject", "")).strip().lower() == subject_lower
-            ):
-                return True
-        return False
+        return subject_lower in verifiers
 
-    async def _fetch_account_credentials(self, xrpl_address: str) -> list[JsonDict]:
+    async def _fetch_identity_nft(
+        self,
+        xrpl_address: str,
+        expected_nft_token_id: str | None = None,
+    ) -> JsonDict:
         xrpl_client = await self._xrpl_identity_handler.get_client()
         marker: str | None = None
-        credentials: list[JsonDict] = []
+        expected = expected_nft_token_id.lower() if expected_nft_token_id else None
         for _ in range(2):
             response = await xrpl_client.request(
-                AccountObjects(
+                AccountNFTs(
                     account=xrpl_address,
-                    type=AccountObjectType.CREDENTIAL,
                     limit=200,
                     marker=marker,
                 )
             )
             result = response.result
-            account_objects = result.get("account_objects", [])
-            if isinstance(account_objects, list):
-                credentials.extend(
-                    entry for entry in account_objects if isinstance(entry, dict)
-                )
+            account_nfts = result.get("account_nfts", [])
+            if isinstance(account_nfts, list):
+                for entry in account_nfts:
+                    if not isinstance(entry, dict):
+                        continue
+                    token_id = str(entry.get("NFTokenID", "")).strip().lower()
+                    uri = str(entry.get("URI", "")).strip()
+                    if expected and token_id == expected:
+                        return entry
+                    if not expected and uri:
+                        return entry
             marker = result.get("marker")
             if marker is None:
                 break
-        return credentials
+        raise ValueError("Identity NFT not found for account")
+
+    async def _load_verifiers_from_uri(self, uri: str) -> set[str]:
+        if not uri:
+            return set()
+
+        cache_key = hashlib.sha256(uri.encode("utf-8")).hexdigest()
+        cached = await self._external_cache.get(URI_METADATA_CACHE_NAME, cache_key)
+        if isinstance(cached, str):
+            try:
+                metadata = json.loads(cached)
+                return extract_verifiers_from_metadata(metadata)
+            except Exception:
+                pass
+
+        metadata = await self._fetch_uri_metadata(uri)
+        await self._external_cache.set(
+            URI_METADATA_CACHE_NAME,
+            cache_key,
+            json.dumps(metadata),
+            expiry_ms=60_000,
+        )
+        return extract_verifiers_from_metadata(metadata)
+
+    async def _fetch_uri_metadata(self, uri: str) -> JsonDict:
+        if uri.startswith("{"):
+            parsed = json.loads(uri)
+            if isinstance(parsed, dict):
+                return parsed
+            return {}
+
+        if uri.startswith("data:application/json,"):
+            payload = unquote(uri.split(",", 1)[1])
+            parsed = json.loads(payload)
+            if isinstance(parsed, dict):
+                return parsed
+            return {}
+
+        if uri.startswith("ipfs://"):
+            cid_path = uri.removeprefix("ipfs://")
+            gateway_url = f"https://ipfs.io/ipfs/{cid_path}"
+            with urlopen(gateway_url, timeout=3.0) as response:
+                raw = response.read().decode("utf-8")
+            parsed = json.loads(raw)
+            if isinstance(parsed, dict):
+                return parsed
+            return {}
+
+        return {}
 
     def _trust_cache_key(self, payer_xrpl: str, payee_xrpl: str) -> str:
         raw = f"{payer_xrpl.lower()}|{payee_xrpl.lower()}".encode("utf-8")
@@ -392,7 +416,7 @@ class VerificationHandler(BaseHandler):
     def _to_public_verified_content(self, verified_content: JsonDict) -> JsonDict:
         public_content: JsonDict = {
             "status": verified_content.get("status"),
-            "credential_type": verified_content.get("credential_type"),
+            "trust_model": verified_content.get("trust_model"),
             "tx_hash": verified_content.get("tx_hash"),
             "validated": verified_content.get("validated"),
             "transaction_type": verified_content.get("transaction_type"),
@@ -431,3 +455,28 @@ class VerificationHandler(BaseHandler):
                     room_id,
                     exc_info=True,
                 )
+
+
+def decode_xrpl_uri(encoded: str) -> str:
+    value = encoded.strip()
+    if not value:
+        return ""
+    try:
+        if len(value) % 2 == 0 and all(char in "0123456789abcdefABCDEF" for char in value):
+            return bytes.fromhex(value).decode("utf-8")
+    except Exception:
+        pass
+    return value
+
+
+def extract_verifiers_from_metadata(metadata: Any) -> set[str]:
+    if not isinstance(metadata, dict):
+        return set()
+    values = metadata.get("verifiers")
+    if not isinstance(values, list):
+        return set()
+    return {
+        str(value).strip().lower()
+        for value in values
+        if isinstance(value, str) and value.strip()
+    }
