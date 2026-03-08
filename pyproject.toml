@@ -115,6 +115,7 @@ dependencies = [
     # for details of Synapse improvements that may be unlocked. Particularly around the use of `|`
     # syntax with zope interface types.
     "zope-interface>=5.2", # via twisted
+    "xrpl-py (>=4.5.0,<5.0.0)",
 ]
 
 [project.optional-dependencies]

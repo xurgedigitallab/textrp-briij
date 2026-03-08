@@ -1,3 +1,6 @@
+from textrp_briij.handlers.xrpl_identity import XrplIdentityHandler
+
+__all__ = ["XrplIdentityHandler"]
 #
 # This file is licensed under the Affero General Public License (AGPL) version 3.
 #

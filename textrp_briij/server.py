@@ -138,6 +138,7 @@ from textrp_briij.handlers.thread_subscriptions import ThreadSubscriptionsHandle
 from textrp_briij.handlers.typing import FollowerTypingHandler, TypingWriterHandler
 from textrp_briij.handlers.user_directory import UserDirectoryHandler
 from textrp_briij.handlers.worker_lock import WorkerLocksHandler
+from textrp_briij.handlers.xrpl_identity import XrplIdentityHandler
 from textrp_briij.http.client import (
     InsecureInterceptableContextFactory,
     ReplicationClient,
@@ -1156,6 +1157,10 @@ class HomeServer(metaclass=abc.ABCMeta):
     @cache_in_self
     def get_account_data_handler(self) -> AccountDataHandler:
         return AccountDataHandler(self)
+
+    @cache_in_self
+    def get_xrpl_identity_handler(self) -> XrplIdentityHandler:
+        return XrplIdentityHandler(self)
 
     @cache_in_self
     def get_room_summary_handler(self) -> RoomSummaryHandler:
