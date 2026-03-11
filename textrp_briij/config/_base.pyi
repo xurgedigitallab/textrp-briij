@@ -58,6 +58,7 @@ from textrp_briij.config import (  # noqa: F401
     user_types,
     voip,
     workers,
+    xrpl_auth,
 )
 from textrp_briij.types import StrSequence
 
@@ -120,6 +121,7 @@ class RootConfig:
     background_updates: background_updates.BackgroundUpdateConfig
     auto_accept_invites: auto_accept_invites.AutoAcceptInvitesConfig
     user_types: user_types.UserTypesConfig
+    xrpl_auth: xrpl_auth.XrplAuthConfig
     mas: mas.MasConfig
     matrix_rtc: matrixrtc.MatrixRtcConfig
 

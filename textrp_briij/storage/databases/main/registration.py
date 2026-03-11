@@ -22,7 +22,7 @@
 import logging
 import random
 import re
-from typing import TYPE_CHECKING, Any, cast
+from typing import TYPE_CHECKING, Any, TypedDict, cast
 
 import attr
 
@@ -172,6 +172,14 @@ class ThreepidValidationSession:
     """a number serving to dedupe send attempts for this session"""
     validated_at: int | None
     """timestamp of when this session was validated if so"""
+
+
+class WalletLinkLookupResult(TypedDict):
+    user_id: str
+    wallet_address: str
+    network: str
+    public_key: str | None
+    linked_at: int
 
 
 class RegistrationWorkerStore(StatsStore, CacheInvalidationWorkerStore):
@@ -1062,6 +1070,72 @@ class RegistrationWorkerStore(StatsStore, CacheInvalidationWorkerStore):
                 desc="get_external_ids_by_user",
             ),
         )
+
+    async def upsert_wallet_link(
+        self,
+        user_id: str,
+        wallet_address: str,
+        network: str,
+        public_key: str | None,
+        linked_at: int,
+    ) -> None:
+        await self.db_pool.simple_upsert(
+            table="briij_wallet_links",
+            keyvalues={"wallet_address": wallet_address, "network": network},
+            values={
+                "user_id": user_id,
+                "public_key": public_key,
+                "linked_at": linked_at,
+            },
+            desc="upsert_wallet_link",
+        )
+
+    async def get_wallet_link_by_address(
+        self,
+        wallet_address: str,
+        network: str,
+    ) -> WalletLinkLookupResult | None:
+        row = await self.db_pool.simple_select_one(
+            table="briij_wallet_links",
+            keyvalues={"wallet_address": wallet_address, "network": network},
+            retcols=("user_id", "wallet_address", "network", "public_key", "linked_at"),
+            allow_none=True,
+            desc="get_wallet_link_by_address",
+        )
+
+        if row is None:
+            return None
+
+        user_id, stored_wallet_address, stored_network, public_key, linked_at = row
+        return {
+            "user_id": user_id,
+            "wallet_address": stored_wallet_address,
+            "network": stored_network,
+            "public_key": public_key,
+            "linked_at": linked_at,
+        }
+
+    async def get_wallet_links_by_user(
+        self,
+        user_id: str,
+    ) -> list[WalletLinkLookupResult]:
+        rows = await self.db_pool.simple_select_list(
+            table="briij_wallet_links",
+            keyvalues={"user_id": user_id},
+            retcols=("user_id", "wallet_address", "network", "public_key", "linked_at"),
+            desc="get_wallet_links_by_user",
+        )
+
+        return [
+            {
+                "user_id": stored_user_id,
+                "wallet_address": wallet_address,
+                "network": network,
+                "public_key": public_key,
+                "linked_at": linked_at,
+            }
+            for stored_user_id, wallet_address, network, public_key, linked_at in rows
+        ]
 
     async def count_all_users(self) -> int:
         """Counts all users registered on the homeserver."""

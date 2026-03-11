@@ -200,3 +200,12 @@ trusted_key_servers:
 
 password_config:
    enabled: true
+
+{% if BRIIJ_XRPL_AUTH_ENABLED and BRIIJ_XRPL_AUTH_ENABLED.lower() == "true" %}
+xrpl_auth:
+  enabled: true
+  allow_account_creation: {{ "True" if BRIIJ_XRPL_ALLOW_ACCOUNT_CREATION.lower() == "true" else "False" }}
+  xrpl_node_url: "{{ BRIIJ_XRPL_NODE_URL or "https://s.altnet.rippletest.net:51234" }}"
+  xahau_node_url: "{{ BRIIJ_XAHAU_NODE_URL or "https://xahau-testnet.xrpl-labs.com" }}"
+  challenge_ttl_seconds: {{ BRIIJ_XRPL_CHALLENGE_TTL_SECONDS or 300 }}
+{% endif %}

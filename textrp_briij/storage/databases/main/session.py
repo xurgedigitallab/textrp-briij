@@ -137,6 +137,43 @@ class SessionStore(SQLBaseStore):
             self.clock.time_msec(),
         )
 
+    async def consume_session(self, session_type: str, session_id: str) -> JsonDict:
+        """Retrieve and delete an unexpired session in one transaction."""
+
+        def _consume_session(
+            txn: LoggingTransaction,
+            session_type: str,
+            session_id: str,
+            ts: int,
+        ) -> JsonDict:
+            select_sql = """
+            SELECT value FROM sessions WHERE
+            session_type = ? AND session_id = ? AND expiry_time_ms > ?
+            """
+            txn.execute(select_sql, [session_type, session_id, ts])
+            row = txn.fetchone()
+
+            if not row:
+                raise StoreError(404, "No session")
+
+            txn.execute(
+                """
+                DELETE FROM sessions
+                WHERE session_type = ? AND session_id = ?
+                """,
+                (session_type, session_id),
+            )
+
+            return db_to_json(row[0])
+
+        return await self.db_pool.runInteraction(
+            "consume_session",
+            _consume_session,
+            session_type,
+            session_id,
+            self.clock.time_msec(),
+        )
+
     @wrap_as_background_process("delete_expired_sessions")
     async def _delete_expired_sessions(self) -> None:
         """Remove sessions with expiry dates that have passed."""

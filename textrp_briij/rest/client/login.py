@@ -27,6 +27,7 @@ from typing import (
     Awaitable,
     Callable,
     TypedDict,
+    cast,
 )
 
 from textrp_briij.api.constants import ApprovalNoticeMedium
@@ -118,6 +119,7 @@ class LoginRestServlet(RestServlet):
         self._sso_handler = hs.get_sso_handler()
         self._spam_checker = hs.get_module_api_callbacks().spam_checker
         self._account_validity_handler = hs.get_account_validity_handler()
+        self._xrpl_auth = hs.get_xrpl_auth()
 
         self._well_known_builder = WellKnownBuilder(hs)
         self._address_ratelimiter = Ratelimiter(
@@ -179,13 +181,16 @@ class LoginRestServlet(RestServlet):
                 tokenTypeFlow["get_login_token"] = True
             flows.append(tokenTypeFlow)
 
+        if self._xrpl_auth.enabled:
+            flows.append({"type": self._xrpl_auth.get_login_type()})
+
         flows.extend({"type": t} for t in self.auth_handler.get_supported_login_types())
 
         flows.append({"type": LoginRestServlet.APPSERVICE_TYPE})
 
         return 200, {"flows": flows}
 
-    async def on_POST(self, request: SynapseRequest) -> tuple[int, LoginResponse]:
+    async def on_POST(self, request: SynapseRequest) -> tuple[int, JsonDict]:
         login_submission = parse_json_object_from_request(request)
 
         # Check to see if the client requested a refresh token.
@@ -250,6 +255,18 @@ class LoginRestServlet(RestServlet):
                     should_issue_refresh_token=should_issue_refresh_token,
                     request_info=request_info,
                 )
+            elif login_submission["type"] == self._xrpl_auth.get_login_type():
+                await self._address_ratelimiter.ratelimit(
+                    None, request.getClientAddress().host
+                )
+                xrpl_status, xrpl_result = await self._do_xrpl_login(
+                    login_submission,
+                    should_issue_refresh_token=should_issue_refresh_token,
+                    request_info=request_info,
+                )
+                if xrpl_status != 200:
+                    return xrpl_status, xrpl_result
+                result = cast(LoginResponse, xrpl_result)
             else:
                 await self._address_ratelimiter.ratelimit(
                     None, request.getClientAddress().host
@@ -360,6 +377,32 @@ class LoginRestServlet(RestServlet):
             request_info=request_info,
         )
         return result
+
+    async def _do_xrpl_login(
+        self,
+        login_submission: JsonDict,
+        should_issue_refresh_token: bool = False,
+        *,
+        request_info: RequestInfo,
+    ) -> tuple[int, JsonDict]:
+        if not self._xrpl_auth.enabled:
+            raise SynapseError(400, "Unknown login type %s" % (login_submission["type"],))
+
+        if self._xrpl_auth.is_initial_request(login_submission):
+            challenge = await self._xrpl_auth.issue_challenge(
+                login_submission.get("address"),
+                login_submission.get("network"),
+            )
+            return 401, challenge
+
+        canonical_user_id = await self._xrpl_auth.complete_auth(login_submission)
+        result = await self._complete_login(
+            canonical_user_id,
+            login_submission,
+            should_issue_refresh_token=should_issue_refresh_token,
+            request_info=request_info,
+        )
+        return 200, result
 
     async def _complete_login(
         self,
