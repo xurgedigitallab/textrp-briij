@@ -42,7 +42,7 @@ Native XRPL/Xahau wallet login
 ==============================
 
 TextRP-Briij supports a native challenge-response Matrix login flow for XRPL and
-Xahau wallets via the custom login type ``org.textrp.login.xrpl``.
+Xahau wallets via the custom login type ``io.briij.login.xrpl``.
 
 Enable it with the ``xrpl_auth`` section in ``homeserver.yaml`` and configure
 the appropriate JSON-RPC endpoints for the XRPL and Xahau networks. Clients

@@ -4772,7 +4772,7 @@ properties:
     type: object
     description: >-
       Native XRPL/Xahau wallet authentication settings. When enabled, clients
-      can use the custom Matrix login type `org.textrp.login.xrpl` to request a
+      can use the custom Matrix login type `io.briij.login.xrpl` to request a
       signed challenge and complete login with a locally-held wallet seed.
     properties:
       enabled:

@@ -40,7 +40,7 @@ XRPL_WALLET_ACCOUNT_DATA_TYPE = "org.textrp.xrpl.wallet"
 
 
 class XrplAuth:
-    LOGIN_TYPE = "org.textrp.login.xrpl"
+    LOGIN_TYPE = "io.briij.login.xrpl"
     SESSION_TYPE = "xrpl_auth"
     SUPPORTED_NETWORKS = ("xrpl", "xahau")
 

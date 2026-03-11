@@ -81,7 +81,7 @@ class XrplAuthConfig(Config):
             # Native XRPL/Xahau wallet authentication.
             #
             # When enabled, clients can use the custom Matrix login type
-            # `org.textrp.login.xrpl` to request a signed challenge and complete
+            # `io.briij.login.xrpl` to request a signed challenge and complete
             # login using a locally-held XRPL or Xahau seed.
             #
             #xrpl_auth:

@@ -521,7 +521,7 @@ xrpl_auth:
 ```
 
 Clients can then use the custom Matrix login type
-`org.textrp.login.xrpl`. The homeserver issues a short-lived signed challenge,
+`io.briij.login.xrpl`. The homeserver issues a short-lived signed challenge,
 which the wallet signs locally before completing the login. Wallet seeds are
 never stored on, or transmitted to, the homeserver.
 

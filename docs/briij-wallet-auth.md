@@ -1,7 +1,7 @@
 # Briij XRPL/Xahau wallet login
 
 TextRP-Briij supports a native Matrix login flow for XRPL and Xahau wallets via
-the custom login type `org.textrp.login.xrpl`.
+the custom login type `io.briij.login.xrpl`.
 
 ## Homeserver configuration
 
@@ -22,7 +22,7 @@ xrpl_auth:
 
 ```json
 {
-  "type": "org.textrp.login.xrpl",
+  "type": "io.briij.login.xrpl",
   "address": "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
   "network": "xrpl"
 }
@@ -46,7 +46,7 @@ derived from the wallet seed. The seed never leaves the client.
 
 ```json
 {
-  "type": "org.textrp.login.xrpl",
+  "type": "io.briij.login.xrpl",
   "session": "abc123...",
   "address": "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
   "signature": "hex-encoded-signature",

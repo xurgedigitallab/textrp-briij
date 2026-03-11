@@ -3884,7 +3884,7 @@ Configuration settings related to native XRPL/Xahau wallet authentication.
 ---
 ### `xrpl_auth`
 
-*(object)* Native XRPL/Xahau wallet authentication settings. When enabled, clients can use the custom Matrix login type `org.textrp.login.xrpl` to request a signed challenge and complete login with a locally-held wallet seed.
+*(object)* Native XRPL/Xahau wallet authentication settings. When enabled, clients can use the custom Matrix login type `io.briij.login.xrpl` to request a signed challenge and complete login with a locally-held wallet seed.
 
 This setting has the following sub-options:
 
