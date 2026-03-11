@@ -62,6 +62,7 @@ from textrp_briij.app._base import unregister_sighups
 from textrp_briij.app.phone_stats_home import start_phone_stats_home
 from textrp_briij.appservice.api import ApplicationServiceApi
 from textrp_briij.appservice.scheduler import ApplicationServiceScheduler
+from textrp_briij.auth import XrplAuth
 from textrp_briij.config.homeserver import HomeServerConfig
 from textrp_briij.crypto import context_factory
 from textrp_briij.crypto.context_factory import RegularPolicyForHTTPS
@@ -1168,6 +1169,10 @@ class HomeServer(metaclass=abc.ABCMeta):
         return XrplIdentityHandler(self)
 
     @cache_in_self
+    def get_xrpl_auth(self) -> XrplAuth:
+        return XrplAuth(self)
+
+    @cache_in_self
     def get_room_summary_handler(self) -> RoomSummaryHandler:
         return RoomSummaryHandler(self)
 
@@ -1211,7 +1216,10 @@ class HomeServer(metaclass=abc.ABCMeta):
 
         # We only want to import redis module if we're using it, as we have
         # `txredisapi` as an optional dependency.
-        from textrp_briij.replication.tcp.redis import lazyConnection, lazyUnixConnection
+        from textrp_briij.replication.tcp.redis import (
+            lazyConnection,
+            lazyUnixConnection,
+        )
 
         if self.config.redis.redis_path is None:
             logger.info(

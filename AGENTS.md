@@ -9,7 +9,12 @@ This is the **Element Synapse** Matrix homeserver (Python 3 + Rust). See `CONTRI
 1. Generate config: `poetry run python -m synapse.app.homeserver --generate-config --server-name localhost --config-path homeserver.yaml --report-stats=no`
 2. Start server: `poetry run python -m synapse.app.homeserver -c homeserver.yaml`
 3. The server listens on `http://127.0.0.1:8008` by default.
-4. To register a user with the shared secret from config: `poetry run register_new_matrix_user -c homeserver.yaml -u USERNAME -p PASSWORD -a http://localhost:8008`
+4. The `register_new_matrix_user` CLI tool does **not** work in local dev mode because the admin API is mounted at `/_briij/admin` but the URL patterns still reference `/_synapse/admin` (path mismatch). Instead, enable registration in `homeserver.yaml` (`enable_registration: true` and `enable_registration_without_verification: true`) and use the Matrix client API directly:
+   ```
+   curl -X POST http://127.0.0.1:8008/_matrix/client/v3/register \
+     -H 'Content-Type: application/json' \
+     -d '{"username":"USER","password":"PASS","auth":{"type":"m.login.dummy"}}'
+   ```
 
 ### Linting
 
