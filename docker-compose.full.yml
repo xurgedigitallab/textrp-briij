@@ -39,6 +39,11 @@ services:
       SYNAPSE_CONFIG_PATH: /data/homeserver.yaml
       UID: "1000"
       GID: "1000"
+      BRIIJ_XRPL_AUTH_ENABLED: "true"
+      BRIIJ_XRPL_ALLOW_ACCOUNT_CREATION: "true"
+      BRIIJ_XRPL_NODE_URL: "https://s.altnet.rippletest.net:51234"
+      BRIIJ_XAHAU_NODE_URL: "https://xahau-testnet.xrpl-labs.com"
+      BRIIJ_XRPL_CHALLENGE_TTL_SECONDS: "300"
     volumes:
       - ./data:/data
     depends_on:
