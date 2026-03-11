@@ -43,7 +43,10 @@ line linking to the new documentation file:
 The documentation is built with [mdbook](https://rust-lang.github.io/mdBook/), and the outline of the
 documentation is determined by the structure of [SUMMARY.md](SUMMARY.md).
 
-First, [get mdbook](https://github.com/rust-lang/mdBook#installation). Then, **from the root of the repository**,
+First, [get mdbook](https://github.com/rust-lang/mdBook#installation).
+Use version `0.5.2` or newer (`mdbook --version`), otherwise the custom theme
+assets will not be generated correctly and the docs can render without styling.
+Then, **from the root of the repository**,
 build the documentation with:
 
 ```sh

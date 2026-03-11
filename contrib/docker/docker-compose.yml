@@ -7,7 +7,7 @@ services:
     build:
       context: ../..
       dockerfile: docker/Dockerfile
-    image: textrp-briij:latest
+    image: textrp-briij:testing
     # Since briij does not retry to connect to the database, restart upon
     # failure
     restart: unless-stopped
@@ -33,17 +33,17 @@ services:
     labels:
       # The following lines are valid for Traefik version 1.x:
       - traefik.enable=true
-      - traefik.frontend.rule=Host:chat.briij.app
+      - traefik.frontend.rule=Host:test-client.textrp.io
       - traefik.port=8008
       # Alternatively, for Traefik version 2.0:
       - traefik.enable=true
       - traefik.http.routers.http-textrp-briij.entryPoints=http
-      - traefik.http.routers.http-textrp-briij.rule=Host(`chat.briij.app`)
+      - traefik.http.routers.http-textrp-briij.rule=Host(`test-server.textrp.io`)
       - traefik.http.middlewares.https_redirect.redirectscheme.scheme=https
       - traefik.http.middlewares.https_redirect.redirectscheme.permanent=true
       - traefik.http.routers.http-textrp-briij.middlewares=https_redirect
       - traefik.http.routers.https-textrp-briij.entryPoints=https
-      - traefik.http.routers.https-textrp-briij.rule=Host(`chat.briij.app`)
+      - traefik.http.routers.https-textrp-briij.rule=Host(`test-server.textrp.io`)
       - traefik.http.routers.https-textrp-briij.service=textrp_briij
       - traefik.http.routers.https-textrp-briij.tls=true
       - traefik.http.services.textrp_briij.loadbalancer.server.port=8008
@@ -53,13 +53,14 @@ services:
     image: docker.io/postgres:15-alpine
     # Change that password, of course!
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=changeme
+      - POSTGRES_DB=briij-testing
+      - POSTGRES_USER=briij-testing
+      - POSTGRES_PASSWORD=testpassword123
       # ensure the database gets created correctly
-      # https://docs.briij.example/synapse/latest/postgres.html#set-up-database
       - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
     volumes:
-      # You may store the database tables in a local folder..
-      - ./schemas:/var/lib/postgresql/data
-      # .. or store them on some high performance storage for better results
-      # - /path/to/ssd/storage:/var/lib/postgresql/data
+      - briij-testing-postgres:/var/lib/postgresql/data
+      - ../../init-databases.sql:/docker-entrypoint-initdb.d/init-databases.sql:ro
+
+volumes:
+  briij-testing-postgres:

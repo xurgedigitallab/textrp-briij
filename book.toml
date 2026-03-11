@@ -22,10 +22,10 @@ edit-url-template = "https://github.com/textrp/briij-synapse/edit/develop/{path}
 no-section-label = true
 
 # The source code URL of the repository
-git-repository-url = "https://github.com/textrp/briij-synapse"
+git-repository-url = "https://github.com/xurgedigitallab/textrp-briij"
 
 # The path that the docs are hosted on
-site-url = "/synapse/"
+site-url = "/briij/"
 
 # Additional HTML, JS, CSS that's injected into each page of the book.
 # More information available in docs/website_files/README.md
