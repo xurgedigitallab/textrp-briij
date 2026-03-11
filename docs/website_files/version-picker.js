@@ -1,10 +1,13 @@
-
 const dropdown = document.querySelector('.version-picker .dropdown');
-const dropdownMenu = dropdown.querySelector('.dropdown-menu');
+const dropdownMenu = dropdown ? dropdown.querySelector('.dropdown-menu') : null;
 
-fetchVersions(dropdown, dropdownMenu).then(() => {
-    initializeVersionDropdown(dropdown, dropdownMenu);
-});
+if (dropdown && dropdownMenu) {
+    fetchVersions(dropdown, dropdownMenu).then((versions) => {
+        if (versions.length > 1) {
+            initializeVersionDropdown(dropdown, dropdownMenu);
+        }
+    });
+}
 
 /**
  * Initialize the dropdown functionality for version selection.
@@ -51,41 +54,90 @@ function initializeVersionDropdown(dropdown, dropdownMenu) {
  * @returns {Promise<Array<string>>} A promise that resolves with an array of available versions.
  */
 function fetchVersions(dropdown, dropdownMenu) {
-    return new Promise((resolve, reject) => {
-        window.addEventListener("load", () => {
+    return new Promise((resolve) => {
+        window.addEventListener("load", async () => {
+            const currentVersion = window.SYNAPSE_VERSION || "latest";
+            const fallbackVersions = [currentVersion];
 
-            fetch("https://api.github.com/repos/textrp/briij-synapse/git/trees/gh-pages", {
-                cache: "force-cache",
-            }).then(res => 
-                res.json()
-            ).then(resObject => {
-                const excluded = ['dev-docs', 'v1.91.0', 'v1.80.0', 'v1.69.0'];
-                const tree = resObject.tree.filter(item => item.type === "tree" && !excluded.includes(item.path));
-                const versions = tree.map(item => item.path).sort(sortVersions);
-
-                // Create a list of <li> items for versions
-                versions.forEach((version) => {
-                    const li = document.createElement("li");
-                    li.textContent = version;
-                    li.id = version;
-    
-                    if (window.SYNAPSE_VERSION === version) {
-                        li.classList.add('active');
-                        dropdown.querySelector('span').textContent = version;
-                        dropdown.querySelector('input').value = version;
-                    }
-    
-                    dropdownMenu.appendChild(li);
-                });
-
+            // Allow explicitly provided versions to avoid network requests.
+            if (Array.isArray(window.SYNAPSE_VERSIONS) && window.SYNAPSE_VERSIONS.length > 0) {
+                const versions = window.SYNAPSE_VERSIONS.slice().sort(sortVersions);
+                renderVersions(dropdown, dropdownMenu, versions, currentVersion);
                 resolve(versions);
+                return;
+            }
 
-            }).catch(ex => {
-                console.error("Failed to fetch version data", ex);
-                reject(ex);
-            })
-        });
+            // Optional API endpoint for dynamic version discovery.
+            const versionTreeApi = window.SYNAPSE_VERSION_PICKER_API;
+            if (!versionTreeApi) {
+                renderVersions(dropdown, dropdownMenu, fallbackVersions, currentVersion);
+                resolve(fallbackVersions);
+                return;
+            }
+
+            try {
+                const response = await fetch(versionTreeApi, { cache: "force-cache" });
+                if (!response.ok) {
+                    throw new Error(`Request failed with status ${response.status}`);
+                }
+
+                const resObject = await response.json();
+                const excluded = ['dev-docs', 'v1.91.0', 'v1.80.0', 'v1.69.0'];
+                const tree = Array.isArray(resObject.tree)
+                    ? resObject.tree.filter(item => item.type === "tree" && !excluded.includes(item.path))
+                    : [];
+
+                const versions = tree
+                    .map(item => item.path)
+                    .filter(item => item === "develop" || item === "latest" || /^v\d+(\.\d+)+$/.test(item))
+                    .sort(sortVersions);
+
+                const finalVersions = versions.length > 0 ? versions : fallbackVersions;
+                if (!finalVersions.includes(currentVersion)) {
+                    finalVersions.unshift(currentVersion);
+                }
+
+                renderVersions(dropdown, dropdownMenu, finalVersions, currentVersion);
+                resolve(finalVersions);
+            } catch (ex) {
+                console.warn("Failed to fetch version data; falling back to current version.", ex);
+                renderVersions(dropdown, dropdownMenu, fallbackVersions, currentVersion);
+                resolve(fallbackVersions);
+            }
+        }, { once: true });
     });
+}
+
+/**
+ * Render available versions into the dropdown and set selected value.
+ *
+ * @param {Element} dropdown - The dropdown element.
+ * @param {Element} dropdownMenu - The dropdown menu element.
+ * @param {Array<string>} versions - Versions to render.
+ * @param {string} currentVersion - Current docs version.
+ */
+function renderVersions(dropdown, dropdownMenu, versions, currentVersion) {
+    dropdownMenu.innerHTML = "";
+
+    versions.forEach((version) => {
+        const li = document.createElement("li");
+        li.textContent = version;
+        li.id = version;
+
+        if (currentVersion === version) {
+            li.classList.add('active');
+            dropdown.querySelector('span').textContent = version;
+            dropdown.querySelector('input').value = version;
+        }
+
+        dropdownMenu.appendChild(li);
+    });
+
+    // Ensure label/input are always set, even if currentVersion was absent.
+    if (!dropdown.querySelector('input').value && versions.length > 0) {
+        dropdown.querySelector('span').textContent = versions[0];
+        dropdown.querySelector('input').value = versions[0];
+    }
 }
 
 /**
