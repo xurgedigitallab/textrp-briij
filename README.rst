@@ -35,6 +35,23 @@ below for more useful documentation links.
 - `Using a reverse proxy with Briij by TextRP <https://docs.briij.example/synapse/latest/reverse_proxy.html>`_
 - `Upgrading Briij by TextRP <https://docs.briij.example/synapse/develop/upgrade.html>`_
 - `NFT-based verification trust design <docs/verification-on-chain.md>`_
+- `Native XRPL/Xahau wallet login configuration <docs/briij-wallet-auth.md>`_
+
+
+Native XRPL/Xahau wallet login
+==============================
+
+TextRP-Briij supports a native challenge-response Matrix login flow for XRPL and
+Xahau wallets via the custom login type ``org.textrp.login.xrpl``.
+
+Enable it with the ``xrpl_auth`` section in ``homeserver.yaml`` and configure
+the appropriate JSON-RPC endpoints for the XRPL and Xahau networks. Clients
+first request a challenge for a wallet address and network, then sign that
+challenge locally and complete the login without ever sending a seed to the
+homeserver.
+
+See `docs/briij-wallet-auth.md <docs/briij-wallet-auth.md>`_ for the exact
+request flow and configuration example.
 
 
 Troubleshooting and support

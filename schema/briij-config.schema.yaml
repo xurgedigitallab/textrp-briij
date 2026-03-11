@@ -4768,6 +4768,46 @@ properties:
           require_symbol: true
           require_lowercase: true
           require_uppercase: true
+  xrpl_auth:
+    type: object
+    description: >-
+      Native XRPL/Xahau wallet authentication settings. When enabled, clients
+      can use the custom Matrix login type `org.textrp.login.xrpl` to request a
+      signed challenge and complete login with a locally-held wallet seed.
+    properties:
+      enabled:
+        type: boolean
+        description: >-
+          Set to `true` to enable native XRPL/Xahau wallet authentication.
+        default: false
+      allow_account_creation:
+        type: boolean
+        description: >-
+          Whether an unknown wallet address may create a new local Matrix
+          account after a successful signed challenge response.
+        default: true
+      xrpl_node_url:
+        type: string
+        description: >-
+          JSON-RPC endpoint for the XRPL network.
+        default: https://s.altnet.rippletest.net:51234
+      xahau_node_url:
+        type: string
+        description: >-
+          JSON-RPC endpoint for the Xahau network.
+        default: https://xahau-testnet.xrpl-labs.com
+      challenge_ttl_seconds:
+        type: integer
+        description: >-
+          Number of seconds that an XRPL login challenge remains valid before it
+          expires and must be requested again.
+        default: 300
+    examples:
+      - enabled: true
+        allow_account_creation: true
+        xrpl_node_url: https://s.altnet.rippletest.net:51234
+        xahau_node_url: https://xahau-testnet.xrpl-labs.com
+        challenge_ttl_seconds: 300
   push:
     type: object
     description: This setting defines options for push notifications.

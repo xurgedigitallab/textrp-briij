@@ -506,6 +506,28 @@ listeners:
 For a more detailed guide to configuring your server for federation, see
 [Federation](../federate.md).
 
+### Native XRPL/Xahau wallet login
+
+If you want to enable native XRPL/Xahau wallet authentication alongside the
+existing SSO flows, add an `xrpl_auth` section to `homeserver.yaml`:
+
+```yaml
+xrpl_auth:
+  enabled: true
+  allow_account_creation: true
+  xrpl_node_url: "https://s.altnet.rippletest.net:51234"
+  xahau_node_url: "https://xahau-testnet.xrpl-labs.com"
+  challenge_ttl_seconds: 300
+```
+
+Clients can then use the custom Matrix login type
+`org.textrp.login.xrpl`. The homeserver issues a short-lived signed challenge,
+which the wallet signs locally before completing the login. Wallet seeds are
+never stored on, or transmitted to, the homeserver.
+
+See [docs/briij-wallet-auth.md](../briij-wallet-auth.md) for the full
+challenge-response flow.
+
 ### Client Well-Known URI
 
 Setting up the client Well-Known URI is optional but if you set it up, it will

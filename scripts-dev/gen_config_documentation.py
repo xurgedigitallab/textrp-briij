@@ -237,6 +237,12 @@ SECTION_HEADERS = {
             "Configuration settings related to automatically accepting invites."
         ),
     },
+    "xrpl_auth": {
+        "title": "XRPL Authentication",
+        "description": (
+            "Configuration settings related to native XRPL/Xahau wallet authentication."
+        ),
+    },
 }
 INDENT = "  "
 
