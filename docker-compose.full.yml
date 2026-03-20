@@ -61,7 +61,7 @@ services:
       start_period: 30s
   textrp-mobile-chat:
     build:
-      context: ./textrp-mobile-chat
+      context: ../textrp-mobile-chat
       args:
         NEXT_PUBLIC_MATRIX_HOMESERVER_URL: http://briij:8008
     restart: unless-stopped
@@ -71,7 +71,7 @@ services:
       briij:
         condition: service_healthy
     ports:
-      - "3002:3001"
+      - "3000:3000"
 
 volumes:
   briij-testing-postgres:

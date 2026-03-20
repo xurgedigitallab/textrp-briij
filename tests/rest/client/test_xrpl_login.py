@@ -21,10 +21,12 @@ from xrpl.core.keypairs import (
 )
 
 import textrp_briij.rest.admin
+from textrp_briij.api.errors import Codes
 from textrp_briij.auth.xrpl_auth import XrplAuth
 from textrp_briij.rest.client import login, register
 from textrp_briij.rest.client.account import WhoamiRestServlet
 from textrp_briij.server import HomeServer
+from textrp_briij.types import UserID
 
 from tests.unittest import HomeserverTestCase, override_config
 
@@ -164,15 +166,152 @@ class XrplLoginTestCase(HomeserverTestCase):
 
         self.assertEqual(login_response.code, HTTPStatus.OK, login_response.result)
 
-    def _start_login(self, address: str, network: str):
+    @override_config({"xrpl_auth": {"enabled": True}})
+    def test_first_login_uses_requested_localpart_and_display_name(self) -> None:
+        wallet = self._generate_wallet(CryptoAlgorithm.ED25519)
+        challenge_response = self._start_login(
+            wallet["address"],
+            "xrpl",
+            preferred_localpart="alice_wallet",
+            display_name="Alice",
+        )
+        login_response = self._complete_login(
+            wallet,
+            cast(str, challenge_response.json_body["session"]),
+            cast(str, challenge_response.json_body["challenge"]),
+        )
+
+        self.assertEqual(login_response.code, HTTPStatus.OK, login_response.result)
+        self.assertEqual(
+            login_response.json_body["user_id"],
+            f"@alice_wallet:{self.hs.hostname}",
+        )
+        display_name = self.get_success(
+            self.hs.get_datastores().main.get_profile_displayname(
+                UserID.from_string(login_response.json_body["user_id"])
+            )
+        )
+        self.assertEqual(display_name, "Alice")
+
+    @override_config({"xrpl_auth": {"enabled": True}})
+    def test_requested_localpart_rejected_when_taken(self) -> None:
+        self.register_user("taken", "pass")
+        wallet = self._generate_wallet(CryptoAlgorithm.ED25519)
+        challenge_response = self._start_login(
+            wallet["address"],
+            "xrpl",
+            preferred_localpart="taken",
+            display_name="Taken Fallback",
+        )
+        login_response = self._complete_login(
+            wallet,
+            cast(str, challenge_response.json_body["session"]),
+            cast(str, challenge_response.json_body["challenge"]),
+        )
+
+        self.assertEqual(login_response.code, HTTPStatus.BAD_REQUEST, login_response.result)
+        self.assertEqual(login_response.json_body.get("errcode"), Codes.USER_IN_USE)
+
+    @override_config({"xrpl_auth": {"enabled": True}})
+    def test_initial_request_rejects_invalid_preferred_localpart_type(self) -> None:
+        wallet = self._generate_wallet(CryptoAlgorithm.ED25519)
         channel = self.make_request(
             "POST",
             LOGIN_URL,
             {
                 "type": XrplAuth.LOGIN_TYPE,
-                "address": address,
-                "network": network,
+                "address": wallet["address"],
+                "network": "xrpl",
+                "preferred_localpart": 123,
             },
+        )
+        self.assertEqual(channel.code, HTTPStatus.BAD_REQUEST, channel.result)
+
+    @override_config({"xrpl_auth": {"enabled": True}})
+    def test_first_login_accepts_username_alias_for_localpart(self) -> None:
+        wallet = self._generate_wallet(CryptoAlgorithm.ED25519)
+        challenge_response = self._start_login(
+            wallet["address"],
+            "xrpl",
+            username="alias_user",
+        )
+        login_response = self._complete_login(
+            wallet,
+            cast(str, challenge_response.json_body["session"]),
+            cast(str, challenge_response.json_body["challenge"]),
+        )
+
+        self.assertEqual(login_response.code, HTTPStatus.OK, login_response.result)
+        self.assertEqual(
+            login_response.json_body["user_id"],
+            f"@alias_user:{self.hs.hostname}",
+        )
+
+    @override_config({"xrpl_auth": {"enabled": True}})
+    def test_initial_request_rejects_conflicting_username_and_preferred_localpart(self) -> None:
+        wallet = self._generate_wallet(CryptoAlgorithm.ED25519)
+        channel = self._start_login(
+            wallet["address"],
+            "xrpl",
+            preferred_localpart="alice",
+            username="bob",
+        )
+
+        self.assertEqual(channel.code, HTTPStatus.BAD_REQUEST, channel.result)
+        self.assertEqual(channel.json_body.get("errcode"), Codes.INVALID_PARAM)
+
+    @override_config({"xrpl_auth": {"enabled": True}})
+    def test_linked_wallet_rejects_different_requested_localpart(self) -> None:
+        wallet = self._generate_wallet(CryptoAlgorithm.ED25519)
+        challenge_response = self._start_login(
+            wallet["address"],
+            "xrpl",
+            preferred_localpart="first_user",
+        )
+        first_login = self._complete_login(
+            wallet,
+            cast(str, challenge_response.json_body["session"]),
+            cast(str, challenge_response.json_body["challenge"]),
+        )
+        self.assertEqual(first_login.code, HTTPStatus.OK, first_login.result)
+
+        second_challenge = self._start_login(
+            wallet["address"],
+            "xrpl",
+            preferred_localpart="other_user",
+        )
+        second_login = self._complete_login(
+            wallet,
+            cast(str, second_challenge.json_body["session"]),
+            cast(str, second_challenge.json_body["challenge"]),
+        )
+        self.assertEqual(second_login.code, HTTPStatus.FORBIDDEN, second_login.result)
+        self.assertEqual(second_login.json_body.get("errcode"), Codes.FORBIDDEN)
+
+    def _start_login(
+        self,
+        address: str,
+        network: str,
+        *,
+        preferred_localpart: str | None = None,
+        username: str | None = None,
+        display_name: str | None = None,
+    ):
+        body: dict[str, Any] = {
+            "type": XrplAuth.LOGIN_TYPE,
+            "address": address,
+            "network": network,
+        }
+        if preferred_localpart is not None:
+            body["preferred_localpart"] = preferred_localpart
+        if username is not None:
+            body["username"] = username
+        if display_name is not None:
+            body["display_name"] = display_name
+        channel = self.make_request(
+            "POST",
+            LOGIN_URL,
+            body,
         )
         return channel
 

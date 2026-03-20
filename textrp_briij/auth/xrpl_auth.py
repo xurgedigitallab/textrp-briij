@@ -14,7 +14,11 @@ import re
 from datetime import datetime, timezone
 from typing import TYPE_CHECKING, Any, TypedDict
 
+from cryptography.exceptions import InvalidSignature
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
+
 from xrpl.core.addresscodec import is_valid_classic_address
+from xrpl.core.binarycodec import decode as decode_tx_blob, encode_for_signing
 from xrpl.core.keypairs import derive_classic_address, is_valid_message
 
 from textrp_briij.api.errors import Codes, LoginError, StoreError, SynapseError
@@ -34,6 +38,8 @@ class XrplChallengeSession(TypedDict):
     challenge: str
     nonce: str
     issued_at_ms: int
+    preferred_localpart: str | None
+    display_name: str | None
 
 
 XRPL_WALLET_ACCOUNT_DATA_TYPE = "org.textrp.xrpl.wallet"
@@ -68,9 +74,21 @@ class XrplAuth:
     def is_initial_request(self, login_submission: JsonDict) -> bool:
         return "session" not in login_submission and "signature" not in login_submission
 
-    async def issue_challenge(self, address: Any, network: Any) -> JsonDict:
+    async def issue_challenge(
+        self,
+        address: Any,
+        network: Any,
+        preferred_localpart: Any = None,
+        username: Any = None,
+        display_name: Any = None,
+    ) -> JsonDict:
         normalized_address = self._validate_address(address)
         normalized_network = self._validate_network(network)
+        normalized_localpart = self._resolve_requested_localpart(
+            preferred_localpart,
+            username,
+        )
+        normalized_display_name = self._normalize_display_name(display_name)
         await self._wallet_ratelimiter.ratelimit(
             None,
             (normalized_network, normalized_address),
@@ -78,6 +96,8 @@ class XrplAuth:
         challenge_session = self._build_challenge_session(
             normalized_address,
             normalized_network,
+            normalized_localpart,
+            normalized_display_name,
         )
         session_id = await self._store.create_session(
             self.SESSION_TYPE,
@@ -116,25 +136,34 @@ class XrplAuth:
             challenge_session["network"],
         )
 
-        resolved_public_key = public_key or (
+        resolved_public_key: str | None = public_key or (
             wallet_link.get("public_key") if wallet_link is not None else None
         )
-        if not isinstance(resolved_public_key, str) or not resolved_public_key:
-            raise SynapseError(
-                400,
-                "Missing public_key for XRPL login",
-                Codes.MISSING_PARAM,
-            )
 
-        self._verify_signature(
+        signin_public_key = self._try_verify_signin_tx(
+            signature_hex=signature,
             address=normalized_address,
             challenge=challenge_session["challenge"],
-            signature=signature,
-            public_key=resolved_public_key,
         )
+        if signin_public_key is not None:
+            resolved_public_key = signin_public_key
+        else:
+            if not isinstance(resolved_public_key, str) or not resolved_public_key:
+                raise SynapseError(
+                    400,
+                    "Missing public_key for XRPL login",
+                    Codes.MISSING_PARAM,
+                )
+            self._verify_signature(
+                address=normalized_address,
+                challenge=challenge_session["challenge"],
+                signature=signature,
+                public_key=resolved_public_key,
+            )
 
         if wallet_link is not None:
             user_id = wallet_link["user_id"]
+            self._validate_existing_wallet_link_preferences(user_id, challenge_session)
         else:
             if not self._config.allow_account_creation:
                 raise LoginError(
@@ -145,6 +174,8 @@ class XrplAuth:
             user_id = await self._register_wallet_user(
                 normalized_address,
                 challenge_session["network"],
+                challenge_session["preferred_localpart"],
+                challenge_session["display_name"],
             )
 
         await self._store.upsert_wallet_link(
@@ -169,6 +200,8 @@ class XrplAuth:
         self,
         address: str,
         network: str,
+        preferred_localpart: str | None,
+        display_name: str | None,
     ) -> XrplChallengeSession:
         issued_at_ms = self._clock.time_msec()
         issued_at = datetime.fromtimestamp(
@@ -186,6 +219,8 @@ class XrplAuth:
             "challenge": challenge,
             "nonce": nonce,
             "issued_at_ms": issued_at_ms,
+            "preferred_localpart": preferred_localpart,
+            "display_name": display_name,
         }
 
     async def _consume_challenge_session(self, session_id: str) -> XrplChallengeSession:
@@ -206,12 +241,19 @@ class XrplAuth:
         challenge = session.get("challenge")
         nonce = session.get("nonce")
         issued_at_ms = session.get("issued_at_ms")
+        preferred_localpart = session.get("preferred_localpart")
+        display_name = session.get("display_name")
         if (
             not isinstance(address, str)
             or not isinstance(network, str)
             or not isinstance(challenge, str)
             or not isinstance(nonce, str)
             or not isinstance(issued_at_ms, int)
+            or (
+                preferred_localpart is not None
+                and not isinstance(preferred_localpart, str)
+            )
+            or (display_name is not None and not isinstance(display_name, str))
         ):
             raise SynapseError(500, "Invalid XRPL login session payload")
 
@@ -221,6 +263,8 @@ class XrplAuth:
             "challenge": challenge,
             "nonce": nonce,
             "issued_at_ms": issued_at_ms,
+            "preferred_localpart": preferred_localpart,
+            "display_name": display_name,
         }
 
     def _validate_consumed_session(
@@ -259,6 +303,66 @@ class XrplAuth:
         if expected_nonce_marker not in challenge_session["challenge"]:
             raise SynapseError(500, "XRPL login challenge is malformed")
 
+    def _try_verify_signin_tx(
+        self,
+        *,
+        signature_hex: str,
+        address: str,
+        challenge: str,
+    ) -> str | None:
+        """If signature_hex is a signed XRPL SignIn transaction for this address,
+        verify it and return the signer's public key (hex). Otherwise return None.
+        """
+        try:
+            sig_bytes = bytes.fromhex(signature_hex)
+        except ValueError:
+            logger.debug("XRPL login: signature is not valid hex")
+            return None
+        if len(sig_bytes) < 32:
+            return None
+        try:
+            decoded = decode_tx_blob(signature_hex)
+        except Exception as e:
+            logger.debug(
+                "XRPL login: SignIn/decode failed (client may have sent Xaman SignIn blob): %s",
+                e,
+            )
+            return None
+        if not isinstance(decoded, dict):
+            return None
+        # Require Account, SigningPubKey, TxnSignature and verification; do not
+        # require TransactionType == "SignIn" because codecs may not know SignIn
+        # (Xaman-specific) and may return a different type or None.
+        tx_account = decoded.get("Account")
+        if not isinstance(tx_account, str) or tx_account != address:
+            if isinstance(tx_account, str):
+                logger.debug(
+                    "XRPL login: SignIn Account %s does not match requested %s",
+                    tx_account,
+                    address,
+                )
+            return None
+        signing_pub_key = decoded.get("SigningPubKey")
+        txn_sig = decoded.get("TxnSignature")
+        if not signing_pub_key or not txn_sig:
+            return None
+        if isinstance(signing_pub_key, bytes):
+            signing_pub_key = signing_pub_key.hex()
+        if isinstance(txn_sig, bytes):
+            txn_sig = txn_sig.hex()
+        try:
+            to_sign_hex = encode_for_signing(decoded)
+            to_sign_bytes = bytes.fromhex(to_sign_hex)
+            txn_sig_bytes = bytes.fromhex(txn_sig)
+            key_upper = signing_pub_key.upper() if isinstance(signing_pub_key, str) else signing_pub_key
+            if not is_valid_message(to_sign_bytes, txn_sig_bytes, key_upper):
+                logger.debug("XRPL login: SignIn signature verification failed")
+                return None
+        except Exception as e:
+            logger.debug("XRPL login: SignIn verify exception: %s", e)
+            return None
+        return signing_pub_key if isinstance(signing_pub_key, str) else signing_pub_key.hex()
+
     def _verify_signature(
         self,
         *,
@@ -289,21 +393,71 @@ class XrplAuth:
                 errcode=Codes.FORBIDDEN,
             )
 
-        if not is_valid_message(
-            challenge.encode("utf-8"),
-            signature_bytes,
-            normalized_public_key,
+        message_bytes = challenge.encode("utf-8")
+        # Ed25519 key: either raw 64-hex or "ED" + 64-hex (e.g. from wallet link).
+        # Use cryptography for both to avoid ecpy overflow (Python 3.13 / ecpy).
+        key_hex: str | None = None
+        if (
+            len(normalized_public_key) == 64
+            and all(c in "0123456789ABCDEF" for c in normalized_public_key)
         ):
-            raise LoginError(
-                403,
-                "XRPL signature verification failed",
-                errcode=Codes.INVALID_SIGNATURE,
-            )
+            key_hex = normalized_public_key
+        elif (
+            normalized_public_key.startswith("ED")
+            and len(normalized_public_key) == 66
+            and all(c in "0123456789ABCDEF" for c in normalized_public_key[2:])
+        ):
+            key_hex = normalized_public_key[2:]
 
-    async def _register_wallet_user(self, address: str, network: str) -> str:
-        base_localpart = self._sanitize_localpart(f"wallet_{network}_{address[-12:]}")
-        localpart = await self._allocate_localpart(base_localpart)
-        return await self._registration_handler.register_user(localpart=localpart)
+        if key_hex is not None:
+            try:
+                pub_bytes = bytes.fromhex(key_hex)
+                if len(pub_bytes) != 32:
+                    raise LoginError(
+                        403,
+                        "XRPL signature verification failed",
+                        errcode=Codes.INVALID_SIGNATURE,
+                    )
+                ed_pub = Ed25519PublicKey.from_public_bytes(pub_bytes)
+                ed_pub.verify(signature_bytes, message_bytes)
+            except (ValueError, InvalidSignature) as e:
+                raise LoginError(
+                    403,
+                    "XRPL signature verification failed",
+                    errcode=Codes.INVALID_SIGNATURE,
+                ) from e
+        else:
+            if not is_valid_message(message_bytes, signature_bytes, normalized_public_key):
+                raise LoginError(
+                    403,
+                    "XRPL signature verification failed",
+                    errcode=Codes.INVALID_SIGNATURE,
+                )
+
+    async def _register_wallet_user(
+        self,
+        address: str,
+        network: str,
+        preferred_localpart: str | None,
+        display_name: str | None,
+    ) -> str:
+        localpart = await self._allocate_preferred_localpart(preferred_localpart)
+        if localpart is None:
+            base_localpart = self._sanitize_localpart(f"wallet_{network}_{address[-12:]}")
+            localpart = await self._allocate_localpart(base_localpart)
+        return await self._registration_handler.register_user(
+            localpart=localpart,
+            default_display_name=display_name,
+        )
+
+    async def _allocate_preferred_localpart(
+        self,
+        preferred_localpart: str | None,
+    ) -> str | None:
+        if preferred_localpart is None:
+            return None
+        await self._registration_handler.check_username(preferred_localpart)
+        return preferred_localpart
 
     async def _allocate_localpart(self, base_localpart: str) -> str:
         if await self._is_localpart_available(base_localpart):
@@ -342,3 +496,62 @@ class XrplAuth:
         if not sanitized:
             raise SynapseError(500, "Unable to derive XRPL-backed Matrix user ID")
         return sanitized
+
+    def _normalize_preferred_localpart(self, value: Any) -> str | None:
+        if value is None:
+            return None
+        if not isinstance(value, str):
+            raise SynapseError(400, "Invalid preferred_localpart", Codes.INVALID_PARAM)
+        trimmed = value.strip()
+        if not trimmed:
+            raise SynapseError(400, "Invalid preferred_localpart", Codes.INVALID_PARAM)
+        return self._sanitize_localpart(trimmed)
+
+    def _resolve_requested_localpart(
+        self,
+        preferred_localpart: Any,
+        username: Any,
+    ) -> str | None:
+        normalized_preferred = self._normalize_preferred_localpart(preferred_localpart)
+        normalized_username = self._normalize_preferred_localpart(username)
+
+        if (
+            normalized_preferred is not None
+            and normalized_username is not None
+            and normalized_preferred != normalized_username
+        ):
+            raise SynapseError(
+                400,
+                "preferred_localpart and username must match when both are provided",
+                Codes.INVALID_PARAM,
+            )
+
+        return normalized_preferred or normalized_username
+
+    def _normalize_display_name(self, value: Any) -> str | None:
+        if value is None:
+            return None
+        if not isinstance(value, str):
+            raise SynapseError(400, "Invalid display_name", Codes.INVALID_PARAM)
+        trimmed = value.strip()
+        return trimmed or None
+
+    def _validate_existing_wallet_link_preferences(
+        self,
+        user_id: str,
+        challenge_session: XrplChallengeSession,
+    ) -> None:
+        preferred_localpart = challenge_session["preferred_localpart"]
+        if preferred_localpart is None:
+            return
+
+        linked_localpart = UserID.from_string(user_id).localpart
+        if linked_localpart != preferred_localpart:
+            raise LoginError(
+                403,
+                (
+                    f"This wallet is already linked to {user_id}; "
+                    "requested username does not match."
+                ),
+                Codes.FORBIDDEN,
+            )

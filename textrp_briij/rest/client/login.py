@@ -392,6 +392,9 @@ class LoginRestServlet(RestServlet):
             challenge = await self._xrpl_auth.issue_challenge(
                 login_submission.get("address"),
                 login_submission.get("network"),
+                login_submission.get("preferred_localpart"),
+                login_submission.get("username"),
+                login_submission.get("display_name"),
             )
             return 401, challenge
 

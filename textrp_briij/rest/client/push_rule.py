@@ -48,7 +48,8 @@ if TYPE_CHECKING:
 
 
 class PushRuleRestServlet(RestServlet):
-    PATTERNS = client_patterns("/(?P<path>pushrules/.*)$", v1=True)
+    # Accept both `/pushrules` and `/pushrules/...` for client compatibility.
+    PATTERNS = client_patterns("/(?P<path>pushrules(?:/.*)?)$", v1=True)
     SLIGHTLY_PEDANTIC_TRAILING_SLASH_ERROR = (
         "Unrecognised request: You probably wanted a trailing slash"
     )
@@ -178,6 +179,9 @@ class PushRuleRestServlet(RestServlet):
         # to send which means doing unnecessary work sometimes but is
         # is probably not going to make a whole lot of difference
         rules = await self._push_rules_handler.push_rules_for_user(requester.user)
+
+        if path == "pushrules":
+            return 200, rules
 
         path_parts = path.split("/")[1:]
 

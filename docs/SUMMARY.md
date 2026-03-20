@@ -20,6 +20,7 @@
 # Usage
 - [Federation](federate.md)
 - [NFT-based Verification Trust](verification-on-chain.md)
+- [Briij Wallet Authentication (XRPL/Xahau)](briij-wallet-auth.md)
 - [Configuration](usage/configuration/README.md)
     - [Configuration Manual](usage/configuration/config_documentation.md)
     - [Homeserver Sample Config File](usage/configuration/homeserver_sample_config.md)

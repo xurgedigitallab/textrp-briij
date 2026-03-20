@@ -33,17 +33,17 @@ services:
     labels:
       # The following lines are valid for Traefik version 1.x:
       - traefik.enable=true
-      - traefik.frontend.rule=Host:test-client.textrp.io
+      - traefik.frontend.rule=Host:my.briij.host
       - traefik.port=8008
       # Alternatively, for Traefik version 2.0:
       - traefik.enable=true
       - traefik.http.routers.http-textrp-briij.entryPoints=http
-      - traefik.http.routers.http-textrp-briij.rule=Host(`test-server.textrp.io`)
+      - traefik.http.routers.http-textrp-briij.rule=Host(`my.briij.host`)
       - traefik.http.middlewares.https_redirect.redirectscheme.scheme=https
       - traefik.http.middlewares.https_redirect.redirectscheme.permanent=true
       - traefik.http.routers.http-textrp-briij.middlewares=https_redirect
       - traefik.http.routers.https-textrp-briij.entryPoints=https
-      - traefik.http.routers.https-textrp-briij.rule=Host(`test-server.textrp.io`)
+      - traefik.http.routers.https-textrp-briij.rule=Host(`my.briij.host`)
       - traefik.http.routers.https-textrp-briij.service=textrp_briij
       - traefik.http.routers.https-textrp-briij.tls=true
       - traefik.http.services.textrp_briij.loadbalancer.server.port=8008
