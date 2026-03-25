@@ -102,13 +102,50 @@ derived from the wallet seed. The seed never leaves the client.
   "session": "abc123...",
   "address": "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
   "signature": "hex-encoded-signature",
-  "public_key": "hex-public-key"
+  "public_key": "hex-public-key",
+  "wallet_e2ee_recovery": {
+    "envelope_version": 1,
+    "chain_id": "xrpl",
+    "account_id": "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
+    "created_at_ms": 1742492912000,
+    "key_id": "k-....",
+    "wallet_wrap": {
+      "alg": "xchacha20poly1305",
+      "kdf": "blake3",
+      "salt": "base64",
+      "nonce": "base64",
+      "ciphertext": "base64"
+    },
+    "password_wrap": {
+      "alg": "xchacha20poly1305",
+      "kdf": "argon2id",
+      "salt": "base64",
+      "nonce": "base64",
+      "ciphertext": "base64",
+      "params": {
+        "m": 19456,
+        "t": 2,
+        "p": 1,
+        "v": 19
+      }
+    }
+  }
 }
 ```
 
 If the signature verifies successfully, TextRP-Briij links the wallet address to
 the Matrix account and returns a standard Matrix login response with an access
 token.
+
+When `wallet_e2ee_recovery` is provided, the homeserver validates the envelope and
+stores it as user global account data at:
+
+- `org.textrp.wallet.e2ee_recovery.v1`
+
+The server also persists canonical wallet identity metadata for chain-agnostic
+clients:
+
+- `org.textrp.wallet.identity`
 
 ## Error handling and troubleshooting
 
@@ -131,3 +168,5 @@ token.
 - Existing Xaman/OIDC SSO flows continue to work in parallel.
 - Challenges are short-lived and single-use.
 - Linked wallet metadata is persisted on the homeserver; wallet seeds are not.
+- For chain-agnostic extension details and conformance checklist, see:
+  `docs/wallet-auth-chain-agnostic.md`.

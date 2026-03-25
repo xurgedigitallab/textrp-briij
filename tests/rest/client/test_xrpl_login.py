@@ -23,6 +23,10 @@ from xrpl.core.keypairs import (
 import textrp_briij.rest.admin
 from textrp_briij.api.errors import Codes
 from textrp_briij.auth.xrpl_auth import XrplAuth
+from textrp_briij.auth.wallet_auth_types import (
+    WALLET_E2EE_RECOVERY_ACCOUNT_DATA_TYPE,
+    WALLET_IDENTITY_ACCOUNT_DATA_TYPE,
+)
 from textrp_briij.rest.client import login, register
 from textrp_briij.rest.client.account import WhoamiRestServlet
 from textrp_briij.server import HomeServer
@@ -94,6 +98,92 @@ class XrplLoginTestCase(HomeserverTestCase):
         )
         self.assertEqual(whoami.code, HTTPStatus.OK, whoami.result)
         self.assertEqual(whoami.json_body["user_id"], login_response.json_body["user_id"])
+        identity = self.get_success(
+            self.hs.get_datastores().main.get_global_account_data_by_type_for_user(
+                login_response.json_body["user_id"],
+                WALLET_IDENTITY_ACCOUNT_DATA_TYPE,
+            )
+        )
+        self.assertIsNotNone(identity)
+        self.assertEqual(identity.get("chain_id"), "xrpl")
+        self.assertEqual(identity.get("account_id"), wallet["address"])
+
+    @override_config({"xrpl_auth": {"enabled": True}})
+    def test_complete_login_stores_wallet_recovery_envelope(self) -> None:
+        wallet = self._generate_wallet(CryptoAlgorithm.ED25519)
+        challenge_response = self._start_login(wallet["address"], "xrpl")
+        envelope = {
+            "envelope_version": 1,
+            "chain_id": "xrpl",
+            "account_id": wallet["address"],
+            "created_at_ms": 1,
+            "key_id": "wallet-key-1",
+            "wallet_wrap": {
+                "alg": "xchacha20poly1305",
+                "kdf": "blake3",
+                "salt": "AA==",
+                "nonce": "AA==",
+                "ciphertext": "AA==",
+            },
+            "password_wrap": {
+                "alg": "xchacha20poly1305",
+                "kdf": "argon2id",
+                "salt": "AA==",
+                "nonce": "AA==",
+                "ciphertext": "AA==",
+                "params": {"m": 65536, "t": 3, "p": 1},
+            },
+        }
+        login_response = self._complete_login(
+            wallet,
+            cast(str, challenge_response.json_body["session"]),
+            cast(str, challenge_response.json_body["challenge"]),
+            wallet_e2ee_recovery=envelope,
+        )
+        self.assertEqual(login_response.code, HTTPStatus.OK, login_response.result)
+        stored = self.get_success(
+            self.hs.get_datastores().main.get_global_account_data_by_type_for_user(
+                login_response.json_body["user_id"],
+                WALLET_E2EE_RECOVERY_ACCOUNT_DATA_TYPE,
+            )
+        )
+        self.assertIsNotNone(stored)
+        self.assertEqual(stored.get("chain_id"), "xrpl")
+        self.assertEqual(stored.get("account_id"), wallet["address"])
+
+    @override_config({"xrpl_auth": {"enabled": True}})
+    def test_complete_login_rejects_invalid_wallet_recovery_envelope(self) -> None:
+        wallet = self._generate_wallet(CryptoAlgorithm.ED25519)
+        challenge_response = self._start_login(wallet["address"], "xrpl")
+        invalid_envelope = {
+            "envelope_version": 2,
+            "chain_id": "xrpl",
+            "account_id": wallet["address"],
+            "created_at_ms": 1,
+            "key_id": "k",
+            "wallet_wrap": {
+                "alg": "x",
+                "kdf": "x",
+                "salt": "AA==",
+                "nonce": "AA==",
+                "ciphertext": "AA==",
+            },
+            "password_wrap": {
+                "alg": "x",
+                "kdf": "x",
+                "salt": "AA==",
+                "nonce": "AA==",
+                "ciphertext": "AA==",
+            },
+        }
+        login_response = self._complete_login(
+            wallet,
+            cast(str, challenge_response.json_body["session"]),
+            cast(str, challenge_response.json_body["challenge"]),
+            wallet_e2ee_recovery=invalid_envelope,
+        )
+        self.assertEqual(login_response.code, HTTPStatus.BAD_REQUEST, login_response.result)
+        self.assertEqual(login_response.json_body.get("errcode"), Codes.INVALID_PARAM)
 
     @override_config({"xrpl_auth": {"enabled": True}})
     def test_existing_link_can_login_without_public_key(self) -> None:
@@ -322,6 +412,7 @@ class XrplLoginTestCase(HomeserverTestCase):
         challenge: str,
         *,
         include_public_key: bool = True,
+        wallet_e2ee_recovery: dict[str, Any] | None = None,
     ):
         body: dict[str, Any] = {
             "type": XrplAuth.LOGIN_TYPE,
@@ -331,6 +422,8 @@ class XrplLoginTestCase(HomeserverTestCase):
         }
         if include_public_key:
             body["public_key"] = wallet["public_key"]
+        if wallet_e2ee_recovery is not None:
+            body["wallet_e2ee_recovery"] = wallet_e2ee_recovery
 
         return self.make_request("POST", LOGIN_URL, body)
 
