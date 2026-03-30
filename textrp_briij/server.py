@@ -99,6 +99,7 @@ from textrp_briij.handlers.federation_event import FederationEventHandler
 from textrp_briij.handlers.identity import IdentityHandler
 from textrp_briij.handlers.initial_sync import InitialSyncHandler
 from textrp_briij.handlers.message import EventCreationHandler, MessageHandler
+from textrp_briij.handlers.mcredit_handler import MCreditHandler
 from textrp_briij.handlers.pagination import PaginationHandler
 from textrp_briij.handlers.password_policy import PasswordPolicyHandler
 from textrp_briij.handlers.presence import (
@@ -139,6 +140,7 @@ from textrp_briij.handlers.thread_subscriptions import ThreadSubscriptionsHandle
 from textrp_briij.handlers.typing import FollowerTypingHandler, TypingWriterHandler
 from textrp_briij.handlers.user_directory import UserDirectoryHandler
 from textrp_briij.handlers.verification import VerificationHandler
+from textrp_briij.handlers.voip import VoipHandler
 from textrp_briij.handlers.worker_lock import WorkerLocksHandler
 from textrp_briij.handlers.xrpl_identity import XrplIdentityHandler
 from textrp_briij.http.client import (
@@ -1090,6 +1092,14 @@ class HomeServer(metaclass=abc.ABCMeta):
     @cache_in_self
     def get_registration_handler(self) -> RegistrationHandler:
         return RegistrationHandler(self)
+
+    @cache_in_self
+    def get_mcredit_handler(self) -> MCreditHandler:
+        return MCreditHandler(self)
+
+    @cache_in_self
+    def get_voip_handler(self) -> VoipHandler:
+        return VoipHandler(self)
 
     @cache_in_self
     def get_account_validity_handler(self) -> AccountValidityHandler:

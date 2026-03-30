@@ -24,6 +24,7 @@ from typing import TYPE_CHECKING, cast
 
 import attr
 
+from textrp_briij.api.errors import Codes, SynapseError
 from textrp_briij.api.constants import Direction
 from textrp_briij.config.homeserver import HomeServerConfig
 from textrp_briij.storage._base import make_in_list_sql_clause
@@ -390,6 +391,159 @@ class DataStore(
             )
 
         return await self.db_pool.runInteraction("search_users", search_users)
+
+    async def get_mcredit_balance(self, user_id: str) -> int:
+        def _get_mcredit_balance_txn(txn: LoggingTransaction) -> int:
+            txn.execute(
+                "SELECT balance FROM mcredit_balances WHERE user_id = ?",
+                (user_id,),
+            )
+            row = txn.fetchone()
+            if row is None:
+                return 0
+
+            return int(row[0])
+
+        return await self.db_pool.runInteraction(
+            "get_mcredit_balance", _get_mcredit_balance_txn
+        )
+
+    async def get_premium_feature_by_key(self, feature_key: str) -> dict[str, object] | None:
+        def _get_premium_feature_by_key_txn(
+            txn: LoggingTransaction,
+        ) -> dict[str, object] | None:
+            txn.execute(
+                """
+                SELECT feature_id, feature_key, name, description, mcredits_cost, category, is_active, created_ts
+                FROM premium_features
+                WHERE feature_key = ?
+                """,
+                (feature_key,),
+            )
+            row = txn.fetchone()
+            if row is None:
+                return None
+
+            return {
+                "feature_id": int(row[0]),
+                "feature_key": row[1],
+                "name": row[2],
+                "description": row[3],
+                "mcredits_cost": int(row[4]),
+                "category": row[5],
+                "is_active": bool(row[6]),
+                "created_ts": int(row[7]),
+            }
+
+        return await self.db_pool.runInteraction(
+            "get_premium_feature_by_key", _get_premium_feature_by_key_txn
+        )
+
+    async def add_mcredit_transaction(
+        self,
+        user_id: str,
+        amount: int,
+        reason: str,
+        feature_id: int | None = None,
+        onchain_tx_id: str | None = None,
+    ) -> int:
+        now_ms = self._clock.time_msec()
+
+        def _add_mcredit_transaction_txn(txn: LoggingTransaction) -> int:
+            txn.execute("SELECT COALESCE(MAX(tx_id), 0) + 1 FROM mcredit_transactions")
+            (next_tx_id,) = txn.fetchone()
+            txn.execute(
+                """
+                INSERT INTO mcredit_transactions (
+                    tx_id, user_id, feature_id, amount, reason, onchain_tx_id, ts
+                ) VALUES (?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    int(next_tx_id),
+                    user_id,
+                    feature_id,
+                    int(amount),
+                    reason,
+                    onchain_tx_id,
+                    now_ms,
+                ),
+            )
+            return int(next_tx_id)
+
+        return await self.db_pool.runInteraction(
+            "add_mcredit_transaction", _add_mcredit_transaction_txn
+        )
+
+    async def spend_mcredits(
+        self, user_id: str, feature_key: str, amount: int, reason: str
+    ) -> int:
+        if amount <= 0:
+            raise SynapseError(400, "Amount must be positive", errcode=Codes.INVALID_PARAM)
+
+        now_ms = self._clock.time_msec()
+
+        def _spend_mcredits_txn(txn: LoggingTransaction) -> int:
+            txn.execute(
+                "SELECT balance FROM mcredit_balances WHERE user_id = ?",
+                (user_id,),
+            )
+            row = txn.fetchone()
+            if row is None:
+                raise SynapseError(404, "mCredit balance not found", errcode=Codes.NOT_FOUND)
+
+            balance = int(row[0])
+            if balance < amount:
+                raise SynapseError(
+                    402,
+                    "Insufficient mCredits",
+                    errcode=Codes.RESOURCE_LIMIT_EXCEEDED,
+                )
+
+            txn.execute(
+                """
+                SELECT feature_id
+                FROM premium_features
+                WHERE feature_key = ?
+                """,
+                (feature_key,),
+            )
+            feature_row = txn.fetchone()
+            if feature_row is None:
+                raise SynapseError(404, "Feature not found", errcode=Codes.NOT_FOUND)
+
+            feature_id = int(feature_row[0])
+            new_balance = balance - amount
+            txn.execute(
+                """
+                UPDATE mcredit_balances
+                SET balance = ?, updated_ts = ?
+                WHERE user_id = ?
+                """,
+                (new_balance, now_ms, user_id),
+            )
+
+            txn.execute("SELECT COALESCE(MAX(tx_id), 0) + 1 FROM mcredit_transactions")
+            (next_tx_id,) = txn.fetchone()
+            txn.execute(
+                """
+                INSERT INTO mcredit_transactions (
+                    tx_id, user_id, feature_id, amount, reason, onchain_tx_id, ts
+                ) VALUES (?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    int(next_tx_id),
+                    user_id,
+                    feature_id,
+                    -int(amount),
+                    reason,
+                    None,
+                    now_ms,
+                ),
+            )
+
+            return new_balance
+
+        return await self.db_pool.runInteraction("spend_mcredits", _spend_mcredits_txn)
 
 
 def check_database_before_upgrade(

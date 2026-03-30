@@ -128,6 +128,7 @@ class RegistrationHandler:
         self._user_consent_version = self.hs.config.consent.user_consent_version
         self._server_notices_mxid = hs.config.servernotices.server_notices_mxid
         self._user_types_config = hs.config.user_types
+        self._mcredits_initial = hs.config.briij.mcredits_initial
 
         self._spam_checker_module_callbacks = hs.get_module_api_callbacks().spam_checker
 
@@ -374,6 +375,9 @@ class RegistrationHandler:
                     # if user id is taken, just generate another
                     fail_count += 1
 
+        if not make_guest:
+            await self._grant_initial_mcredits(user_id)
+
         registration_counter.labels(
             guest=make_guest,
             shadow_banned=shadow_banned,
@@ -414,6 +418,33 @@ class RegistrationHandler:
             await self._register_email_threepid(user_id, threepid_dict, None)
 
         return user_id
+
+    async def _grant_initial_mcredits(self, user_id: str) -> None:
+        existing = await self.store.db_pool.simple_select_one_onecol(
+            table="mcredit_balances",
+            keyvalues={"user_id": user_id},
+            retcol="user_id",
+            allow_none=True,
+            desc="get_mcredit_balance_row",
+        )
+        if existing is not None:
+            return
+
+        now_ms = self.clock.time_msec()
+        await self.store.db_pool.simple_insert(
+            "mcredit_balances",
+            {
+                "user_id": user_id,
+                "balance": self._mcredits_initial,
+                "updated_ts": now_ms,
+            },
+            desc="insert_initial_mcredit_balance",
+        )
+        await self.store.add_mcredit_transaction(
+            user_id=user_id,
+            amount=self._mcredits_initial,
+            reason="initial_bonus",
+        )
 
     async def _create_and_join_rooms(self, user_id: str) -> None:
         """

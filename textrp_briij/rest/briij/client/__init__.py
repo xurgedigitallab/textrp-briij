@@ -23,14 +23,20 @@ from typing import TYPE_CHECKING, Mapping
 
 from twisted.web.resource import Resource
 
-from textrp_briij.rest.briij.info import BriijInfoResource
-from textrp_briij.rest.briij.client.federation_whitelist import FederationWhitelistResource
+from textrp_briij.rest.briij.client.federation_whitelist import (
+    FederationWhitelistResource,
+)
+from textrp_briij.rest.briij.client.legacy_textrp_backend_compat import (
+    LegacyMyAddressResource,
+    LegacyMyFeaturesResource,
+)
 from textrp_briij.rest.briij.client.new_user_consent import NewUserConsentResource
 from textrp_briij.rest.briij.client.pick_idp import PickIdpResource
 from textrp_briij.rest.briij.client.pick_username import pick_username_resource
 from textrp_briij.rest.briij.client.rendezvous import MSC4108RendezvousSessionResource
 from textrp_briij.rest.briij.client.sso_register import SsoRegisterResource
 from textrp_briij.rest.briij.client.unsubscribe import UnsubscribeResource
+from textrp_briij.rest.briij.info import BriijInfoResource
 from textrp_briij.rest.briij.mas import MasResource
 
 if TYPE_CHECKING:
@@ -57,6 +63,9 @@ def build_briij_client_resource_tree(hs: "HomeServer") -> Mapping[str, Resource]
         "/_briij/client/sso_register": SsoRegisterResource(hs),
         # Unsubscribe to notification emails link
         "/_briij/client/unsubscribe": UnsubscribeResource(hs),
+        # Legacy TextRP-Backend compatibility endpoints consumed by mobile-chat.
+        "/my-address": LegacyMyAddressResource(hs),
+        "/my-features": LegacyMyFeaturesResource(hs),
     }
 
     if hs.config.mas.enabled:

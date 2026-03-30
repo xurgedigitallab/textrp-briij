@@ -38,8 +38,13 @@ def admin_patterns(path_regex: str, version: str = "v1") -> Iterable[Pattern]:
     Returns:
         A list of regex patterns.
     """
-    admin_prefix = "^/_synapse/admin/" + version
-    patterns = [re.compile(admin_prefix + path_regex)]
+    # Briij deployments can expose admin APIs under either /_synapse/admin
+    # (upstream default) or /_briij/admin (custom mount in local/dev stacks).
+    prefixes = (
+        "^/_synapse/admin/" + version,
+        "^/_briij/admin/" + version,
+    )
+    patterns = [re.compile(prefix + path_regex) for prefix in prefixes]
     return patterns
 
 
