@@ -24,6 +24,7 @@ from typing import TYPE_CHECKING, cast
 
 import attr
 
+from textrp_briij.api.errors import Codes, SynapseError
 from textrp_briij.api.constants import Direction
 from textrp_briij.config.homeserver import HomeServerConfig
 from textrp_briij.storage._base import make_in_list_sql_clause
@@ -38,7 +39,7 @@ from textrp_briij.storage.databases.main.sticky_events import StickyEventsWorker
 from textrp_briij.storage.databases.main.thread_subscriptions import (
     ThreadSubscriptionsWorkerStore,
 )
-from textrp_briij.storage.engines import BaseDatabaseEngine
+from textrp_briij.storage.engines import BaseDatabaseEngine, PostgresEngine
 from textrp_briij.storage.types import Cursor
 from textrp_briij.types import get_domain_from_id
 
@@ -390,6 +391,242 @@ class DataStore(
             )
 
         return await self.db_pool.runInteraction("search_users", search_users)
+
+    async def get_mcredit_balance(self, user_id: str) -> int:
+        def _get_mcredit_balance_txn(txn: LoggingTransaction) -> int:
+            txn.execute(
+                "SELECT balance FROM mcredit_balances WHERE user_id = ?",
+                (user_id,),
+            )
+            row = txn.fetchone()
+            if row is None:
+                return 0
+
+            return int(row[0])
+
+        return await self.db_pool.runInteraction(
+            "get_mcredit_balance", _get_mcredit_balance_txn
+        )
+
+    async def get_premium_feature_by_key(self, feature_key: str) -> dict[str, object] | None:
+        def _get_premium_feature_by_key_txn(
+            txn: LoggingTransaction,
+        ) -> dict[str, object] | None:
+            txn.execute(
+                """
+                SELECT feature_id, feature_key, name, description, mcredits_cost, category, is_active, created_ts
+                FROM premium_features
+                WHERE feature_key = ?
+                """,
+                (feature_key,),
+            )
+            row = txn.fetchone()
+            if row is None:
+                return None
+
+            return {
+                "feature_id": int(row[0]),
+                "feature_key": row[1],
+                "name": row[2],
+                "description": row[3],
+                "mcredits_cost": int(row[4]),
+                "category": row[5],
+                "is_active": bool(row[6]),
+                "created_ts": int(row[7]),
+            }
+
+        return await self.db_pool.runInteraction(
+            "get_premium_feature_by_key", _get_premium_feature_by_key_txn
+        )
+
+    async def get_active_premium_features(self) -> list[dict[str, object]]:
+        rows = await self.db_pool.simple_select_list(
+            table="premium_features",
+            keyvalues={"is_active": True},
+            retcols=(
+                "feature_key",
+                "name",
+                "description",
+                "mcredits_cost",
+                "category",
+                "is_active",
+            ),
+            desc="get_active_premium_features",
+        )
+        return [
+            {
+                "feature_key": row[0],
+                "name": row[1],
+                "description": row[2],
+                "mcredits_cost": int(row[3]),
+                "category": row[4],
+                "is_active": bool(row[5]),
+            }
+            for row in rows
+        ]
+
+    def _insert_mcredit_transaction_txn(
+        self,
+        txn: LoggingTransaction,
+        *,
+        user_id: str,
+        feature_id: int | None,
+        amount: int,
+        reason: str,
+        onchain_tx_id: str | None,
+        ts: int,
+    ) -> int:
+        if isinstance(self.database_engine, PostgresEngine):
+            txn.execute(
+                """
+                INSERT INTO mcredit_transactions (
+                    user_id, feature_id, amount, reason, onchain_tx_id, ts
+                ) VALUES (?, ?, ?, ?, ?, ?)
+                RETURNING tx_id
+                """,
+                (user_id, feature_id, int(amount), reason, onchain_tx_id, ts),
+            )
+            row = txn.fetchone()
+            if row is None:
+                raise SynapseError(500, "Failed to insert mCredit transaction")
+            return int(row[0])
+
+        txn.execute(
+            """
+            INSERT INTO mcredit_transactions (
+                user_id, feature_id, amount, reason, onchain_tx_id, ts
+            ) VALUES (?, ?, ?, ?, ?, ?)
+            """,
+            (user_id, feature_id, int(amount), reason, onchain_tx_id, ts),
+        )
+        txn.execute("SELECT last_insert_rowid()")
+        row = txn.fetchone()
+        if row is None:
+            raise SynapseError(500, "Failed to resolve inserted mCredit transaction ID")
+        return int(row[0])
+
+    async def add_mcredit_transaction(
+        self,
+        user_id: str,
+        amount: int,
+        reason: str,
+        feature_id: int | None = None,
+        onchain_tx_id: str | None = None,
+    ) -> int:
+        now_ms = self._clock.time_msec()
+
+        def _add_mcredit_transaction_txn(txn: LoggingTransaction) -> int:
+            return self._insert_mcredit_transaction_txn(
+                txn,
+                user_id=user_id,
+                feature_id=feature_id,
+                amount=int(amount),
+                reason=reason,
+                onchain_tx_id=onchain_tx_id,
+                ts=now_ms,
+            )
+
+        return await self.db_pool.runInteraction(
+            "add_mcredit_transaction", _add_mcredit_transaction_txn
+        )
+
+    async def spend_mcredits(self, user_id: str, feature_key: str, reason: str) -> int:
+        now_ms = self._clock.time_msec()
+
+        def _spend_mcredits_txn(txn: LoggingTransaction) -> int:
+            txn.execute(
+                """
+                SELECT feature_id, mcredits_cost, is_active
+                FROM premium_features
+                WHERE feature_key = ?
+                """,
+                (feature_key,),
+            )
+            feature_row = txn.fetchone()
+            if feature_row is None or not bool(feature_row[2]):
+                raise SynapseError(404, "Premium feature not found", errcode=Codes.NOT_FOUND)
+
+            feature_id = int(feature_row[0])
+            amount = int(feature_row[1])
+            if amount <= 0:
+                raise SynapseError(500, "Invalid mCredits cost for feature")
+
+            txn.execute(
+                """
+                UPDATE mcredit_balances
+                SET balance = balance - ?, updated_ts = ?
+                WHERE user_id = ? AND balance >= ?
+                """,
+                (amount, now_ms, user_id, amount),
+            )
+            if txn.rowcount == 0:
+                txn.execute(
+                    "SELECT 1 FROM mcredit_balances WHERE user_id = ?",
+                    (user_id,),
+                )
+                if txn.fetchone() is None:
+                    raise SynapseError(
+                        404, "mCredit balance not found", errcode=Codes.NOT_FOUND
+                    )
+                raise SynapseError(
+                    402,
+                    "Insufficient mCredits",
+                    errcode=Codes.RESOURCE_LIMIT_EXCEEDED,
+                )
+
+            txn.execute(
+                "SELECT balance FROM mcredit_balances WHERE user_id = ?",
+                (user_id,),
+            )
+            balance_row = txn.fetchone()
+            if balance_row is None:
+                raise SynapseError(404, "mCredit balance not found", errcode=Codes.NOT_FOUND)
+            new_balance = int(balance_row[0])
+
+            self._insert_mcredit_transaction_txn(
+                txn,
+                user_id=user_id,
+                feature_id=feature_id,
+                amount=-int(amount),
+                reason=reason,
+                onchain_tx_id=None,
+                ts=now_ms,
+            )
+
+            return new_balance
+
+        return await self.db_pool.runInteraction("spend_mcredits", _spend_mcredits_txn)
+
+    async def grant_initial_mcredits(self, user_id: str, amount: int) -> None:
+        now_ms = self._clock.time_msec()
+
+        def _grant_initial_mcredits_txn(txn: LoggingTransaction) -> None:
+            inserted = self.db_pool.simple_upsert_txn(
+                txn,
+                table="mcredit_balances",
+                keyvalues={"user_id": user_id},
+                values={},
+                insertion_values={
+                    "balance": int(amount),
+                    "updated_ts": now_ms,
+                },
+            )
+            if not inserted:
+                return
+
+            self._insert_mcredit_transaction_txn(
+                txn,
+                user_id=user_id,
+                feature_id=None,
+                amount=int(amount),
+                reason="initial_bonus",
+                onchain_tx_id=None,
+                ts=now_ms,
+            )
+
+        await self.db_pool.runInteraction(
+            "grant_initial_mcredits", _grant_initial_mcredits_txn
+        )
 
 
 def check_database_before_upgrade(

@@ -1,0 +1,32 @@
+#
+# This file is licensed under the Affero General Public License (AGPL) version 3.
+#
+# Copyright (C) 2026 Xurge Digital Lab
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# See the GNU Affero General Public License for more details:
+# <https://www.gnu.org/licenses/agpl-3.0.html>.
+#
+
+from typing import TYPE_CHECKING
+
+from textrp_briij.types import Requester
+
+if TYPE_CHECKING:
+    from textrp_briij.server import HomeServer
+
+
+class VoipHandler:
+    def __init__(self, hs: "HomeServer"):
+        self._mcredit_handler = hs.get_mcredit_handler()
+
+    async def start_call(self, requester: Requester) -> dict[str, object]:
+        # Gating hook: each call attempt spends voip_premium credits.
+        new_balance = await self._mcredit_handler.spend_mcredits(
+            requester, "voip_premium"
+        )
+        return {"started": True, "balance": new_balance}

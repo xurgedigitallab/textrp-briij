@@ -42,6 +42,7 @@ from textrp_briij.rest.client import (
     login,
     login_token_request,
     logout,
+    mcredits,
     matrixrtc,
     mutual_rooms,
     notifications,
@@ -128,6 +129,7 @@ CLIENT_SERVLET_FUNCTIONS: tuple[RegisterServletsFunc, ...] = (
     auth_metadata.register_servlets,
     thread_subscriptions.register_servlets,
     trust.register_servlets,
+    mcredits.register_servlets,
 )
 
 SERVLET_GROUPS: dict[str, Iterable[RegisterServletsFunc]] = {

@@ -19,7 +19,7 @@
 #
 #
 
-from ._base import ConfigError, RootConfig
+from ._base import Config, ConfigError, RootConfig
 from .account_validity import AccountValidityConfig
 from .api import ApiConfig
 from .appservice import AppServiceConfig
@@ -66,6 +66,29 @@ from .user_types import UserTypesConfig
 from .voip import VoipConfig
 from .workers import WorkerConfig
 from .xrpl_auth import XrplAuthConfig
+
+
+class BriijConfig(Config):
+    section = "briij"
+
+    def read_config(self, config: dict, **kwargs: object) -> None:
+        briij_config = config.get("briij") or {}
+        if not isinstance(briij_config, dict):
+            raise ConfigError("briij must be a mapping", ("briij",))
+
+        mcredits_initial = briij_config.get("mcredits_initial", 1000)
+        if not isinstance(mcredits_initial, int):
+            raise ConfigError(
+                "briij.mcredits_initial must be an integer",
+                ("briij", "mcredits_initial"),
+            )
+        if mcredits_initial < 0:
+            raise ConfigError(
+                "briij.mcredits_initial must be greater than or equal to zero",
+                ("briij", "mcredits_initial"),
+            )
+
+        self.mcredits_initial = mcredits_initial
 
 
 class HomeServerConfig(RootConfig):
@@ -118,6 +141,7 @@ class HomeServerConfig(RootConfig):
         BackgroundUpdateConfig,
         AutoAcceptInvitesConfig,
         UserTypesConfig,
+        BriijConfig,
         XrplAuthConfig,
         # This must be last, as it checks for conflicts with other config options.
         MasConfig,

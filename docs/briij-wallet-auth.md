@@ -168,5 +168,8 @@ clients:
 - Existing Xaman/OIDC SSO flows continue to work in parallel.
 - Challenges are short-lived and single-use.
 - Linked wallet metadata is persisted on the homeserver; wallet seeds are not.
+- For mCredits balance/spend APIs and legacy compatibility endpoints
+  (`/my-address`, `/my-features/.../enabled`), see:
+  `usage/mcredits.md`.
 - For chain-agnostic extension details and conformance checklist, see:
-  `docs/wallet-auth-chain-agnostic.md`.
+  `wallet-auth-chain-agnostic.md`.
