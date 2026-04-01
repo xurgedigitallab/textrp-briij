@@ -453,11 +453,17 @@ async def start(
 
     await _base.start(hs, freeze=freeze)
 
-    seeded = await seed_premium_features(
-        hs.get_datastores().main, hs.get_clock().time_msec()
-    )
-    if seeded:
-        logger.info("Seeded %d premium mCredit features", seeded)
+    try:
+        seeded = await seed_premium_features(
+            hs.get_datastores().main, hs.get_clock().time_msec()
+        )
+        if seeded:
+            logger.info("Seeded %d premium mCredit features", seeded)
+    except Exception:
+        logger.warning(
+            "Failed to seed premium mCredit features, continuing startup",
+            exc_info=True,
+        )
 
     # TODO: Feels like this should be moved somewhere else.
     for db in hs.get_datastores().databases:

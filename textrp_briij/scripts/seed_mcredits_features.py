@@ -66,16 +66,6 @@ async def seed_premium_features(store: "DataStore", now_ms: int) -> int:
     if not table_exists:
         return 0
 
-    existing_count = await store.db_pool.simple_select_one_onecol(
-        table="premium_features",
-        keyvalues={},
-        retcol="COUNT(*)",
-        allow_none=False,
-        desc="count_premium_features",
-    )
-    if int(existing_count) > 0:
-        return 0
-
     seeded = 0
     for (
         feature_id,
@@ -85,11 +75,12 @@ async def seed_premium_features(store: "DataStore", now_ms: int) -> int:
         mcredits_cost,
         category,
     ) in PREMIUM_FEATURES:
-        await store.db_pool.simple_insert(
-            "premium_features",
-            {
+        inserted = await store.db_pool.simple_upsert(
+            table="premium_features",
+            keyvalues={"feature_key": feature_key},
+            values={},
+            insertion_values={
                 "feature_id": feature_id,
-                "feature_key": feature_key,
                 "name": name,
                 "description": description,
                 "mcredits_cost": mcredits_cost,
@@ -99,6 +90,7 @@ async def seed_premium_features(store: "DataStore", now_ms: int) -> int:
             },
             desc=f"seed_{feature_key}",
         )
-        seeded += 1
+        if inserted:
+            seeded += 1
 
     return seeded

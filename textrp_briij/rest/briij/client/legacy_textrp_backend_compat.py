@@ -129,26 +129,15 @@ class LegacyMyFeaturesResource(JsonResource):
             )
 
         balance = await self._store.get_mcredit_balance(owner_user_id)
-        rows = await self._store.db_pool.simple_select_list(
-            table="premium_features",
-            keyvalues={"is_active": True},
-            retcols=(
-                "feature_key",
-                "name",
-                "description",
-                "mcredits_cost",
-                "category",
-            ),
-            desc="legacy_enabled_features",
-        )
+        rows = await self._store.get_active_premium_features()
 
         nfts = []
         for row in rows:
-            feature_key = row[0]
-            name = row[1]
-            description = row[2]
-            mcredits_cost = int(row[3])
-            category = row[4]
+            feature_key = row["feature_key"]
+            name = row["name"]
+            description = row["description"]
+            mcredits_cost = int(row["mcredits_cost"])
+            category = row["category"]
             if balance >= mcredits_cost:
                 nfts.append(
                     {

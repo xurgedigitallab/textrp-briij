@@ -24,6 +24,7 @@ class MCreditRegistrationTestCase(HomeserverTestCase):
     def prepare(self, reactor: MemoryReactor, clock: Clock, hs: HomeServer) -> None:
         self.registration_handler = hs.get_registration_handler()
         self.store = hs.get_datastores().main
+        self.initial_mcredits = hs.config.briij.mcredits_initial
 
     def test_new_user_gets_initial_mcredits(self) -> None:
         user_id = self.get_success(
@@ -31,7 +32,7 @@ class MCreditRegistrationTestCase(HomeserverTestCase):
         )
 
         balance = self.get_success(self.store.get_mcredit_balance(user_id))
-        self.assertEqual(balance, 1000)
+        self.assertEqual(balance, self.initial_mcredits)
 
     def test_initial_balance_and_transaction_exist(self) -> None:
         user_id = self.get_success(
@@ -46,7 +47,7 @@ class MCreditRegistrationTestCase(HomeserverTestCase):
                 desc="test_mcredit_balance_row",
             )
         )
-        self.assertEqual(balance_row[1], 1000)
+        self.assertEqual(balance_row[1], self.initial_mcredits)
 
         tx_rows = self.get_success(
             self.store.db_pool.simple_select_list(
@@ -57,4 +58,4 @@ class MCreditRegistrationTestCase(HomeserverTestCase):
             )
         )
         self.assertEqual(len(tx_rows), 1)
-        self.assertEqual(tx_rows[0][0], 1000)
+        self.assertEqual(tx_rows[0][0], self.initial_mcredits)

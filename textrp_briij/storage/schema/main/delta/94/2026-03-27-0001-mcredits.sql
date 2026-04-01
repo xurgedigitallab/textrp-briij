@@ -32,7 +32,7 @@ CREATE TABLE premium_features (
 
 -- Audit trail (required for compliance + on-chain reconciliation)
 CREATE TABLE mcredit_transactions (
-    tx_id BIGINT PRIMARY KEY,
+    tx_id INTEGER PRIMARY KEY,
     user_id TEXT NOT NULL REFERENCES mcredit_balances(user_id) ON DELETE CASCADE,
     feature_id INTEGER REFERENCES premium_features(feature_id),
     amount BIGINT NOT NULL,

@@ -420,30 +420,9 @@ class RegistrationHandler:
         return user_id
 
     async def _grant_initial_mcredits(self, user_id: str) -> None:
-        existing = await self.store.db_pool.simple_select_one_onecol(
-            table="mcredit_balances",
-            keyvalues={"user_id": user_id},
-            retcol="user_id",
-            allow_none=True,
-            desc="get_mcredit_balance_row",
-        )
-        if existing is not None:
-            return
-
-        now_ms = self.clock.time_msec()
-        await self.store.db_pool.simple_insert(
-            "mcredit_balances",
-            {
-                "user_id": user_id,
-                "balance": self._mcredits_initial,
-                "updated_ts": now_ms,
-            },
-            desc="insert_initial_mcredit_balance",
-        )
-        await self.store.add_mcredit_transaction(
+        await self.store.grant_initial_mcredits(
             user_id=user_id,
             amount=self._mcredits_initial,
-            reason="initial_bonus",
         )
 
     async def _create_and_join_rooms(self, user_id: str) -> None:

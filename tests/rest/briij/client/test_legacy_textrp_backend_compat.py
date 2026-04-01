@@ -12,11 +12,14 @@
 # <https://www.gnu.org/licenses/agpl-3.0.html>.
 #
 
+from twisted.internet.testing import MemoryReactor
 from twisted.web.resource import Resource
 
 from textrp_briij.rest import admin
 from textrp_briij.rest.briij.client import build_briij_client_resource_tree
 from textrp_briij.rest.client import login
+from textrp_briij.server import HomeServer
+from textrp_briij.util.clock import Clock
 
 from tests import unittest
 
@@ -32,7 +35,7 @@ class LegacyTextrpBackendCompatTests(unittest.HomeserverTestCase):
         base.update(build_briij_client_resource_tree(self.hs))
         return base
 
-    def prepare(self, reactor, clock, hs) -> None:
+    def prepare(self, reactor: MemoryReactor, clock: Clock, hs: HomeServer) -> None:
         self.store = hs.get_datastores().main
 
         self.user1_id = self.register_user("legacy_user_one", "pass")

@@ -36,6 +36,13 @@ def _validate_positive_cost(cost: object) -> int:
 
 
 def _feature_row_to_json(row: tuple) -> JsonDict:
+    """Convert a raw runInteraction tuple from premium_features into JSON.
+
+    Expects tuple order:
+    (feature_id, feature_key, name, description, mcredits_cost, category, is_active, created_ts).
+    Only use for raw tuple result paths. Dict-returning paths like
+    get_premium_feature_by_key and handlers in on_POST/on_PUT/on_DELETE should not use it.
+    """
     return {
         "feature_id": row[0],
         "feature_key": row[1],

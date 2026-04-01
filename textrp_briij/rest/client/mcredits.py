@@ -36,30 +36,7 @@ class MCreditFeaturesRestServlet(RestServlet):
 
     async def on_GET(self, request: SynapseRequest) -> tuple[int, JsonDict]:
         await self.auth.get_user_by_req(request)
-        rows = await self.store.db_pool.simple_select_list(
-            table="premium_features",
-            keyvalues={"is_active": True},
-            retcols=(
-                "feature_key",
-                "name",
-                "description",
-                "mcredits_cost",
-                "category",
-                "is_active",
-            ),
-            desc="get_mcredit_features",
-        )
-        features = [
-            {
-                "feature_key": row[0],
-                "name": row[1],
-                "description": row[2],
-                "mcredits_cost": row[3],
-                "category": row[4],
-                "is_active": row[5],
-            }
-            for row in rows
-        ]
+        features = await self.store.get_active_premium_features()
         return HTTPStatus.OK, {"features": features}
 
 

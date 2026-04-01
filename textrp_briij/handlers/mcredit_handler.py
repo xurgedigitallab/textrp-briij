@@ -14,7 +14,6 @@
 
 from typing import TYPE_CHECKING
 
-from textrp_briij.api.errors import Codes, SynapseError
 from textrp_briij.types import Requester
 
 if TYPE_CHECKING:
@@ -27,14 +26,8 @@ class MCreditHandler:
 
     async def spend_mcredits(self, requester: Requester, feature_key: str) -> int:
         user_id = requester.user.to_string()
-        feature = await self.store.get_premium_feature_by_key(feature_key)
-        if feature is None:
-            raise SynapseError(404, "Premium feature not found", errcode=Codes.NOT_FOUND)
-
-        amount = int(feature["mcredits_cost"])
         return await self.store.spend_mcredits(
             user_id=user_id,
             feature_key=feature_key,
-            amount=amount,
             reason=feature_key,
         )

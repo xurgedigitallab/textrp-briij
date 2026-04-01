@@ -127,12 +127,19 @@ class MCreditsAdminRestTestCase(unittest.HomeserverTestCase):
         ]
 
         for method, url, body in requests:
-            channel = self.make_request(
-                method,
-                url,
-                content=body if body is not None else {},
-                access_token=self.user_token,
-            )
+            if body is None:
+                channel = self.make_request(
+                    method,
+                    url,
+                    access_token=self.user_token,
+                )
+            else:
+                channel = self.make_request(
+                    method,
+                    url,
+                    content=body,
+                    access_token=self.user_token,
+                )
             self.assertEqual(403, channel.code, msg=channel.json_body)
             self.assertEqual(Codes.FORBIDDEN, channel.json_body["errcode"])
 

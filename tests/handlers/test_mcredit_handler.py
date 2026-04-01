@@ -72,6 +72,31 @@ class MCreditHandlerTestCase(HomeserverTestCase):
         )
         self.assertEqual(failure.value.code, 404)
 
+    def test_spend_mcredits_deactivated_feature(self) -> None:
+        self.get_success(
+            self.store.db_pool.simple_insert(
+                "premium_features",
+                {
+                    "feature_id": 103,
+                    "feature_key": "voip_deactivated",
+                    "name": "VoIP Deactivated",
+                    "description": "Disabled premium voice calls",
+                    "mcredits_cost": 200,
+                    "category": "communication",
+                    "is_active": False,
+                    "created_ts": self.clock.time_msec(),
+                },
+                desc="test_spend_mcredits_deactivated_insert_feature",
+            )
+        )
+
+        requester = create_requester(self.user_id)
+        failure = self.get_failure(
+            self.handler.spend_mcredits(requester, feature_key="voip_deactivated"),
+            SynapseError,
+        )
+        self.assertEqual(failure.value.code, 404)
+
     def test_spend_mcredits_insufficient_balance(self) -> None:
         self.get_success(
             self.store.db_pool.simple_insert(

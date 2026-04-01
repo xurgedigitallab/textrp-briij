@@ -58,6 +58,20 @@ class MCreditRestTestCase(unittest.HomeserverTestCase):
             )
         )
 
+    def _set_balance(self, balance: int) -> None:
+        self.get_success(
+            self.store.db_pool.simple_upsert(
+                table="mcredit_balances",
+                keyvalues={"user_id": self.user_id},
+                values={"balance": balance, "updated_ts": self.clock.time_msec()},
+                insertion_values={
+                    "balance": balance,
+                    "updated_ts": self.clock.time_msec(),
+                },
+                desc="set_test_user_balance",
+            )
+        )
+
     def test_auth_required(self) -> None:
         channel = self.make_request("GET", "/_matrix/client/v3/mcredits/balance")
         self.assertEqual(channel.code, 401)
@@ -74,6 +88,7 @@ class MCreditRestTestCase(unittest.HomeserverTestCase):
         self.assertEqual(channel.json_body["features"][0]["feature_key"], "voip_premium")
 
     def test_spend_success(self) -> None:
+        self._set_balance(1000)
         self._insert_feature(2, "teleconference_hd", 250)
         channel = self.make_request(
             "POST",
@@ -85,6 +100,7 @@ class MCreditRestTestCase(unittest.HomeserverTestCase):
         self.assertEqual(channel.json_body["balance"], 750)
 
     def test_spend_insufficient_credits(self) -> None:
+        self._set_balance(1000)
         # Drain most of the balance first.
         self._insert_feature(3, "big_spend", 950)
         self._insert_feature(4, "ai_summary", 100)

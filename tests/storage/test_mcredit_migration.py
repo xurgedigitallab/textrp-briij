@@ -23,6 +23,9 @@ class MCreditMigrationTestCase(HomeserverTestCase):
     def test_mcredit_migration_creates_expected_schema(self) -> None:
         db_pool = self.hs.get_datastores().main.db_pool
         db_conn = LoggingDatabaseConnection(
+            # Intentional direct access: this migration test needs a raw connection from
+            # get_datastores().main.db_pool via db_pool._db_pool.connect() to construct
+            # LoggingDatabaseConnection and inspect transaction-level schema changes.
             conn=db_pool._db_pool.connect(),
             engine=db_pool.engine,
             default_txn_name="tests",
@@ -93,7 +96,7 @@ class MCreditMigrationTestCase(HomeserverTestCase):
         self.assertEqual(columns[("premium_features", "category")], "text")
         self.assertEqual(columns[("premium_features", "is_active")], "boolean")
         self.assertEqual(columns[("premium_features", "created_ts")], "bigint")
-        self.assertEqual(columns[("mcredit_transactions", "tx_id")], "bigint")
+        self.assertEqual(columns[("mcredit_transactions", "tx_id")], "integer")
         self.assertEqual(columns[("mcredit_transactions", "user_id")], "text")
         self.assertEqual(columns[("mcredit_transactions", "feature_id")], "integer")
         self.assertEqual(columns[("mcredit_transactions", "amount")], "bigint")

@@ -14,6 +14,8 @@
 
 from typing import TYPE_CHECKING
 
+from textrp_briij.storage.engines import PostgresEngine, Sqlite3Engine
+
 if TYPE_CHECKING:
     from textrp_briij.storage.databases.main import DataStore
 
@@ -41,14 +43,28 @@ PREMIUM_FEATURES: tuple[tuple[int, str, str, str, int, str], ...] = (
 
 
 async def seed_premium_features(store: "DataStore", now_ms: int) -> int:
-    existing_count = await store.db_pool.simple_select_one_onecol(
-        table="premium_features",
-        keyvalues={},
-        retcol="COUNT(*)",
-        allow_none=False,
-        desc="count_premium_features",
+    def _table_exists_txn(txn) -> bool:
+        if isinstance(store.database_engine, PostgresEngine):
+            txn.execute("SELECT to_regclass('public.premium_features')")
+            row = txn.fetchone()
+            return row is not None and row[0] is not None
+
+        if isinstance(store.database_engine, Sqlite3Engine):
+            txn.execute(
+                """
+                SELECT name
+                FROM sqlite_master
+                WHERE type = 'table' AND name = 'premium_features'
+                """
+            )
+            return txn.fetchone() is not None
+
+        return False
+
+    table_exists = await store.db_pool.runInteraction(
+        "check_premium_features_table_exists", _table_exists_txn
     )
-    if int(existing_count) > 0:
+    if not table_exists:
         return 0
 
     seeded = 0
@@ -60,11 +76,12 @@ async def seed_premium_features(store: "DataStore", now_ms: int) -> int:
         mcredits_cost,
         category,
     ) in PREMIUM_FEATURES:
-        await store.db_pool.simple_insert(
-            "premium_features",
-            {
+        inserted = await store.db_pool.simple_upsert(
+            table="premium_features",
+            keyvalues={"feature_key": feature_key},
+            values={},
+            insertion_values={
                 "feature_id": feature_id,
-                "feature_key": feature_key,
                 "name": name,
                 "description": description,
                 "mcredits_cost": mcredits_cost,
@@ -74,6 +91,7 @@ async def seed_premium_features(store: "DataStore", now_ms: int) -> int:
             },
             desc=f"seed_{feature_key}",
         )
-        seeded += 1
+        if inserted:
+            seeded += 1
 
     return seeded

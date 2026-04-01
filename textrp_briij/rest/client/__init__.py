@@ -1,8 +1,4 @@
 #
-
-from . import mcredits
-
-__all__ = ["mcredits"]
 # This file is licensed under the Affero General Public License (AGPL) version 3.
 #
 # Copyright 2014-2016 The Matrix.org Foundation C.I.C.
@@ -22,3 +18,7 @@ __all__ = ["mcredits"]
 # [This file includes modifications made by New Vector Limited]
 #
 #
+
+from . import mcredits
+
+__all__ = ["mcredits"]
