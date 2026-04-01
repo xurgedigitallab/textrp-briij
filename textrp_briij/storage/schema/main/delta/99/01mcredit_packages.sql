@@ -1,0 +1,21 @@
+/* Add mcredit_packages table for TextRP mCredits system */
+
+CREATE TABLE IF NOT EXISTS mcredit_packages (
+    id BIGSERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT,
+    credits_amount BIGINT NOT NULL,
+    price_usd_cents INTEGER NOT NULL CHECK (price_usd_cents > 0),
+    sort_order INTEGER DEFAULT 0,
+    is_active BOOLEAN DEFAULT true,
+    created_ts BIGINT NOT NULL DEFAULT (EXTRACT(EPOCH FROM NOW())::bigint),
+    updated_ts BIGINT NOT NULL DEFAULT (EXTRACT(EPOCH FROM NOW())::bigint)
+);
+
+-- Seed initial packages (admin can edit later via UI)
+INSERT INTO mcredit_packages (name, description, credits_amount, price_usd_cents, sort_order)
+VALUES 
+    ('Starter Pack', '1,000 mCredits — perfect for testing', 1000, 499, 10),
+    ('Pro Pack', '5,000 mCredits — best value', 5000, 1999, 20),
+    ('Enterprise Pack', '25,000 mCredits — team ready', 25000, 7999, 30)
+ON CONFLICT DO NOTHING;
