@@ -9,10 +9,13 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
+import logging
 import re
 from typing import TYPE_CHECKING, Any, TypedDict
 
-from textrp_briij.api.errors import Codes, LoginError, StoreError, SynapseError
+from textrp_briij.api.errors import Codes, LimitExceededError, LoginError, StoreError, SynapseError
 from textrp_briij.api.ratelimiting import Ratelimiter
 from textrp_briij.auth.wallet_auth_types import (
     WALLET_E2EE_RECOVERY_ACCOUNT_DATA_TYPE,
@@ -27,6 +30,15 @@ from textrp_briij.util.stringutils import random_string
 
 if TYPE_CHECKING:
     from textrp_briij.server import HomeServer
+
+
+logger = logging.getLogger(__name__)
+MAX_SIGNATURE_LEN = 4096
+MAX_PUBLIC_KEY_LEN = 256
+MAX_ZKP_PROOF_BYTES = 64 * 1024
+MAX_ZKP_SIGNALS_BYTES = 32 * 1024
+DISALLOWED_SECRET_FIELDS = {"private_key", "seed", "secret", "mnemonic"}
+
 
 class XrplChallengeSession(TypedDict):
     address: str
@@ -50,12 +62,31 @@ class XrplAuth:
         self._auth_handler = hs.get_auth_handler()
         self._registration_handler = hs.get_registration_handler()
         self._account_data_handler = hs.get_account_data_handler()
+        self._did_handler = hs.get_did_handler()
+        self._credential_handler = hs.get_credential_handler()
+        self._zkp_handler = hs.get_zkp_handler()
         self._config = hs.config.xrpl_auth
         self._wallet_ratelimiter = Ratelimiter(
             store=self._store,
             clock=self._clock,
             cfg=hs.config.ratelimiting.rc_login_account,
         )
+        self._full_flow_ratelimiter = Ratelimiter(
+            store=self._store,
+            clock=self._clock,
+            cfg=hs.config.ratelimiting.rc_login_account,
+        )
+        self._ip_ratelimiter = Ratelimiter(
+            store=self._store,
+            clock=self._clock,
+            cfg=hs.config.ratelimiting.rc_login_address,
+        )
+        self._wallet_hour_ratelimiter = Ratelimiter(
+            store=self._store,
+            clock=self._clock,
+            cfg=hs.config.ratelimiting.rc_login_account,
+        )
+        self._conflict_counts: dict[str, int] = {}
 
     @property
     def enabled(self) -> bool:
@@ -74,9 +105,12 @@ class XrplAuth:
         preferred_localpart: Any = None,
         username: Any = None,
         display_name: Any = None,
+        *,
+        client_ip: str | None = None,
     ) -> JsonDict:
         normalized_address = self._adapter.validate_account_id(address)
         normalized_network = self._adapter.validate_network(network)
+        await self._ratelimit_xrpl_paths(client_ip, normalized_address)
         normalized_localpart = self._resolve_requested_localpart(
             preferred_localpart,
             username,
@@ -102,26 +136,72 @@ class XrplAuth:
             "challenge": challenge_session["challenge"],
         }
 
-    async def complete_auth(self, login_submission: JsonDict) -> str:
+    async def complete_auth(
+        self, login_submission: JsonDict, *, client_ip: str | None = None
+    ) -> str:
         session_id = login_submission.get("session")
         address = login_submission.get("address")
         signature = login_submission.get("signature")
         public_key = login_submission.get("public_key")
         network = login_submission.get("network")
+        zkp_proof = login_submission.get("zkp_proof")
+        zkp_public_signals = login_submission.get("zkp_public_signals")
+        e2ee_pubkey_commitment = login_submission.get("e2ee_pubkey_commitment")
+        zkp_declined = login_submission.get("zkp_declined")
 
         if not isinstance(session_id, str) or not session_id:
             raise SynapseError(400, "Missing session", Codes.MISSING_PARAM)
         if not isinstance(signature, str) or not signature:
             raise SynapseError(400, "Missing signature", Codes.MISSING_PARAM)
+        if len(signature) > MAX_SIGNATURE_LEN:
+            raise SynapseError(400, "signature is too large", Codes.INVALID_PARAM)
         if public_key is not None and not isinstance(public_key, str):
             raise SynapseError(400, "Invalid public_key", Codes.INVALID_PARAM)
+        if isinstance(public_key, str) and len(public_key) > MAX_PUBLIC_KEY_LEN:
+            raise SynapseError(400, "public_key is too large", Codes.INVALID_PARAM)
+        if zkp_proof is not None and not isinstance(zkp_proof, dict):
+            raise SynapseError(400, "Invalid zkp_proof", Codes.INVALID_PARAM)
+        if zkp_public_signals is not None and not isinstance(zkp_public_signals, dict):
+            raise SynapseError(400, "Invalid zkp_public_signals", Codes.INVALID_PARAM)
+        if e2ee_pubkey_commitment is not None and (
+            not isinstance(e2ee_pubkey_commitment, str) or not e2ee_pubkey_commitment
+        ):
+            raise SynapseError(400, "Invalid e2ee_pubkey_commitment", Codes.INVALID_PARAM)
+        if zkp_declined is not None and not isinstance(zkp_declined, bool):
+            raise SynapseError(400, "Invalid zkp_declined", Codes.INVALID_PARAM)
+        if DISALLOWED_SECRET_FIELDS.intersection(login_submission.keys()):
+            logger.warning("Rejected XRPL login payload containing secret-like fields")
+            raise SynapseError(400, "Secret material fields are not allowed", Codes.INVALID_PARAM)
+        if zkp_proof is not None:
+            if len(json.dumps(zkp_proof, separators=(",", ":"))) > MAX_ZKP_PROOF_BYTES:
+                logger.warning("Rejected oversized ZKP proof payload")
+                raise SynapseError(400, "zkp_proof is too large", Codes.INVALID_PARAM)
+        if zkp_public_signals is not None:
+            if (
+                len(json.dumps(zkp_public_signals, separators=(",", ":")))
+                > MAX_ZKP_SIGNALS_BYTES
+            ):
+                logger.warning("Rejected oversized ZKP public_signals payload")
+                raise SynapseError(
+                    400, "zkp_public_signals is too large", Codes.INVALID_PARAM
+                )
 
         normalized_address = self._adapter.validate_account_id(address)
+        await self._ratelimit_xrpl_paths(client_ip, normalized_address)
         challenge_session = await self._consume_challenge_session(session_id)
         self._validate_consumed_session(
             challenge_session,
             normalized_address,
             network,
+        )
+        await self._full_flow_ratelimiter.ratelimit(
+            None,
+            ("xrpl_full_login", challenge_session["network"], normalized_address),
+        )
+        logger.info(
+            "XRPL login flow started for %s on %s",
+            normalized_address,
+            challenge_session["network"],
         )
 
         wallet_link = await self._store.get_wallet_link_by_address(
@@ -194,6 +274,58 @@ class XrplAuth:
                 WALLET_E2EE_RECOVERY_ACCOUNT_DATA_TYPE,
                 envelope,
             )
+
+        try:
+            await self._did_handler.commit_wallet_did_binding(
+                matrix_user_id=user_id,
+                xrpl_address=normalized_address,
+                e2ee_commitment=f"pending-e2ee-key:{user_id}",
+            )
+            logger.info("DID binding committed for %s", user_id)
+        except Exception:
+            logger.exception(
+                "Failed to commit DID binding for %s (%s)",
+                user_id,
+                normalized_address,
+            )
+
+        commitment_for_binding = e2ee_pubkey_commitment or hashlib.sha256(
+            f"future-olm-pubkey:{user_id}".encode("utf-8")
+        ).hexdigest()
+        try:
+            await self._credential_handler.issue_login_credential(
+                matrix_user_id=user_id,
+                xrpl_address=normalized_address,
+                e2ee_pubkey_commitment=commitment_for_binding,
+            )
+            logger.info("Credential binding issued for %s", user_id)
+        except Exception:
+            logger.exception(
+                "Failed to issue credential binding for %s (%s)",
+                user_id,
+                normalized_address,
+            )
+        if zkp_declined:
+            logger.info(
+                "ZKP longevity mode declined for %s; continuing wallet-signature path",
+                user_id,
+            )
+        elif zkp_proof is not None and zkp_public_signals is not None:
+            try:
+                await self._zkp_handler.verify_e2ee_binding(
+                    matrix_user_id=user_id,
+                    xrpl_address=normalized_address,
+                    proof=zkp_proof,
+                    public_signals=zkp_public_signals,
+                    e2ee_pubkey_commitment=commitment_for_binding,
+                )
+                logger.info("ZKP longevity verification succeeded for %s", user_id)
+            except Exception:
+                logger.exception(
+                    "Failed to verify E2EE ZKP for %s (%s); falling back to signature-only path",
+                    user_id,
+                    normalized_address,
+                )
         return user_id
 
     def _build_challenge_session(
@@ -325,7 +457,19 @@ class XrplAuth:
     ) -> str | None:
         if preferred_localpart is None:
             return None
-        await self._registration_handler.check_username(preferred_localpart)
+        try:
+            await self._registration_handler.check_username(preferred_localpart)
+        except SynapseError as e:
+            if e.errcode == Codes.USER_IN_USE:
+                raise SynapseError(
+                    400,
+                    (
+                        f"Requested username '{preferred_localpart}' is already taken. "
+                        "Choose another username or retry without username for auto-assignment."
+                    ),
+                    Codes.USER_IN_USE,
+                )
+            raise
         return preferred_localpart
 
     async def _allocate_localpart(self, base_localpart: str) -> str:
@@ -400,11 +544,43 @@ class XrplAuth:
 
         linked_localpart = UserID.from_string(user_id).localpart
         if linked_localpart != preferred_localpart:
+            count = self._conflict_counts.get(user_id, 0) + 1
+            self._conflict_counts[user_id] = count
+            if count >= 3:
+                logger.warning(
+                    "Repeated XRPL localpart conflict for linked user %s (count=%d)",
+                    user_id,
+                    count,
+                )
             raise LoginError(
                 403,
                 (
                     f"This wallet is already linked to {user_id}; "
-                    "requested username does not match."
+                    "requested username does not match. "
+                    "Try logging in without username to recover access."
                 ),
                 Codes.FORBIDDEN,
             )
+
+    async def _ratelimit_xrpl_paths(self, client_ip: str | None, address: str) -> None:
+        ip_key = client_ip or "unknown"
+        try:
+            await self._ip_ratelimiter.ratelimit(
+                None,
+                ("xrpl_login_ip", ip_key),
+                rate_hz=5 / 60.0,
+                burst_count=5,
+            )
+            await self._wallet_hour_ratelimiter.ratelimit(
+                None,
+                ("xrpl_login_wallet", address),
+                rate_hz=20 / 3600.0,
+                burst_count=20,
+            )
+        except LimitExceededError:
+            logger.warning(
+                "XRPL login rate-limited ip=%s wallet=%s",
+                ip_key,
+                address,
+            )
+            raise

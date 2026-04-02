@@ -85,8 +85,10 @@ from textrp_briij.handlers.admin import AdminHandler
 from textrp_briij.handlers.appservice import ApplicationServicesHandler
 from textrp_briij.handlers.auth import AuthHandler, PasswordAuthProvider
 from textrp_briij.handlers.cas import CasHandler
+from textrp_briij.handlers.credential import CredentialHandler
 from textrp_briij.handlers.deactivate_account import DeactivateAccountHandler
 from textrp_briij.handlers.delayed_events import DelayedEventsHandler
+from textrp_briij.handlers.did import DidHandler
 from textrp_briij.handlers.device import DeviceHandler, DeviceWriterHandler
 from textrp_briij.handlers.devicemessage import DeviceMessageHandler
 from textrp_briij.handlers.directory import DirectoryHandler
@@ -137,6 +139,7 @@ from textrp_briij.handlers.sso import SsoHandler
 from textrp_briij.handlers.stats import StatsHandler
 from textrp_briij.handlers.sync import SyncHandler
 from textrp_briij.handlers.thread_subscriptions import ThreadSubscriptionsHandler
+from textrp_briij.handlers.zkp import ZkpHandler
 from textrp_briij.handlers.typing import FollowerTypingHandler, TypingWriterHandler
 from textrp_briij.handlers.user_directory import UserDirectoryHandler
 from textrp_briij.handlers.verification import VerificationHandler
@@ -1181,6 +1184,18 @@ class HomeServer(metaclass=abc.ABCMeta):
     @cache_in_self
     def get_xrpl_auth(self) -> XrplAuth:
         return XrplAuth(self)
+
+    @cache_in_self
+    def get_did_handler(self) -> DidHandler:
+        return DidHandler(self)
+
+    @cache_in_self
+    def get_credential_handler(self) -> CredentialHandler:
+        return CredentialHandler(self)
+
+    @cache_in_self
+    def get_zkp_handler(self) -> ZkpHandler:
+        return ZkpHandler(self)
 
     @cache_in_self
     def get_room_summary_handler(self) -> RoomSummaryHandler:

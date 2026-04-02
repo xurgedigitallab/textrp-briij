@@ -182,6 +182,17 @@ class WalletLinkLookupResult(TypedDict):
     linked_at: int
 
 
+class UserDidMapLookupResult(TypedDict):
+    matrix_user_id: str
+    xrpl_address: str
+    did_uri: str | None
+    did_document_hash: str | None
+    credential_id: str | None
+    credential_issued_at: int | None
+    e2ee_pubkey_commitment: str | None
+    e2ee_zkp_verified_at: int | None
+
+
 class RegistrationWorkerStore(StatsStore, CacheInvalidationWorkerStore):
     def __init__(
         self,
@@ -1136,6 +1147,122 @@ class RegistrationWorkerStore(StatsStore, CacheInvalidationWorkerStore):
             }
             for stored_user_id, wallet_address, network, public_key, linked_at in rows
         ]
+
+    async def upsert_user_did_map(
+        self,
+        matrix_user_id: str,
+        xrpl_address: str,
+        did_uri: str | None,
+        did_document_hash: str | None,
+        credential_id: str | None = None,
+        credential_issued_at: int | None = None,
+        e2ee_pubkey_commitment: str | None = None,
+        e2ee_zkp_verified_at: int | None = None,
+    ) -> None:
+        await self.db_pool.simple_upsert(
+            table="user_did_map",
+            keyvalues={"matrix_user_id": matrix_user_id},
+            values={
+                "xrpl_address": xrpl_address,
+                "did_uri": did_uri,
+                "did_document_hash": did_document_hash,
+                "credential_id": credential_id,
+                "credential_issued_at": credential_issued_at,
+                "e2ee_pubkey_commitment": e2ee_pubkey_commitment,
+                "e2ee_zkp_verified_at": e2ee_zkp_verified_at,
+            },
+            desc="upsert_user_did_map",
+        )
+
+    async def get_user_did_map_by_user_id(
+        self,
+        matrix_user_id: str,
+    ) -> UserDidMapLookupResult | None:
+        row = await self.db_pool.simple_select_one(
+            table="user_did_map",
+            keyvalues={"matrix_user_id": matrix_user_id},
+            retcols=(
+                "matrix_user_id",
+                "xrpl_address",
+                "did_uri",
+                "did_document_hash",
+                "credential_id",
+                "credential_issued_at",
+                "e2ee_pubkey_commitment",
+                "e2ee_zkp_verified_at",
+            ),
+            allow_none=True,
+            desc="get_user_did_map_by_user_id",
+        )
+
+        if row is None:
+            return None
+
+        (
+            matrix_user_id_row,
+            xrpl_address,
+            did_uri,
+            did_document_hash,
+            credential_id,
+            credential_issued_at,
+            e2ee_pubkey_commitment,
+            e2ee_zkp_verified_at,
+        ) = row
+        return {
+            "matrix_user_id": matrix_user_id_row,
+            "xrpl_address": xrpl_address,
+            "did_uri": did_uri,
+            "did_document_hash": did_document_hash,
+            "credential_id": credential_id,
+            "credential_issued_at": credential_issued_at,
+            "e2ee_pubkey_commitment": e2ee_pubkey_commitment,
+            "e2ee_zkp_verified_at": e2ee_zkp_verified_at,
+        }
+
+    async def get_user_did_map_by_address(
+        self,
+        xrpl_address: str,
+    ) -> UserDidMapLookupResult | None:
+        row = await self.db_pool.simple_select_one(
+            table="user_did_map",
+            keyvalues={"xrpl_address": xrpl_address},
+            retcols=(
+                "matrix_user_id",
+                "xrpl_address",
+                "did_uri",
+                "did_document_hash",
+                "credential_id",
+                "credential_issued_at",
+                "e2ee_pubkey_commitment",
+                "e2ee_zkp_verified_at",
+            ),
+            allow_none=True,
+            desc="get_user_did_map_by_address",
+        )
+
+        if row is None:
+            return None
+
+        (
+            matrix_user_id,
+            xrpl_address_row,
+            did_uri,
+            did_document_hash,
+            credential_id,
+            credential_issued_at,
+            e2ee_pubkey_commitment,
+            e2ee_zkp_verified_at,
+        ) = row
+        return {
+            "matrix_user_id": matrix_user_id,
+            "xrpl_address": xrpl_address_row,
+            "did_uri": did_uri,
+            "did_document_hash": did_document_hash,
+            "credential_id": credential_id,
+            "credential_issued_at": credential_issued_at,
+            "e2ee_pubkey_commitment": e2ee_pubkey_commitment,
+            "e2ee_zkp_verified_at": e2ee_zkp_verified_at,
+        }
 
     async def count_all_users(self) -> int:
         """Counts all users registered on the homeserver."""

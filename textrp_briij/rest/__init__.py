@@ -31,7 +31,9 @@ from textrp_briij.rest.client import (
     auth,
     auth_metadata,
     capabilities,
+    credential,
     delayed_events,
+    did,
     devices,
     directory,
     events,
@@ -71,6 +73,7 @@ from textrp_briij.rest.client import (
     user_directory,
     versions,
     voip,
+    zkp,
 )
 
 logger = logging.getLogger(__name__)
@@ -129,6 +132,9 @@ CLIENT_SERVLET_FUNCTIONS: tuple[RegisterServletsFunc, ...] = (
     auth_metadata.register_servlets,
     thread_subscriptions.register_servlets,
     trust.register_servlets,
+    credential.register_servlets,
+    did.register_servlets,
+    zkp.register_servlets,
     mcredits.register_servlets,
 )
 

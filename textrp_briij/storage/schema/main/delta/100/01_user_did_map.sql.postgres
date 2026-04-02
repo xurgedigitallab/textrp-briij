@@ -1,0 +1,10 @@
+/* DID mapping table for XRPL DID support (Postgres-only) */
+
+CREATE TABLE IF NOT EXISTS user_did_map (
+    matrix_user_id TEXT PRIMARY KEY,
+    xrpl_address TEXT NOT NULL UNIQUE,
+    did_uri TEXT,
+    did_document_hash TEXT,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+);

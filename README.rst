@@ -38,20 +38,32 @@ below for more useful documentation links.
 - `Native XRPL/Xahau wallet login configuration <docs/briij-wallet-auth.md>`_
 
 
-Native XRPL/Xahau wallet login
-==============================
+XRPL DID/Credential auth architecture
+=====================================
 
-TextRP-Briij supports a native challenge-response Matrix login flow for XRPL and
-Xahau wallets via the custom login type ``io.briij.login.xrpl``.
+TextRP-Briij is moving to an XRPL-first identity model that upgrades wallet
+login into DID-bound authentication with credential verification and optional
+future ZKP continuity proofs.
 
-Enable it with the ``xrpl_auth`` section in ``homeserver.yaml`` and configure
-the appropriate JSON-RPC endpoints for the XRPL and Xahau networks. Clients
-first request a challenge for a wallet address and network, then sign that
-challenge locally and complete the login without ever sending a seed to the
-homeserver.
+Phase 1 remains XRPL Testnet/Mainnet only and keeps user flow simple: clients
+request a challenge, sign locally, and complete login without sending private
+keys to the homeserver. Xahau is explicitly out of the MVP path and reserved
+for optional issuer-side automation in later phases.
 
-See `docs/briij-wallet-auth.md <docs/briij-wallet-auth.md>`_ for the exact
-request flow and configuration example.
+Architecture references:
+
+- `docs/did-zkp-e2ee-plan.md <docs/did-zkp-e2ee-plan.md>`_
+- `docs/architecture/xrpl-sovereign-e2ee.md <docs/architecture/xrpl-sovereign-e2ee.md>`_
+- `docs/briij-wallet-auth.md <docs/briij-wallet-auth.md>`_
+- `docs/wallet-auth-chain-agnostic.md <docs/wallet-auth-chain-agnostic.md>`_
+
+Finalized feature highlights:
+
+- Native DID binding (XLS-40) on XRPL login.
+- Native credential issuance/verification (XLS-70) for account continuity.
+- Optional and free ZKP longevity mode for stronger E2EE continuity attestations.
+- Hardened endpoint controls with size validation, abuse logging, and
+  per-IP/per-wallet rate limits.
 
 
 Troubleshooting and support

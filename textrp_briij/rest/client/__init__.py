@@ -19,6 +19,6 @@
 #
 #
 
-from . import mcredits
+from . import credential, did, mcredits, zkp
 
-__all__ = ["mcredits"]
+__all__ = ["credential", "did", "mcredits", "zkp"]

@@ -1,4 +1,4 @@
-/* Add mcredit_packages table for TextRP mCredits system */
+/* Add mcredit_packages table for TextRP mCredits system (Postgres) */
 
 CREATE TABLE IF NOT EXISTS mcredit_packages (
     id BIGSERIAL PRIMARY KEY,
@@ -14,8 +14,8 @@ CREATE TABLE IF NOT EXISTS mcredit_packages (
 
 -- Seed initial packages (admin can edit later via UI)
 INSERT INTO mcredit_packages (name, description, credits_amount, price_usd_cents, sort_order)
-VALUES 
-    ('Starter Pack', '1,000 mCredits — perfect for testing', 1000, 499, 10),
-    ('Pro Pack', '5,000 mCredits — best value', 5000, 1999, 20),
-    ('Enterprise Pack', '25,000 mCredits — team ready', 25000, 7999, 30)
+VALUES
+    ('Starter Pack', '1,000 mCredits - perfect for testing', 1000, 499, 10),
+    ('Pro Pack', '5,000 mCredits - best value', 5000, 1999, 20),
+    ('Enterprise Pack', '25,000 mCredits - team ready', 25000, 7999, 30)
 ON CONFLICT DO NOTHING;

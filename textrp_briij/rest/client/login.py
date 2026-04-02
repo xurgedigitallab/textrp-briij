@@ -395,10 +395,14 @@ class LoginRestServlet(RestServlet):
                 login_submission.get("preferred_localpart"),
                 login_submission.get("username"),
                 login_submission.get("display_name"),
+                client_ip=request_info.ip,
             )
             return 401, challenge
 
-        canonical_user_id = await self._xrpl_auth.complete_auth(login_submission)
+        canonical_user_id = await self._xrpl_auth.complete_auth(
+            login_submission,
+            client_ip=request_info.ip,
+        )
         result = await self._complete_login(
             canonical_user_id,
             login_submission,
