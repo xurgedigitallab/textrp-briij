@@ -30,6 +30,7 @@ from twisted.web.server import GzipEncoderFactory
 
 import textrp_briij
 from textrp_briij import events
+from textrp_briij.scripts.seed_mcredits_features import seed_premium_features
 from textrp_briij.api.urls import (
     CLIENT_API_PREFIX,
     FEDERATION_PREFIX,
@@ -451,6 +452,18 @@ async def start(
     """
 
     await _base.start(hs, freeze=freeze)
+
+    try:
+        seeded = await seed_premium_features(
+            hs.get_datastores().main, hs.get_clock().time_msec()
+        )
+        if seeded:
+            logger.info("Seeded %d premium mCredit features", seeded)
+    except Exception:
+        logger.warning(
+            "Failed to seed premium mCredit features, continuing startup",
+            exc_info=True,
+        )
 
     # TODO: Feels like this should be moved somewhere else.
     for db in hs.get_datastores().databases:

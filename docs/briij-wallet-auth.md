@@ -1,9 +1,19 @@
-# Briij XRPL/Xahau wallet login
+# Briij XRPL DID/Credential wallet login
 
-TextRP-Briij supports a native Matrix login flow for XRPL and Xahau wallets via
-the custom login type `io.briij.login.xrpl`.
+TextRP-Briij supports a native Matrix wallet login flow via
+`io.briij.login.xrpl` and is evolving toward DID-bound authentication with
+credential verification and optional future ZKP continuity proofs.
 
-## Homeserver configuration
+## Architecture overview
+
+- XRPL-first by default: MVP and Phase 1 run on XRPL Testnet/Mainnet only.
+- No server-side private key custody: wallet seed/signing material never leaves
+  the client.
+- Xahau is not required for user login; it is an optional future
+  issuer-automation path.
+- Full phased roadmap: `did-zkp-e2ee-plan.md`.
+
+## Homeserver configuration (XRPL-first MVP)
 
 Add this top-level section to `homeserver.yaml`:
 
@@ -12,9 +22,11 @@ xrpl_auth:
   enabled: true
   allow_account_creation: true
   xrpl_node_url: "https://s.altnet.rippletest.net:51234"
-  xahau_node_url: "https://xahau-testnet.xrpl-labs.com"
   challenge_ttl_seconds: 300
 ```
+
+If a deployment enables future optional Xahau automation phases, that
+configuration is additive and must not alter the XRPL-first user login path.
 
 ## Using briij-cli with briij-server (current behavior)
 
@@ -168,5 +180,8 @@ clients:
 - Existing Xaman/OIDC SSO flows continue to work in parallel.
 - Challenges are short-lived and single-use.
 - Linked wallet metadata is persisted on the homeserver; wallet seeds are not.
+- For mCredits balance/spend APIs and legacy compatibility endpoints
+  (`/my-address`, `/my-features/.../enabled`), see:
+  `usage/mcredits.md`.
 - For chain-agnostic extension details and conformance checklist, see:
-  `docs/wallet-auth-chain-agnostic.md`.
+  `wallet-auth-chain-agnostic.md`.

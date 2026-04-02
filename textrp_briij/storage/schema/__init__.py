@@ -20,7 +20,7 @@
 #
 #
 
-SCHEMA_VERSION = 94  # remember to update the list below when updating
+SCHEMA_VERSION = 102  # remember to update the list below when updating
 """Represents the expectations made by the codebase about the database schema
 
 This should be incremented whenever the codebase changes its requirements on the
@@ -176,6 +176,18 @@ Changes in SCHEMA_VERSION = 93
 Changes in SCHEMA_VERSION = 94
     - Add the `briij_wallet_links` table for XRPL/Xahau wallet authentication.
     - Store the last verified public key alongside each linked wallet address.
+
+Changes in SCHEMA_VERSION = 99
+    - Add the `mcredit_packages` table and default seeded package rows.
+
+Changes in SCHEMA_VERSION = 100
+    - Add the Postgres-only `user_did_map` table for DID/account bindings.
+
+Changes in SCHEMA_VERSION = 101
+    - Add optional `credential_id` and `credential_issued_at` columns on `user_did_map`.
+
+Changes in SCHEMA_VERSION = 102
+    - Add optional `e2ee_pubkey_commitment` and `e2ee_zkp_verified_at` columns on `user_did_map`.
 """
 
 

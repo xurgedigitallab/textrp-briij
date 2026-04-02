@@ -1,0 +1,3 @@
+ALTER TABLE user_did_map
+    ADD COLUMN IF NOT EXISTS e2ee_pubkey_commitment TEXT,
+    ADD COLUMN IF NOT EXISTS e2ee_zkp_verified_at BIGINT;

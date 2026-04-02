@@ -3,6 +3,16 @@
 This document defines the chain-agnostic contract used by TextRP-Briij wallet authentication
 and wallet-backed E2EE recovery envelopes.
 
+## DID/Credential architecture context
+
+- Current baseline login type remains `io.briij.login.xrpl`.
+- The target architecture binds login sessions to XRPL-native DID identity
+  claims plus credential verification semantics.
+- Optional ZKP assertions are additive and must not break baseline DID +
+  credential flow.
+- For full implementation sequencing and phase gates, see
+  `did-zkp-e2ee-plan.md`.
+
 ## Objectives
 
 - Keep Matrix/Synapse Olm and Megolm behavior unchanged.

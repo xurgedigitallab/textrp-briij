@@ -27,6 +27,7 @@ from textrp_briij.auth.wallet_auth_types import (
     WALLET_E2EE_RECOVERY_ACCOUNT_DATA_TYPE,
     WALLET_IDENTITY_ACCOUNT_DATA_TYPE,
 )
+from textrp_briij.storage.engines import PostgresEngine
 from textrp_briij.rest.client import login, register
 from textrp_briij.rest.client.account import WhoamiRestServlet
 from textrp_briij.server import HomeServer
@@ -107,6 +108,16 @@ class XrplLoginTestCase(HomeserverTestCase):
         self.assertIsNotNone(identity)
         self.assertEqual(identity.get("chain_id"), "xrpl")
         self.assertEqual(identity.get("account_id"), wallet["address"])
+        if isinstance(self.hs.get_datastores().main.database_engine, PostgresEngine):
+            did_mapping = self.get_success(
+                self.hs.get_datastores().main.get_user_did_map_by_user_id(
+                    login_response.json_body["user_id"]
+                )
+            )
+            self.assertIsNotNone(did_mapping)
+            assert did_mapping is not None
+            self.assertEqual(did_mapping["xrpl_address"], wallet["address"])
+            self.assertTrue(did_mapping["did_uri"].startswith("did:xrpl:testnet:"))
 
     @override_config({"xrpl_auth": {"enabled": True}})
     def test_complete_login_stores_wallet_recovery_envelope(self) -> None:
@@ -301,6 +312,10 @@ class XrplLoginTestCase(HomeserverTestCase):
 
         self.assertEqual(login_response.code, HTTPStatus.BAD_REQUEST, login_response.result)
         self.assertEqual(login_response.json_body.get("errcode"), Codes.USER_IN_USE)
+        self.assertIn(
+            "retry without username",
+            login_response.json_body.get("error", ""),
+        )
 
     @override_config({"xrpl_auth": {"enabled": True}})
     def test_initial_request_rejects_invalid_preferred_localpart_type(self) -> None:
@@ -378,6 +393,184 @@ class XrplLoginTestCase(HomeserverTestCase):
         self.assertEqual(second_login.code, HTTPStatus.FORBIDDEN, second_login.result)
         self.assertEqual(second_login.json_body.get("errcode"), Codes.FORBIDDEN)
 
+    @override_config({"xrpl_auth": {"enabled": True}})
+    def test_successful_login_triggers_credential_issue(self) -> None:
+        wallet = self._generate_wallet(CryptoAlgorithm.ED25519)
+        calls: list[tuple[str, str, str]] = []
+
+        async def _issue_credential(
+            matrix_user_id: str, xrpl_address: str, e2ee_pubkey_commitment: str
+        ) -> dict[str, str]:
+            calls.append((matrix_user_id, xrpl_address, e2ee_pubkey_commitment))
+            return {"credential_id": "cred-test"}
+
+        self.hs.get_credential_handler().issue_login_credential = _issue_credential  # type: ignore[method-assign]
+
+        challenge_response = self._start_login(wallet["address"], "xrpl")
+        login_response = self._complete_login(
+            wallet,
+            cast(str, challenge_response.json_body["session"]),
+            cast(str, challenge_response.json_body["challenge"]),
+        )
+        self.assertEqual(login_response.code, HTTPStatus.OK, login_response.result)
+        self.assertEqual(len(calls), 1)
+        self.assertEqual(calls[0][1], wallet["address"])
+
+    @override_config({"xrpl_auth": {"enabled": True}})
+    def test_successful_login_accepts_optional_zkp_payload(self) -> None:
+        wallet = self._generate_wallet(CryptoAlgorithm.ED25519)
+        zkp_calls: list[tuple[str, str, str]] = []
+
+        async def _verify_zkp(
+            matrix_user_id: str,
+            xrpl_address: str,
+            proof: dict[str, Any],
+            public_signals: dict[str, Any],
+            e2ee_pubkey_commitment: str,
+        ) -> dict[str, Any]:
+            zkp_calls.append((matrix_user_id, xrpl_address, e2ee_pubkey_commitment))
+            return {"valid": True, "verified_at": 123}
+
+        self.hs.get_zkp_handler().verify_e2ee_binding = _verify_zkp  # type: ignore[method-assign]
+
+        challenge_response = self._start_login(wallet["address"], "xrpl")
+        login_response = self._complete_login(
+            wallet,
+            cast(str, challenge_response.json_body["session"]),
+            cast(str, challenge_response.json_body["challenge"]),
+            zkp_payload={
+                "proof": {"type": "groth16"},
+                "public_signals": {
+                    "did_uri": f"did:xrpl:testnet:{wallet['address']}",
+                    "xrpl_address": wallet["address"],
+                    "credential_id": "cred-test",
+                    "e2ee_pubkey_commitment": "abc123",
+                },
+                "e2ee_pubkey_commitment": "abc123",
+            },
+        )
+        self.assertEqual(login_response.code, HTTPStatus.OK, login_response.result)
+        self.assertEqual(len(zkp_calls), 1)
+
+    @override_config({"xrpl_auth": {"enabled": True}})
+    def test_full_flow_sequence_wallet_did_credential_zkp(self) -> None:
+        wallet = self._generate_wallet(CryptoAlgorithm.ED25519)
+        call_order: list[str] = []
+
+        async def _commit_did(*args: Any, **kwargs: Any) -> dict[str, Any]:
+            call_order.append("did")
+            return {"did_uri": f"did:xrpl:testnet:{wallet['address']}"}
+
+        async def _issue_credential(*args: Any, **kwargs: Any) -> dict[str, Any]:
+            call_order.append("credential")
+            return {"credential_id": "cred-seq", "status": "issued"}
+
+        async def _verify_zkp(*args: Any, **kwargs: Any) -> dict[str, Any]:
+            call_order.append("zkp")
+            return {"valid": True, "verified_at": 123}
+
+        self.hs.get_did_handler().commit_wallet_did_binding = _commit_did  # type: ignore[method-assign]
+        self.hs.get_credential_handler().issue_login_credential = _issue_credential  # type: ignore[method-assign]
+        self.hs.get_zkp_handler().verify_e2ee_binding = _verify_zkp  # type: ignore[method-assign]
+
+        challenge_response = self._start_login(wallet["address"], "xrpl")
+        login_response = self._complete_login(
+            wallet,
+            cast(str, challenge_response.json_body["session"]),
+            cast(str, challenge_response.json_body["challenge"]),
+            zkp_payload={
+                "proof": {"type": "groth16"},
+                "public_signals": {
+                    "did_uri": f"did:xrpl:testnet:{wallet['address']}",
+                    "xrpl_address": wallet["address"],
+                    "credential_id": "cred-seq",
+                    "e2ee_pubkey_commitment": "abc123",
+                },
+                "e2ee_pubkey_commitment": "abc123",
+            },
+        )
+        self.assertEqual(login_response.code, HTTPStatus.OK, login_response.result)
+        self.assertEqual(call_order, ["did", "credential", "zkp"])
+        self.assertIn("device_id", login_response.json_body)
+
+    @override_config({"xrpl_auth": {"enabled": True}})
+    def test_login_with_zkp_declined_falls_back_to_signature_path(self) -> None:
+        wallet = self._generate_wallet(CryptoAlgorithm.ED25519)
+        zkp_calls: list[str] = []
+
+        async def _verify_zkp(*args: Any, **kwargs: Any) -> dict[str, Any]:
+            zkp_calls.append("called")
+            return {"valid": True}
+
+        self.hs.get_zkp_handler().verify_e2ee_binding = _verify_zkp  # type: ignore[method-assign]
+
+        challenge_response = self._start_login(wallet["address"], "xrpl")
+        login_response = self._complete_login(
+            wallet,
+            cast(str, challenge_response.json_body["session"]),
+            cast(str, challenge_response.json_body["challenge"]),
+            zkp_declined=True,
+        )
+        self.assertEqual(login_response.code, HTTPStatus.OK, login_response.result)
+        self.assertEqual(zkp_calls, [])
+
+    @override_config({"xrpl_auth": {"enabled": True}})
+    def test_conflict_response_includes_recovery_suggestion(self) -> None:
+        wallet = self._generate_wallet(CryptoAlgorithm.ED25519)
+        challenge_response = self._start_login(
+            wallet["address"],
+            "xrpl",
+            preferred_localpart="first_user",
+        )
+        first_login = self._complete_login(
+            wallet,
+            cast(str, challenge_response.json_body["session"]),
+            cast(str, challenge_response.json_body["challenge"]),
+        )
+        self.assertEqual(first_login.code, HTTPStatus.OK, first_login.result)
+
+        second_challenge = self._start_login(
+            wallet["address"],
+            "xrpl",
+            preferred_localpart="other_user",
+        )
+        second_login = self._complete_login(
+            wallet,
+            cast(str, second_challenge.json_body["session"]),
+            cast(str, second_challenge.json_body["challenge"]),
+        )
+        self.assertEqual(second_login.code, HTTPStatus.FORBIDDEN, second_login.result)
+        self.assertIn("Try logging in without username", second_login.json_body.get("error", ""))
+
+    @override_config({"xrpl_auth": {"enabled": True}})
+    def test_rejects_secret_material_in_login_payload(self) -> None:
+        wallet = self._generate_wallet(CryptoAlgorithm.ED25519)
+        challenge_response = self._start_login(wallet["address"], "xrpl")
+        login_response = self.make_request(
+            "POST",
+            LOGIN_URL,
+            {
+                "type": XrplAuth.LOGIN_TYPE,
+                "session": cast(str, challenge_response.json_body["session"]),
+                "address": wallet["address"],
+                "signature": wallet["signature_for"](cast(str, challenge_response.json_body["challenge"])),
+                "public_key": wallet["public_key"],
+                "private_key": wallet["private_key"],
+            },
+        )
+        self.assertEqual(login_response.code, HTTPStatus.BAD_REQUEST, login_response.result)
+
+    @override_config({"xrpl_auth": {"enabled": True}})
+    def test_xrpl_login_rate_limited_by_ip(self) -> None:
+        for _ in range(5):
+            wallet = self._generate_wallet(CryptoAlgorithm.ED25519)
+            challenge = self._start_login(wallet["address"], "xrpl")
+            self.assertEqual(challenge.code, HTTPStatus.UNAUTHORIZED, challenge.result)
+
+        wallet = self._generate_wallet(CryptoAlgorithm.ED25519)
+        limited = self._start_login(wallet["address"], "xrpl")
+        self.assertEqual(limited.code, HTTPStatus.TOO_MANY_REQUESTS, limited.result)
+
     def _start_login(
         self,
         address: str,
@@ -413,6 +606,8 @@ class XrplLoginTestCase(HomeserverTestCase):
         *,
         include_public_key: bool = True,
         wallet_e2ee_recovery: dict[str, Any] | None = None,
+        zkp_payload: dict[str, Any] | None = None,
+        zkp_declined: bool = False,
     ):
         body: dict[str, Any] = {
             "type": XrplAuth.LOGIN_TYPE,
@@ -424,6 +619,12 @@ class XrplLoginTestCase(HomeserverTestCase):
             body["public_key"] = wallet["public_key"]
         if wallet_e2ee_recovery is not None:
             body["wallet_e2ee_recovery"] = wallet_e2ee_recovery
+        if zkp_payload is not None:
+            body["zkp_proof"] = zkp_payload["proof"]
+            body["zkp_public_signals"] = zkp_payload["public_signals"]
+            body["e2ee_pubkey_commitment"] = zkp_payload["e2ee_pubkey_commitment"]
+        if zkp_declined:
+            body["zkp_declined"] = True
 
         return self.make_request("POST", LOGIN_URL, body)
 

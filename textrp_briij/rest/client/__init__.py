@@ -18,3 +18,7 @@
 # [This file includes modifications made by New Vector Limited]
 #
 #
+
+from . import credential, did, mcredits, zkp
+
+__all__ = ["credential", "did", "mcredits", "zkp"]
