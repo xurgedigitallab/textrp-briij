@@ -54,6 +54,148 @@ def _feature_row_to_json(row: tuple) -> JsonDict:
         "created_ts": row[7],
     }
 
+def _package_row_to_json(row: tuple) -> JsonDict:
+    return {
+        "id": row[0],
+        "name": row[1],
+        "description": row[2],
+        "credits_amount": int(row[3]),
+        "price_usd_cents": int(row[4]),
+        "sort_order": int(row[5]) if row[5] is not None else 0,
+        "is_active": bool(row[6]),
+        "created_ts": int(row[7]),
+        "updated_ts": int(row[8]),
+    }
+
+
+def _validate_non_empty_string(value: object, field_name: str) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise SynapseError(
+            HTTPStatus.BAD_REQUEST,
+            f"{field_name} is required",
+            errcode=Codes.INVALID_PARAM,
+        )
+    return value.strip()
+
+
+def _validate_positive_int(value: object, field_name: str) -> int:
+    if not isinstance(value, int) or value <= 0:
+        raise SynapseError(
+            HTTPStatus.BAD_REQUEST,
+            f"{field_name} must be a positive integer",
+            errcode=Codes.INVALID_PARAM,
+        )
+    return value
+
+
+def _validate_non_negative_int(value: object, field_name: str, default: int = 0) -> int:
+    if value is None:
+        return default
+    if not isinstance(value, int) or value < 0:
+        raise SynapseError(
+            HTTPStatus.BAD_REQUEST,
+            f"{field_name} must be a non-negative integer",
+            errcode=Codes.INVALID_PARAM,
+        )
+    return value
+
+
+class AdminMcreditPackagesRestServlet(RestServlet):
+    PATTERNS = admin_patterns("/briij/credits/packages$", "v2")
+
+    def __init__(self, hs: "HomeServer"):
+        self.auth = hs.get_auth()
+        self.store = hs.get_datastores().main
+        self.clock = hs.get_clock()
+
+    async def on_GET(self, request: SynapseRequest) -> tuple[int, JsonDict]:
+        await assert_requester_is_admin(self.auth, request)
+
+        def _get_packages_txn(txn) -> list[tuple]:
+            txn.execute(
+                """
+                SELECT id, name, description, credits_amount, price_usd_cents,
+                       sort_order, is_active, created_ts, updated_ts
+                FROM mcredit_packages
+                ORDER BY sort_order ASC, id ASC
+                """
+            )
+            return txn.fetchall()
+
+        rows = await self.store.db_pool.runInteraction(
+            "admin_get_mcredit_packages", _get_packages_txn
+        )
+        return HTTPStatus.OK, [_package_row_to_json(r) for r in rows]
+
+    async def on_POST(self, request: SynapseRequest) -> tuple[int, JsonDict]:
+        await assert_requester_is_admin(self.auth, request)
+        body = parse_json_object_from_request(request)
+
+        name = _validate_non_empty_string(body.get("name"), "name")
+        description = body.get("description")
+        credits_amount = _validate_positive_int(body.get("credits_amount"), "credits_amount")
+        price_usd_cents = _validate_positive_int(
+            body.get("price_usd_cents"), "price_usd_cents"
+        )
+        sort_order = _validate_non_negative_int(body.get("sort_order"), "sort_order")
+        is_active = body.get("is_active", True)
+        package_id = body.get("id")
+
+        if description is not None and not isinstance(description, str):
+            raise SynapseError(
+                HTTPStatus.BAD_REQUEST,
+                "description must be a string",
+                errcode=Codes.INVALID_PARAM,
+            )
+        if not isinstance(is_active, bool):
+            raise SynapseError(
+                HTTPStatus.BAD_REQUEST,
+                "is_active must be a boolean",
+                errcode=Codes.INVALID_PARAM,
+            )
+
+        if package_id is not None:
+            if not isinstance(package_id, int) or package_id <= 0:
+                raise SynapseError(
+                    HTTPStatus.BAD_REQUEST,
+                    "id must be a positive integer",
+                    errcode=Codes.INVALID_PARAM,
+                )
+
+            updated = await self.store.db_pool.simple_update(
+                table="mcredit_packages",
+                keyvalues={"id": package_id},
+                updatevalues={
+                    "name": name,
+                    "description": description,
+                    "credits_amount": credits_amount,
+                    "price_usd_cents": price_usd_cents,
+                    "sort_order": sort_order,
+                    "is_active": is_active,
+                    "updated_ts": self.clock.time_msec(),
+                },
+                desc="admin_update_mcredit_package",
+            )
+            if updated == 0:
+                raise NotFoundError("mCredits package not found")
+        else:
+            await self.store.db_pool.simple_insert(
+                "mcredit_packages",
+                {
+                    "name": name,
+                    "description": description,
+                    "credits_amount": credits_amount,
+                    "price_usd_cents": price_usd_cents,
+                    "sort_order": sort_order,
+                    "is_active": is_active,
+                    "created_ts": self.clock.time_msec(),
+                    "updated_ts": self.clock.time_msec(),
+                },
+                desc="admin_create_mcredit_package",
+            )
+
+        return HTTPStatus.OK, {"id": package_id, "status": "ok"}
+
 
 class PremiumFeaturesRestServlet(RestServlet):
     PATTERNS = admin_patterns("/briij/premium_features$", "v2")

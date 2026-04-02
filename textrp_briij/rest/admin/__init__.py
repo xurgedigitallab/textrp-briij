@@ -69,6 +69,7 @@ from textrp_briij.rest.admin.federation import (
 )
 from textrp_briij.rest.admin.media import ListMediaInRoom, register_servlets_for_media_repo
 from textrp_briij.rest.admin.mcredits import (
+    AdminMcreditPackagesRestServlet,
     PremiumFeatureByKeyRestServlet,
     PremiumFeaturesRestServlet,
 )
@@ -354,6 +355,7 @@ def register_servlets(hs: "HomeServer", http_server: HttpServer) -> None:
     ScheduledTasksRestServlet(hs).register(http_server)
     AdminRoomHierarchy(hs).register(http_server)
     EventRestServlet(hs).register(http_server)
+    AdminMcreditPackagesRestServlet(hs).register(http_server)
     PremiumFeaturesRestServlet(hs).register(http_server)
     PremiumFeatureByKeyRestServlet(hs).register(http_server)
 
